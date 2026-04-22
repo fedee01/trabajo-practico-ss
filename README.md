@@ -6,7 +6,7 @@ Desarrollamos una FastAPI en Python que calcula parametros acusticos (ver [ISO 3
 
 - **$\color{white}\Huge{\textsf{Integrantes del grupo:}}$**
  
-  Dulcinea Bonet, 81506. $${\color{lightpurple}Responsable \space de \space testing/CI}$$.
+  Dulcinea Bonet, 81506. $${\color{magenta}Responsable \space de \space testing/CI}$$.
 
   Valentina De Piero, legajo. $${\color{yellow}Responsable \space de \space procesamiento}$$.
 
