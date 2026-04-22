@@ -1,8 +1,8 @@
-# trabajo-practico-ss
+# Trabajo Practico SyS
 
-- **$\color{white}\Huge{\textsf{Nombre del proyecto:}}$**
+- **$\color{white}\Huge{\textsf{PONER NOMBRE ACA}}$**
   
-`descripcion breve (1-2 parrafos)`
+Desarrollamos una FastAPI en Python que calcula parametros acusticos (ver [ISO 3382](https://www.iso.org/obp/ui/en/#iso:std:iso:3382:-1:ed-1:v1:en)), teniendo en cuenta: generacion de senales de excitacion, procesamiento de la RI y calculo de parametros acústicos.
 
 - **$\color{white}\Huge{\textsf{Integrantes del grupo:}}$**
  
@@ -20,4 +20,4 @@
 
 - **$\color{white}\Huge{\textsf{Estructura del proyecto:}}$**
 
- ` arbol de directorios con una breve explicacion de cada carpeta y archivo principal.`
+ `arbol de directorios con una breve explicacion de cada carpeta y archivo principal.`
