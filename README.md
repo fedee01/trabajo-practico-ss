@@ -8,11 +8,11 @@ Desarrollamos una FastAPI en Python que calcula parametros acusticos (ver [ISO 3
  
   Dulcinea Bonet | Legajo: 81506. $${\color{magenta}Responsable \space de \space testing/CI}$$.
 
-  Valentina De Piero, legajo. $${\color{yellow}Responsable \space de \space procesamiento}$$.
+  Valentina De Piero | Legajo: $${\color{yellow}Responsable \space de \space procesamiento}$$.
 
-  Federico Gionco, 56901. $${\color{lightblue}Responsable \space de \space generacion \space de  \space senales}$$.
+  Federico Gionco | Legajo: 56901. $${\color{lightblue}Responsable \space de \space generacion \space de  \space senales}$$.
 
-  Eugenia Onnainty, 74462. $${\color{green}Responsable \space de \space documentacion}$$.
+  Eugenia Onnainty | Legajo: 74462. $${\color{green}Responsable \space de \space documentacion}$$.
 
 - **$\color{white}\Huge{\textsf{Instrucciones de instalacion:}}$**
 
