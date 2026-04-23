@@ -1,1 +1,0 @@
-# Configuracion (pydantic-settings)
