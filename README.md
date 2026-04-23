@@ -62,11 +62,11 @@ graph LR
 Client --> R[Routers]
 R --> S[Services]
 S --> Gen[Generación]
-Gen --> SS[Sine Sweep (M1)]
-Gen --> PN[Pink Noise (M1)]
+Gen --> SS[Sine Sweep]
+Gen --> PN[Pink Noise]
 S --> Proc[Procesamiento]
 S --> An[Análisis]
-An --> Par[Parámetros acústicos ISO 3382 (M3)]
+An --> Par[Parámetros acústicos ISO 3382]
 R --> Sch[Schemas]
 ```
 
