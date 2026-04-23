@@ -30,7 +30,7 @@ Desarrollamos una FastAPI en Python que calcula parametros acusticos (ver [ISO 3
 
   Ejecutar la API:
 ```
-    uv run uvicorn app.main:app --reload
+  uv run uvicorn app.main:app --reload
 ```
   
 - **$\color{white}\Huge{\textsf{Estructura del proyecto:}}$**
