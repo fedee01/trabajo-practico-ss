@@ -73,6 +73,7 @@ An -->Sua[Suavizado de señal]
 An -->InS[Integral de Shchorder]
 An -->Reg[Regresion lineal]
 R --> Sch[Schemas]
+Sch -->Pydantic 
 ```
 
 ## Estructura del proyecto
