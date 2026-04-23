@@ -62,6 +62,8 @@ graph LR
 Client --> R[Routers]
 R --> S[Services]
 S --> Gen[Generación]
+Gen --> [Sine Sweep]
+Gen--> [Pink Noise]
 S --> Proc[Procesamiento]
 S --> An[Análisis]
 R --> Sch[Schemas]
