@@ -18,17 +18,20 @@ Desarrollamos una FastAPI en Python que calcula parametros acusticos (ver [ISO 3
 
   Clonar el repositorio:
 
-    `git clone https://github.com/valentinadepiero/trabajo-practico-ss.git`
-
-    `cd trabajo-practico-ss`
+    ```bash
+    git clone https://github.com/valentinadepiero/trabajo-practico-ss.git`
+    cd trabajo-practico-ss
+    ```
 
   Instalar librerías:
-  
-    `uv sync`
+  ```
+    uv sync
+  ```
 
   Ejecutar la API:
-  
-    `uv run uvicorn app.main:app --reload`
+```
+    uv run uvicorn app.main:app --reload
+```
   
 - **$\color{white}\Huge{\textsf{Estructura del proyecto:}}$**
 
