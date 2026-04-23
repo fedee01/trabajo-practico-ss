@@ -69,6 +69,8 @@ S --> Proc[Procesamiento]
 Proc --> F[Filtros]
 S --> An[Análisis]
 An --> Par[Parámetros acústicos]
+An -->Sua[suavizado de señal]
+An -->InS[Integral de Shchorder]
 R --> Sch[Schemas]
 ```
 
