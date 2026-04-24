@@ -78,11 +78,20 @@ R --> Sch[SCHEMAS<br><small>Pydantic</small>]
 style S fill: #857979
 style Sch fill: #857979
 style R fill: #857979
-style Gen fill: #c9c9c9
-style Proc fill: #c9c9c9
-style An fill: #c9c9c9
+style Gen fill: #a69999
+style Proc fill: #a69999
+style An fill: #a69999
+style Pyd fill: #a69999
 style Par fill: #turquoise
-
+style SS fill: #AFA3A3
+style PN fill: #AFA3A3
+style Rec fill: #AFA3A3
+style F fill: #AFA3A3
+style Par fill: #AFA3A3
+style Sua fill: #AFA3A3
+style InS fill: #AFA3A3
+style Reg fill: #AFA3A3
+style Mlun fill: #AFA3A3
 
 ```
 
