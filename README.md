@@ -61,19 +61,19 @@ La API estara disponible en `http://localhost:8000`. Documentacion interactiva e
 graph LR
 Client --> R[ROUTERS<br><small>Endpoints</small>]
 R --> S[SERVICES<br><small>Logica</small>]
-S --> Gen[#1<br>Generación]
+S --> Gen[#1<br>GENERACIÓN]
 Gen --> SS[Sine Sweep]
 Gen --> PN[Pink Noise]
 Gen --> Rec[Reproducir y Grabar]
-S --> Proc[Procesamiento]
+S --> Proc[#2<br>Procesamiento]
 Proc --> F[Filtros]
-S --> An[Análisis]
+S --> An[#3<br>Análisis]
 An --> Par[Parámetros acústicos]
 An -->Sua[Suavizado de señal]
 An -->InS[Integral de Shchorder]
 An -->Reg[Regresion lineal]
 An -->Mlun[Metodo Lundeby]
-R --> Sch[Schemas<br><small>PYDANTIC</small>]
+R --> Sch[SCHEMAS<br><small>Pydantic</small>]
 
 style S fill: #857979
 style Sch fill: #857979
