@@ -126,6 +126,9 @@ rir-api/
 ├── pyproject.toml                 # Configuracion del proyecto
 └── README.md
 ```
+## Branching Strategy
+
+La estrategia armada para el proyecto es utilizar tres tipos de branches. En primer lugar, MAIN donde estara la version estable del código. Luego TESTING donde se empleara como anteproyecto/borrador del código total. Por último, FEATURE donde realizaremos Branches segun las funcionalidades y conflictos que se generen a lo largo del proyecto, para seguidamente ser aprobados por el resto de los integrantes para enviarlos a TESTING y posteriormente al MAIN.
 
 ## Milestones
 
