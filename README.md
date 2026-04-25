@@ -14,7 +14,6 @@ completa de procesamiento acustico: generacion de senales de excitacion, procesa
 de respuestas al impulso por bandas de octava y calculo de parametros acusticos
 (EDT, T20, T30) segun la norma [ISO 3382](https://www.iso.org/obp/ui/en/#iso:std:iso:3382:-1:ed-1:v1:en).
 
-> **API de referencia**: Explorar la [documentacion interactiva de la API de la catedra](https://rir-api.onrender.com/docs) para entender la estructura de endpoints, schemas y respuestas esperadas.
 
 ## Integrantes del grupo
  
@@ -58,35 +57,41 @@ La API estara disponible en `http://localhost:8000`. Documentacion interactiva e
 - ReDoc: `http://localhost:8000/redoc`
 ## Diagrama de estructura
 ```mermaid
-flowchart LR
- subgraph s1["Untitled subgraph"]
-        S["Services<br><small>Logica</small>"]
-  end
-    Client["Client"] --> R["Routers<br>Endpoints"]
-    R --> S & Sch["SCHEMAS<br><small>Pydantic</small>"]
-    S -- M1 --> Gen["GENERACIÓN"]
-    Gen --> SS["Sine Sweep"] & PN["Pink Noise"] & Rec["Reproducir y Grabar"]
-    S -- M2 --> Proc["Procesamiento"]
-    Proc --> F["Filtros"]
-    S -- M3 --> An["Análisis"]
-    An --> Par["Parámetros acústicos"] & Sua["Suavizado de señal"] & InS["Integral de Shchorder"] & Reg["Regresion lineal"] & Mlun["Metodo Lundeby"]
+graph LR
+Client --> R[ROUTERS<br>Endpoints]
+R --> S[SERVICES<br><small>Logica</small>]
+S --> Gen[M1<br>GENERACIÓN]
+Gen --> SS[Sine Sweep]
+Gen --> PN[Pink Noise]
+Gen --> Rec[Reproducir y Grabar]
+S --> Proc[M2<br>Procesamiento]
+Proc --> F[Filtros por banda de octava]
+Proc --> Con[Conversion a escala logaritmica]
+S --> An[M3<br>Análisis]
+An --> Par[Parámetros acústicos]
+An -->Sua[Suavizado de señal]
+An -->InS[Integral de Shchorder]
+An -->Reg[Regresion lineal]
+An -->Mlun[Metodo Lundeby]
+R --> Sch[SCHEMAS<br><small>Pydantic</small>]
 
-    style S fill: #857979,color:#000000
-    style R fill: #857979,color:#000000
-    style Sch fill: #857979,color:#000000
-    style Gen fill: #a69999,color:#000000
-    style SS fill: #AFA3A3,color:#000000
-    style PN fill: #AFA3A3,color:#000000
-    style Rec fill: #AFA3A3,color:#000000
-    style Proc fill: #a69999,color:#000000
-    style F fill: #AFA3A3,color:#000000
-    style An fill: #a69999,color:#000000
-    style Par fill: #AFA3A3,color:#000000
-    style Sua fill: #AFA3A3,color:#000000
-    style InS fill: #AFA3A3,color:#000000
-    style Reg fill: #AFA3A3,color:#000000
-    style Mlun fill: #AFA3A3,color:#000000
-    style s1 fill:transparent,stroke:transparent,color:transparent
+style S fill: #857979
+style Sch fill: #857979
+style R fill: #857979
+style Gen fill: #a69999
+style Proc fill: #a69999
+style An fill: #a69999
+style Par fill: #turquoise
+style SS fill: #C7B3B3
+style PN fill: #C7B3B3
+style Rec fill: #C7B3B3
+style F fill: #C7B3B3
+style Par fill: #C7B3B3
+style Sua fill: #C7B3B3
+style InS fill: #C7B3B3
+style Reg fill: #C7B3B3
+style Mlun fill: #C7B3B3
+style Con fill: #C7B3B3
 
 ```
 
