@@ -121,6 +121,10 @@ rir-api/
 ├── pyproject.toml                 # Configuracion del proyecto
 └── README.md
 ```
+## Branching Strategy
+
+La estrategia armada para el proyecto 
+
 
 ## Milestones
 
