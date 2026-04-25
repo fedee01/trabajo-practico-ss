@@ -7,7 +7,7 @@ license = "MIT"
 requires-python = ">=3.12"
 authors = [
     { name = "DulBonet15", email = "@gmail.com" },
-    { name = "valentinadepiero", email = "@gmail.com" },
+    { name = "valentinadepiero", email = "depierovalentina@gmail.com" },
     { name = "fedee01", email = "fedeegionco@gmail.com" },
     { name = "onnaintyeugenia-oss", email = "@gmail.com" },
 ]
