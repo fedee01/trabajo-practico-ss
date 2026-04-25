@@ -59,15 +59,15 @@ La API estara disponible en `http://localhost:8000`. Documentacion interactiva e
 ## Diagrama de estructura
 ```mermaid
 graph LR
-Client --> R[ROUTERS<br><small>Endpoints</small>]
+Client --> R[ROUTERS<br>Endpoints]
 R --> S[SERVICES<br><small>Logica</small>]
-S --> Gen[#1<br>GENERACIÓN]
+S --> Gen[M1<br>GENERACIÓN]
 Gen --> SS[Sine Sweep]
 Gen --> PN[Pink Noise]
 Gen --> Rec[Reproducir y Grabar]
-S --> Proc[#2<br>Procesamiento]
+S --> Proc[M2<br>Procesamiento]
 Proc --> F[Filtros]
-S --> An[#3<br>Análisis]
+S --> An[M3<br>Análisis]
 An --> Par[Parámetros acústicos]
 An -->Sua[Suavizado de señal]
 An -->InS[Integral de Shchorder]
