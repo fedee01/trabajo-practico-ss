@@ -66,7 +66,8 @@ flowchart LR
     S -- M1 --> Gen["GENERACIÓN"]
     Gen --> SS["Sine Sweep"] & PN["Pink Noise"] & Rec["Reproducir y Grabar"]
     S -- M2 --> Proc["Procesamiento"]
-    Proc --> F["Filtros"]
+    Proc --> F["Filtros por banda de octava"]
+    Proc -->Conv ["Conversión a escala logaritmica"]
     S -- M3 --> An["Análisis"]
     An --> Par["Parámetros acústicos"] & Sua["Suavizado de señal"] & InS["Integral de Shchorder"] & Reg["Regresion lineal"] & Mlun["Metodo Lundeby"]
 
