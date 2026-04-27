@@ -86,6 +86,7 @@ flowchart LR
     style Reg fill: #AFA3A3,color:#000000
     style Mlun fill: #AFA3A3,color:#000000
     style s1 fill:transparent,stroke:transparent,color:transparent
+
 ```
 
 ## Estructura del proyecto
