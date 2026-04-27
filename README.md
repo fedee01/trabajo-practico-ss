@@ -76,6 +76,7 @@ flowchart LR
     style Gen fill: #a69999,color:#000000
     style SS fill: #AFA3A3,color:#000000
     style PN fill: #AFA3A3,color:#000000
+    style Conv fill: #AFA3A3,color:#000000
     style Rec fill: #AFA3A3,color:#000000
     style Proc fill: #a69999,color:#000000
     style F fill: #AFA3A3,color:#000000
