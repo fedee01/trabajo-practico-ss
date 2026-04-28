@@ -30,7 +30,7 @@ de respuestas al impulso por bandas de octava y calculo de parametros acusticos
 - Python 3.12 o superior
 - [uv](https://docs.astral.sh/uv/) (gestor de paquetes y entornos virtuales)
 - [FastAPI](https://fastapi.tiangolo.com/) (framework a utilizar)
-- [httpx](https://www.python-httpx.org/) (libreria)
+- [httpx](https://www.python-httpx.org/) (libreria para realizar requests)
 
 ## Instalacion
 
