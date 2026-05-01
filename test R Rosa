@@ -1,6 +1,4 @@
 import numpy as np
-
-
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
     Genera ruido rosa creando ruido blanco y aplicando un filtro.
@@ -37,7 +35,6 @@ def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
 
 import math as ma
 import numpy as np
-
 def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[np.ndarray, np.ndarray]:
     """
     Genera un sine sweep logaritmico y su filtro inverso.
@@ -69,3 +66,23 @@ def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[
  "PARTE 3"          "PARTE 3"          "PARTE 3"          "PARTE 3"          "PARTE 3"          "PARTE 3"          "PARTE 3"          "PARTE 3"          "PARTE 3"          "PARTE 3"
 
 
+import sounddevice as sd
+def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) -> np.ndarray:
+    """
+    Reproduce una senal y graba simultaneamente.
+
+    Parameters
+    ----------
+    signal : np.ndarray
+        Senal a reproducir.
+    fs : int
+        Frecuencia de muestreo en Hz.
+    duracion_grabacion : float
+        Duracion total de la grabacion en segundos.
+        Debe ser >= duracion de la senal para capturar la reverberacion.
+
+    Returns
+    -------
+    np.ndarray
+        Array con la senal grabada.
+    """
