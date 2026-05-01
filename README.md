@@ -101,29 +101,40 @@ flowchart LR
 rir-api/
 ├── app/
 │   ├── __init__.py
-│   ├── main.py                    # Punto de entrada FastAPI
+│   ├── main.py                           # Punto de entrada FastAPI
 │   ├── routers/
-│   │   ├── health.py              # GET /health
-│   │   ├── signals.py             # Endpoints de generacion (M1 → M3)
-│   │   ├── filters.py             # Endpoints de filtrado (M2 → M3)
-│   │   ├── acoustics.py           # Endpoints de analisis (M3)
-│   │   └── utils.py               # Endpoints de utilidades (M3)
+│   │   ├── health.py                     # GET /health
+│   │   ├── generacion.py                 # Endpoints de generacion (M1 → M3)
+│   │   ├── procesamiento.py              # Endpoints de filtrado (M2 → M3)
+│   │   ├── analisis.py                   # Endpoints de analisis (M3)
+│   │   └── utils.py                      # Endpoints de utilidades (M3)
 │   ├── schemas/
-│   │   └── ...                    # Modelos Pydantic de request/response
+│   │   └── ...                           # Modelos Pydantic de request/response
 │   └── services/
-│       ├── pink_noise.py          # Generacion de ruido rosa (M1)
-│       ├── sine_sweep.py          # Generacion de sine sweep (M1)
-│       ├── signal_utils.py        # Utilidades de procesamiento (M2)
-│       ├── filter.py              # Filtros de banda de octava (M2)
-│       └── acoustic_parameters.py # Parametros acusticos ISO 3382 (M3)
+│       ├── generación/
+│       │   ├── pink_noise.py             # Generacion de ruido rosa (M1)
+│       │   └── sine_sweep.py             # Generacion de sine sweep (M1)
+│       ├── procesamiento/
+│       │   ├── signal_utils.py           # Utilidades de procesamiento (M2)
+│       │   └── filter.py                 # Filtros de banda de octava (M2)
+│       └── analisis/
+│           └── acoustic_parameters.py    # Parametros acusticos ISO 3382 (M3)
 ├── tests/
-│   ├── test_generacion.py         # Tests de generacion (M1)
-│   ├── test_procesamiento.py      # Tests de procesamiento (M2)
-│   ├── test_analisis.py           # Tests de analisis (M3)
-│   └── test_api.py                # Tests de endpoints (M3)
-├── docs/                          # Documentacion
-├── .github/workflows/ci.yml       # Integracion continua
-├── pyproject.toml                 # Configuracion del proyecto
+│   ├── test_generacion.py                # Tests de generacion (M1)
+│   ├── test_procesamiento.py             # Tests de procesamiento (M2)
+│   ├── test_analisis.py                  # Tests de analisis (M3)
+│   └── test_api.py                       # Tests de endpoints (M3)
+├── docs/                                 # Documentacion
+│   ├── imagenes                          
+│   ├── teoria                            # Informacion adicional
+│   │   ├── iso_3382.md
+│   │   └── parametros.md              
+│   ├── mediciones
+│   └── README.md                         # Documentacion de RIR-API
+├── uv.lock
+├── .github/workflows/ci.yml              # Integracion continua
+├── pyproject.toml                        # Configuracion del proyecto
+├── .gitignore
 └── README.md
 ```
 ## Branching Strategy
