@@ -14,7 +14,6 @@ completa de procesamiento acustico: generacion de senales de excitacion, procesa
 de respuestas al impulso por bandas de octava y calculo de parametros acusticos
 (EDT, T20, T30) segun la norma [ISO 3382](https://www.iso.org/obp/ui/en/#iso:std:iso:3382:-1:ed-1:v1:en).
 
-> **API de referencia**: Explorar la [documentacion interactiva de la API de la catedra](https://rir-api.onrender.com/docs) para entender la estructura de endpoints, schemas y respuestas esperadas.
 
 ## Integrantes del grupo
  
@@ -30,6 +29,8 @@ de respuestas al impulso por bandas de octava y calculo de parametros acusticos
 
 - Python 3.12 o superior
 - [uv](https://docs.astral.sh/uv/) (gestor de paquetes y entornos virtuales)
+- [FastAPI](https://fastapi.tiangolo.com/) (framework a utilizar)
+- [httpx](https://www.python-httpx.org/) (libreria para realizar requests)
 
 ## Instalacion
 
@@ -39,8 +40,11 @@ git clone https://github.com/valentinadepiero/trabajo-practico-ss.git
 cd trabajo-practico-ss
 
 # Crear entorno virtual e instalar dependencias
-uv venv
+uv sync
+
 uv pip install -e ".[dev]"
+uv add --dev httpx
+uv add --dev fastapi
 ```
 
 ## Ejecucion
@@ -58,39 +62,36 @@ La API estara disponible en `http://localhost:8000`. Documentacion interactiva e
 - ReDoc: `http://localhost:8000/redoc`
 ## Diagrama de estructura
 ```mermaid
-graph LR
-Client --> R[ROUTERS<br>Endpoints]
-R --> S[SERVICES<br><small>Logica</small>]
-S --> Gen[M1<br>GENERACIÓN]
-Gen --> SS[Sine Sweep]
-Gen --> PN[Pink Noise]
-Gen --> Rec[Reproducir y Grabar]
-S --> Proc[M2<br>Procesamiento]
-Proc --> F[Filtros]
-S --> An[M3<br>Análisis]
-An --> Par[Parámetros acústicos]
-An -->Sua[Suavizado de señal]
-An -->InS[Integral de Shchorder]
-An -->Reg[Regresion lineal]
-An -->Mlun[Metodo Lundeby]
-R --> Sch[SCHEMAS<br><small>Pydantic</small>]
+flowchart LR
+ subgraph s1["Untitled subgraph"]
+        S["Services<br><small>Logica</small>"]
+  end
+    Client["Client"] --> R["Routers<br>Endpoints"]
+    R --> S & Sch["SCHEMAS<br><small>Pydantic</small>"]
+    S -- M1 --> Gen["GENERACIÓN"]
+    Gen --> SS["Sine Sweep"] & PN["Pink Noise"] & Rec["Reproducir y Grabar"]
+    S -- M2 --> Proc["Procesamiento"]
+    Proc --> F["Filtros por banda de octava"] & Conv["Conversión a escala logaritmica"]
+    S -- M3 --> An["Análisis"]
+    An --> Par["Parámetros acústicos"] & Sua["Suavizado de señal"] & InS["Integral de Shchorder"] & Reg["Regresion lineal"] & Mlun["Metodo Lundeby"]
 
-style S fill: #857979
-style Sch fill: #857979
-style R fill: #857979
-style Gen fill: #a69999
-style Proc fill: #a69999
-style An fill: #a69999
-style Par fill: #turquoise
-style SS fill: #C7B3B3
-style PN fill: #C7B3B3
-style Rec fill: #C7B3B3
-style F fill: #C7B3B3
-style Par fill: #C7B3B3
-style Sua fill: #C7B3B3
-style InS fill: #C7B3B3
-style Reg fill: #C7B3B3
-style Mlun fill: #C7B3B3
+    style S fill: #857979,color:#000000
+    style R fill: #857979,color:#000000
+    style Sch fill: #857979,color:#000000
+    style Gen fill: #a69999,color:#000000
+    style SS fill: #AFA3A3,color:#000000
+    style PN fill: #AFA3A3,color:#000000
+    style Rec fill: #AFA3A3,color:#000000
+    style Proc fill: #a69999,color:#000000
+    style F fill: #AFA3A3,color:#000000
+    style Conv fill: #AFA3A3,color:#000000
+    style An fill: #a69999,color:#000000
+    style Par fill: #AFA3A3,color:#000000
+    style Sua fill: #AFA3A3,color:#000000
+    style InS fill: #AFA3A3,color:#000000
+    style Reg fill: #AFA3A3,color:#000000
+    style Mlun fill: #AFA3A3,color:#000000
+    style s1 fill:transparent,stroke:transparent,color:transparent
 
 ```
 
@@ -100,31 +101,45 @@ style Mlun fill: #C7B3B3
 rir-api/
 ├── app/
 │   ├── __init__.py
-│   ├── main.py                    # Punto de entrada FastAPI
+│   ├── main.py                           # Punto de entrada FastAPI
 │   ├── routers/
-│   │   ├── health.py              # GET /health
-│   │   ├── signals.py             # Endpoints de generacion (M1 → M3)
-│   │   ├── filters.py             # Endpoints de filtrado (M2 → M3)
-│   │   ├── acoustics.py           # Endpoints de analisis (M3)
-│   │   └── utils.py               # Endpoints de utilidades (M3)
+│   │   ├── health.py                     # GET /health
+│   │   ├── generacion.py                 # Endpoints de generacion (M1 → M3)
+│   │   ├── procesamiento.py              # Endpoints de filtrado (M2 → M3)
+│   │   ├── analisis.py                   # Endpoints de analisis (M3)
+│   │   └── utils.py                      # Endpoints de utilidades (M3)
 │   ├── schemas/
-│   │   └── ...                    # Modelos Pydantic de request/response
+│   │   └── ...                           # Modelos Pydantic de request/response
 │   └── services/
-│       ├── pink_noise.py          # Generacion de ruido rosa (M1)
-│       ├── sine_sweep.py          # Generacion de sine sweep (M1)
-│       ├── signal_utils.py        # Utilidades de procesamiento (M2)
-│       ├── filter.py              # Filtros de banda de octava (M2)
-│       └── acoustic_parameters.py # Parametros acusticos ISO 3382 (M3)
+│       ├── generación/
+│       │   ├── pink_noise.py             # Generacion de ruido rosa (M1)
+│       │   └── sine_sweep.py             # Generacion de sine sweep (M1)
+│       ├── procesamiento/
+│       │   ├── signal_utils.py           # Utilidades de procesamiento (M2)
+│       │   └── filter.py                 # Filtros de banda de octava (M2)
+│       └── analisis/
+│           └── acoustic_parameters.py    # Parametros acusticos ISO 3382 (M3)
 ├── tests/
-│   ├── test_generacion.py         # Tests de generacion (M1)
-│   ├── test_procesamiento.py      # Tests de procesamiento (M2)
-│   ├── test_analisis.py           # Tests de analisis (M3)
-│   └── test_api.py                # Tests de endpoints (M3)
-├── docs/                          # Documentacion
-├── .github/workflows/ci.yml       # Integracion continua
-├── pyproject.toml                 # Configuracion del proyecto
+│   ├── test_generacion.py                # Tests de generacion (M1)
+│   ├── test_procesamiento.py             # Tests de procesamiento (M2)
+│   ├── test_analisis.py                  # Tests de analisis (M3)
+│   └── test_api.py                       # Tests de endpoints (M3)
+├── docs/                                 # Documentacion
+│   ├── imagenes                          
+│   ├── teoria                            # Informacion adicional
+│   │   ├── iso_3382.md
+│   │   └── parametros.md              
+│   ├── mediciones
+│   └── README.md                         # Documentacion de RIR-API
+├── uv.lock
+├── .github/workflows/ci.yml              # Integracion continua
+├── pyproject.toml                        # Configuracion del proyecto
+├── .gitignore
 └── README.md
 ```
+## Branching Strategy
+
+La estrategia armada para el proyecto es utilizar tres tipos de branches. En primer lugar, MAIN donde estara la version estable del código. Luego TESTING donde se empleara como anteproyecto/borrador del código total. Por último, FEATURE donde realizaremos Branches segun las funcionalidades y conflictos que se generen a lo largo del proyecto, para seguidamente ser aprobados por el resto de los integrantes para enviarlos a TESTING y posteriormente al MAIN.
 
 ## Milestones
 
