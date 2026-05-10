@@ -3,6 +3,7 @@
 Milestone 1: Generacion de senales.
 """
 import numpy as np
+import math as ma
 
 def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[np.ndarray, np.ndarray]:
     """
