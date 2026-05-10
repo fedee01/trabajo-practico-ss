@@ -1,5 +1,10 @@
-import sounddevice as sd
-import numpy as np
+"""Grabacion y Reproduccion en simultaneo.
+
+Milestone 1: Generacion de senales.
+"""
+
+import sounddevice as sd 
+import numpy as np 
 
 def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) -> np.ndarray:
     """
