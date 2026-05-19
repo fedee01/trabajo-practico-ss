@@ -23,7 +23,7 @@ para entender la estructura de endpoints, schemas y respuestas esperadas.
 
 ## Milestone 1
 1. Generación de Sine Sweep
-   - El sine sweep logaritmico (tambien llamado exponencial) se define como:
+El sine sweep logaritmico (tambien llamado exponencial) se define como:
 
 $$x(t) = \sin\left[\frac{2\pi f_1 T}{\ln(f_2/f_1)} \left(e^{t \ln(f_2/f_1)/T} - 1\right)\right]$$
 
@@ -38,8 +38,10 @@ La frecuencia instantanea del sweep en el instante $t$ es:
 $$f(t) = f_1 \cdot e^{t \ln(f_2/f_1)/T}$$
 
 que crece exponencialmente de $f_1$ a $f_2$.
-   - Creamos un array de muestras de la duración t (a especificar). Utilizamos la función linspace para obtener muestras equidistantes.
-   - 
+
+
+Creamos un array de muestras de la duración t (a especificar). Utilizamos la función linspace para obtener muestras equidistantes.
+Definimos sine_sweep con la función $$x(t) definida en los fundamentos matemáticos
 
 ## Referencias utiles
 
