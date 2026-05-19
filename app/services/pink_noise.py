@@ -38,16 +38,6 @@ def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
         for n in range(0, n_bits): # en la consigna dice que los generadores i tienen que actualizarse cada 2^i (supongo que muestras), asi que aca itero por mi numero de bits (o sea el numero de generadores) y me fijo si la cantidad de muestras que ya sume coincide con 2^i, si lo hace actualizo los generadores
             if contador == 2 ** n: 
                 generadores[n] = np.random.randn(n_muestras)
-    
-    # este es el codigo de fede que comente por las dudas, si el mio es muy choto podemos volver a este
-    # rap_fou = np.fft.rfft(r_blanco)
-
-    # frec = np.fft.rfftfreq(n_muestras, d=1 / fs)
-    # filtro = 1 / np.sqrt(frec + 1e-10)               
-
-    # r_rosa = np.fft.irfft(rap_fou * filtro)
-    # r_rosa = r_rosa / np.max(np.abs(r_rosa))        
-
     return r_rosa
 
 # descomenten esto para escuchar como suena (tarda un rato asi q paciencia)
