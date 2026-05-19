@@ -5,6 +5,7 @@ import pytest
 
 from app.services.pink_noise import generar_ruido_rosa
 from app.services.sine_sweep import generar_sine_sweep
+from app.services.reproducir_grabar import reproducir_y_grabar
 
 from scipy import signal
 from scipy.signal import spectrogram 
@@ -84,6 +85,29 @@ class TestReproducirYGrabar:
     """
     Verificar que la funcion maneja correctamente senales mono y estereo.
     """
-    # Verificar que la funcion acepta arrays 1D (mono) y 2D (estereo).
-    # Verificar que la grabacion tiene la duracion esperada (numero de muestras = duracion_grabacion * fs, con tolerancia del 1%).
-    # Verificar que la funcion lanza una excepcion informativa si no hay dispositivo de audio disponible.
+    mono = np.random.uniform(-1, 1 (int(0,1 * 44100))
+    rta_mono = reproducir_y_grabar(mono, 44100, 0.1)
+    assert isinstance(rta_mono, np.ndarray)
+    
+    stereo = np.random.uniform(-1, 1, (int(0,1 * 44100), 2))
+    rta_ stereo = rta_ste = reproducir_y_grabar(stereo, 44100, 0.1)
+    assert isinstance(rta_stereo, np.ndarray)
+
+    def test_tolerancia(self):
+        duracion_esperada = 2.0
+        entrada3 = np.random.uniform(-1, 1, int(44100 * duracion_esperada)
+        salida3 = reproducir_y_grabar(entrada3, 44100, duracion_esperada)
+        
+        muestra_esperada = duracion_esperada * 44100
+        muestra_obtenida = len(salida3)
+
+        tolerancia = 0.01
+        assert abs(muestra_obtenida - muestra_esperada) >= muestra_esperada * tolerancia, "La grabacion cumple con la tolerancia de !%"
+
+    def test_dispositivo_no_disponible(self):
+        """
+        Verifica que hay una excepcion si no hay dispositivo funcionando
+        """
+        with pytest.raises(Exception) as exc_info:
+            reproducir_y_grabar(np.array([]), 44100, 0.1)
+            assert "dispositivo no encontrado"
