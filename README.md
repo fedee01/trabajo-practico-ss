@@ -67,7 +67,7 @@ flowchart LR
         S["Services<br><small>Logica</small>"]
   end
     Client["Client"] --> R["Routers<br>Endpoints"]
-    R --> S & Sch["SCHEMAS<br><small>Pydantic</small>"]
+    R <--> S & Sch["SCHEMAS<br><small>Pydantic</small>"]
     S -- M1 --> Gen["GENERACIÓN"]
     Gen --> SS["Sine Sweep"] & PN["Pink Noise"] & Rec["Reproducir y Grabar"]
     S -- M2 --> Proc["Procesamiento"]
