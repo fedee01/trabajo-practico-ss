@@ -43,3 +43,4 @@ def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[
 # para escuchar como suena descomenten este codigo y reemplacen el return de aca arriba por return sine_sweep 
 # sd.play(generar_sine_sweep(400,4000,1,44100))
 # sd.wait()
+

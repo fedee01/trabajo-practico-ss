@@ -40,10 +40,10 @@ async def root():
         "docs": "/docs",
     }
 
+sine_sweep = generar_sine_sweep(400,4000,1,44100)
+pink_noise = generar_ruido_rosa(1,44100)
 
 if __name__ == "__main__":
     # import uvicorn
     # uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
-    sd.play(generar_sine_sweep(400,4000,1,44100))
-    sd.wait()
-
+    reproducir_y_grabar(sine_sweep,44100)
