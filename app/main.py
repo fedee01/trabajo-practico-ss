@@ -7,8 +7,11 @@ Uso:
 """
 
 from fastapi import FastAPI
-
-from app.routers import health
+# from app.routers import health
+from services.sine_sweep import generar_sine_sweep
+from services.pink_noise import generar_ruido_rosa
+from services.reproducir_grabar import reproducir_y_grabar
+import sounddevice as sd
 
 app = FastAPI(
     title="RIR-API",
@@ -17,7 +20,7 @@ app = FastAPI(
 )
 
 # Routers
-app.include_router(health.router)
+# app.include_router(health.router)
 
 # TODO (M3): Agregar routers de signals, filters, acoustics, analysis, utils
 # app.include_router(signals.router, prefix="/api/v1/signals", tags=["signals"])
@@ -39,6 +42,8 @@ async def root():
 
 
 if __name__ == "__main__":
-    import uvicorn
+    # import uvicorn
+    # uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    sd.play(generar_sine_sweep(400,4000,1,44100))
+    sd.wait()
 
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

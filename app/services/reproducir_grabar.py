@@ -36,3 +36,5 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
     sd.wait()  # Esperar a que la reproducción y grabación terminen
 
     return grabacion
+
+
