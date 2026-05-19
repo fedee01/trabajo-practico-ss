@@ -56,12 +56,27 @@ class TestConvolucion:
     Verificar que la convolucion del sweep con su filtro inverso
     produce una aproximacion a un impulso.
     """
-    # 1. Generar sweep y filtro inverso.
-    # 2. Calcular la convolucion (preferiblemente via FFT con scipy.signal.fftconvolve).
-    # 3. Encontrar el pico maximo de la senal resultante.
-    # 4. Verificar que la energia del pico es al menos 40 dB superior a la energia promedio 
-    # del resto de la senal (excluyendo una ventana alrededor del pico).
-    
+    senal1 = generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int)
+    rta_imp = fftconvolve(senal1[0], senal1[1], mode="full")
+    indice_pico = np.argmax(np.abs(rta_imp))
+    # Sacamos una ventana cerca del pico
+    vta = 100
+    ini_exc = max(0, indice_pico - vta) 
+    fin_exc = min(len(rta_imp), indice_pico + vta)
+    # mascara booleana
+    mask2 = np.ones(len(rta_imp), dtype=bool)
+    mask2[ini_exc:fin_exc] = False
+
+    energ_pico = np.sum(np.abs(rta_imp[indice_pico]) ** 2)
+    energ_resto = np.sum(np.abs(rta_imp[mask2]) ** 2)
+    if energ_resto == 0:
+        energ_resto = 1e-12
+    # dif energia en dB
+    dif_db = 10 * np.log10(energ_pico / energ_resto)
+
+    assert dif_db >= 40, "La energia pico es igual o inferior a 40 dB"
+
+
 class TestReproducirYGrabar:
     """Tests para la funcion reproducir_y_grabar."""
 
