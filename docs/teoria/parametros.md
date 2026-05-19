@@ -1,5 +1,5 @@
-# Explicacion de EDT
-""" 
+"""Explicacion de EDT
+
 Early Decay Time (Tiempo de Decaimiento Temprano) determinará cómo será el T60 (Tiempo de reverberacion) del recinto considerando el comportamiento del decaimiento de los primeros 10 dB. Debemos considerar que el tiempo obtenido en el decaimiento de 10 dB lo debemos multiplicar por 6 para obtener la suposición anteriormente nombrada. Se toma la medición entre 0 dB y -10 dB y luego se extrapola el resultado. En algunas fuentes se lo suele nombrar como T10. """
 
 # Explicacion de T20
