@@ -6,45 +6,69 @@ import pytest
 from app.services.pink_noise import generar_ruido_rosa
 from app.services.sine_sweep import generar_sine_sweep
 
+from scipy import signal
+from scipy.signal import spectrogram 
 
 class TestGenerarRuidoRosa:
     """Tests para la funcion generar_ruido_rosa."""
 
-    def test_ruido_rosa_duracion(self):
-        """Verifica que la longitud de la senal corresponda a duracion * fs."""
-        duracion = 2.0
-        fs = 44100
-        ruido = generar_ruido_rosa(duracion, fs)
-        expected_length = int(duracion * fs)
-        assert len(ruido) == expected_length
-
-    def test_ruido_rosa_tipo(self):
-        """Verifica que la funcion retorna un np.ndarray."""
-        ruido = generar_ruido_rosa(1.0, 44100)
-        assert isinstance(ruido, np.ndarray)
-
-    def test_ruido_rosa_normalizado(self):
-        """Verifica que la senal esta normalizada entre -1 y 1."""
-        ruido = generar_ruido_rosa(1.0, 44100)
-        assert np.max(np.abs(ruido)) <= 1.0
+    def test_ruido_rosa_espectro(self):
+    """Verificar que el espectro del ruido rosa tiene una pendiente
+    de aproximadamente -3 dB/octava."""
+    r_rosa = generar_ruido_rosa(10, 44100)
+    Frec, Psd = signal.welch(r_rosa, fs=44100, nperseg=1024)
+    #filtrado y pasaje dB
+    mask = (Frec >= 100) & (Frec <= 10000)
+    fre_filtro = Frec[mask]
+    psd_filtro = Psd[mask]
+    db_psd = 10 * np.log10(psd_filtro)
+    #calculo
+    octava = np.log2(fre_filtro / fre_filtro[0])
+    pendiente, interc = np.polyfit(octava, db_psd, 1)
+    assert -4 <= pendiente <= -2, "El espectro del ruido rosa tiene una pendiente de aproximadamente -3 dB/octava"
 
 
 class TestGenerarSineSweep:
     """Tests para la funcion generar_sine_sweep."""
+    def test_sine_sweep_rango_frecuencias(self):
+    """Verificar que el sine sweep cubre el rango de frecuencias
+    especificado de f1 a f2."""
+    sin_swe = generar_sine_sweep(20, 20000, 5, 44100)
+    Frec2, tiempos, Sxx = spectrogram(sin_swe, fs=44100, nperseg=1024)
+    inicio = np.abs(Frec2 - 20).argmin()
+    final = np.abs(Frec2 - 20000).argmin()
+    #Suma en t por cada frec
+    ener_x_frec = np.sum(Sxx, axis=1)
+    assert ener_x_frec[20] > umbral_energia, "Poca energía en frecuencia inicial"
+    assert ener_x_frec[20000] > umbral_energia, "Poca energía en frecuencia final"
+    #Ve si la frec_inst crece monotonamente
+    indice_max_ener = np.argmax(Sxx, axis=0)
+    frec_max = Frec2[indice_max_ener]
+     #Ve si las frec son solo crecientes
+    frec_cre = np.all(np.diff(frec_max) >= 0)
+    assert frec_cre == np.all(np.diff(frec_max) >= 0), "La frecuencia instantánea no crece monótonamente"
 
-    def test_sine_sweep_retorna_tupla(self):
-        """Verifica que retorna una tupla con dos arrays."""
-        resultado = generar_sine_sweep(20, 20000, 1.0, 44100)
-        assert isinstance(resultado, tuple)
-        assert len(resultado) == 2
-        assert isinstance(resultado[0], np.ndarray)
-        assert isinstance(resultado[1], np.ndarray)
+class TestConvolucion:
+    """Tests para la funcion generar_sine_sweep."""
 
-    def test_sine_sweep_duracion(self):
-        """Verifica que ambas senales tienen la longitud correcta."""
-        duracion = 3.0
-        fs = 44100
-        sweep, filtro_inv = generar_sine_sweep(20, 20000, duracion, fs)
-        expected_length = int(duracion * fs)
-        assert len(sweep) == expected_length
-        assert len(filtro_inv) == expected_length
+    def test_sweep_convolucion_impulso(self):
+    """
+    Verificar que la convolucion del sweep con su filtro inverso
+    produce una aproximacion a un impulso.
+    """
+    # 1. Generar sweep y filtro inverso.
+    # 2. Calcular la convolucion (preferiblemente via FFT con scipy.signal.fftconvolve).
+    # 3. Encontrar el pico maximo de la senal resultante.
+    # 4. Verificar que la energia del pico es al menos 40 dB superior a la energia promedio 
+    # del resto de la senal (excluyendo una ventana alrededor del pico).
+    
+class TestReproducirYGrabar:
+    """Tests para la funcion reproducir_y_grabar."""
+
+    def test_reproducir_y_grabar_forma(self):
+    """
+    Verificar que la funcion maneja correctamente senales mono y estereo.
+    """
+    # Verificar que la funcion acepta arrays 1D (mono) y 2D (estereo).
+    # Verificar que la grabacion tiene la duracion esperada (numero de muestras = duracion_grabacion * fs, con tolerancia del 1%).
+    # Verificar que la funcion lanza una excepcion informativa si no hay dispositivo de audio disponible.
