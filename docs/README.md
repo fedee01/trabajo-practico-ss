@@ -41,7 +41,7 @@ que crece exponencialmente de $f_1$ a $f_2$.
 
 
 Creamos un array de muestras de la duración t (a especificar). Utilizamos la función linspace para obtener muestras equidistantes.
-Definimos sine_sweep con la función $$x(t) definida en los fundamentos matemáticos
+Definimos sine_sweep con la función x(t) definida en los fundamentos matemáticos
 
 ## Referencias utiles
 
