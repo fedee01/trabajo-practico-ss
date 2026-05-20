@@ -1,3 +1,5 @@
+import numpy as np
+import sounddevice as sd
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
     Genera ruido rosa usando el algoritmo de Voss-McCartney.
