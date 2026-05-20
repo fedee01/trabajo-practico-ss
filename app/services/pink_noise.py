@@ -4,6 +4,8 @@ Milestone 1: Generacion de senales.
 """
 
 import numpy as np
+import sounddevice as sd
+import numpy as np
 
 
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
