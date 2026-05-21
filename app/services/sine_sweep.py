@@ -7,6 +7,7 @@ import math as ma
 import numpy as np
 import sounddevice as sd
 import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt2
 import matplotlib.mlab as mlab # tuve q agregar otra libreria porque pyplot no puede imprimir en una escala que no sea lineal
 
 def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[np.ndarray, np.ndarray]:
@@ -63,7 +64,9 @@ f1 = 300
 f2 = 20000
 duracion = 1
 
-sweep = generar_sine_sweep(f1, f2, duracion, fs)[0]
+sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
+convolucion = np.convolve(sweep, inverso, mode="full")
+
 # si ponen [0] hace el sweep normal y si ponen [1] hace el inverso
 # y si en vez de lo otro ponen esto las convoluciona y hace cosas raras
 
@@ -78,3 +81,8 @@ plt.ylabel('frecuencia')
 plt.title("sweep")
 plt.specgram(sweep, Fs=fs)
 plt.show()
+
+plt.xlabel('frecuencia en Hz')
+plt2.title("sweep")
+plt2.psd(convolucion, Fs=fs, color ='green')
+plt2.show()
