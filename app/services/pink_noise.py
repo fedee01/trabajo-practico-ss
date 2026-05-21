@@ -1,8 +1,10 @@
 import numpy as np
 import sounddevice as sd
+
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
     Genera ruido rosa usando el algoritmo de Voss-McCartney.
+import numpy as np
 
 
     Parámetros
@@ -37,14 +39,9 @@ def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     if max_val > 0:
         r_rosa /= max_val
 
-
     return r_rosa
 
-
-
-
-# CON ESTO DE ABAJO PRUEBAN
-# si cambian numeros creo que tienen que guardar y salir
+  
 if __name__ == "__main__":
     duracion = 3.0
     fs = 44100
