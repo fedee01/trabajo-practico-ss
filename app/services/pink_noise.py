@@ -1,5 +1,6 @@
 import numpy as np
 import sounddevice as sd
+import matplotlib.pyplot as plt
 
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
@@ -41,11 +42,19 @@ import numpy as np
 
     return r_rosa
 
-  
-if __name__ == "__main__":
-    duracion = 3.0
-    fs = 44100
-    r_rosa = generar_ruido_rosa(duracion, fs)
-    print(f"Reproduciendo ruido rosa de {duracion} s a {fs} Hz...")
-    sd.play(r_rosa, samplerate=fs)
-    sd.wait()
+
+# parametros de ejemplo:
+
+duracion = 3.0
+fs = 44100
+r_rosa = generar_ruido_rosa(duracion, fs)
+
+# aca encontre la funcion magnitude spectrum: https://www.geeksforgeeks.org/python/plot-the-magnitude-spectrum-in-python-using-matplotlib/
+# en la documentacion me fije como se usaba y que parametros pasarle https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.magnitude_spectrum.html
+# me di cuenta que habia que usar la funcion psd https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.psd.html#matplotlib.pyplot.psd
+
+plt.xlabel('frecuencia en Hz')
+plt.title("Ruido rosa")
+
+plt.psd(r_rosa, Fs=fs, color ='green')
+plt.show()
