@@ -64,10 +64,9 @@ def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[
     return funcion1, funcion2
 
 
-
-
 if __name__ == "__main__":
-    sd.play(generar_sine_sweep(400, 4000, 1, 44100)[0])
+    sweep, inverso = generar_sine_sweep(400, 4000, 1, 44100)
+    sd.play(sweep)
     # si ponen [0] hace el sweep normal y si ponen [1] hace el inverso
 
 
