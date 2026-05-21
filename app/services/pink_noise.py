@@ -1,39 +1,51 @@
-"""Servicio de generacion de ruido rosa.
-
-Milestone 1: Generacion de senales.
-"""
-
 import numpy as np
 import sounddevice as sd
+
+def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
+    """
+    Genera ruido rosa usando el algoritmo de Voss-McCartney.
 import numpy as np
 
 
-def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
-    """Genera una senal de ruido rosa de la duracion especificada.
-
-    El ruido rosa tiene una densidad espectral de potencia inversamente
-    proporcional a la frecuencia (1/f). Esto significa que cada octava
-    contiene la misma cantidad de energia, lo cual lo hace util para
-    mediciones acusticas.
-
-    Algoritmo sugerido:
-    1. Generar ruido blanco (distribucion normal) de la duracion deseada.
-    2. Aplicar la transformada de Fourier (np.fft.rfft).
-    3. Crear un vector de frecuencias correspondiente.
-    4. Dividir cada componente por sqrt(f) (omitir f=0 para evitar division por cero).
-    5. Aplicar la transformada inversa (np.fft.irfft).
-    6. Normalizar la senal resultante al rango [-1, 1].
-
-    Parameters
+    Parámetros
     ----------
     duracion : float
-        Duracion de la senal en segundos.
+        Duración de la señal en segundos.
     fs : int
         Frecuencia de muestreo en Hz.
+
 
     Returns
     -------
     np.ndarray
-        Senal de ruido rosa normalizada, de longitud ``int(duracion * fs)``.
+        Array con la señal de ruido rosa normalizada entre -1 y 1 (dtype float32).
     """
-    raise NotImplementedError("Implementar en Milestone 1")
+    n_bits = 16  # numero de bits, es decir numero de generadores
+    n_muestras = int(duracion * fs)  # numero de muestras
+
+
+    generadores = np.random.randn(n_bits)  # array de la profundidad de bits elegida con los generadores de ruido.
+    r_rosa = np.empty(n_muestras, dtype=np.float32)
+
+
+    for i in range(n_muestras):
+        r_rosa[i] = float(np.sum(generadores))  # va sumando
+        for n in range(n_bits):  # Voss-McCartney
+            if (i + 1) % (2**n) == 0:
+                generadores[n] = np.random.randn()
+
+
+    max_val = float(np.max(np.abs(r_rosa)))  # normaliza
+    if max_val > 0:
+        r_rosa /= max_val
+
+    return r_rosa
+
+  
+if __name__ == "__main__":
+    duracion = 3.0
+    fs = 44100
+    r_rosa = generar_ruido_rosa(duracion, fs)
+    print(f"Reproduciendo ruido rosa de {duracion} s a {fs} Hz...")
+    sd.play(r_rosa, samplerate=fs)
+    sd.wait()
