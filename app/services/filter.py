@@ -4,7 +4,7 @@ Milestone 2: Procesamiento de la respuesta al impulso.
 """
 
 import numpy as np
-
+from scipy.signal import butter, filtfilt, lfilter
 
 def filtro_octava(
     signal: np.ndarray, fc: float, fs: int, orden: int = 4
@@ -32,4 +32,41 @@ def filtro_octava(
     np.ndarray
         Senal filtrada (array 1D).
     """
-    raise NotImplementedError("Implementar en Milestone 2")
+    
+    if not isinstance(x, np.ndarray):
+        raise TypeError("x debe ser un np.ndarray 1D")
+    if x.ndim != 1:
+        raise ValueError("x debe ser un array 1D (senal mono)")
+    if not (isinstance(fc, (int, float)) and fc > 0):
+        raise ValueError("fc debe ser una frecuencia positiva en Hz")
+    if not (isinstance(fs, (int, float)) and fs > 0):
+        raise ValueError("fs debe ser una frecuencia de muestreo positiva en Hz")
+
+    nyq = float(fs) / 2.0
+    low = float(fc) / np.sqrt(2.0)
+    high = float(fc) * np.sqrt(2.0)
+
+    if low <= 0:
+        low = 1.0
+    if high >= nyq:
+        high = nyq * 0.999
+
+    wn0 = low / nyq
+    wn1 = high / nyq
+
+    # Evitar valores en los limites y asegurar wn0 < wn1
+    eps = 1e-6
+    wn0 = max(wn0, eps)
+    wn1 = min(wn1, 1.0 - eps)
+
+    # Intentar filtfilt (cero-fase). Si la señal es demasiado corta para filtfilt,
+    # capturamos la excepción y usamos lfilter como respaldo.
+    try:
+        filtered = filtfilt(b, a, x)
+    except Exception:
+        filtered = lfilter(b, a, x)
+
+    # Asegurar 1D y tipo float64
+    filtered = np.asarray(filtered, dtype=np.float64).flatten()
+
+    return filtered
