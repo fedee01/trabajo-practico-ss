@@ -17,7 +17,7 @@ de respuestas al impulso por bandas de octava y calculo de parametros acusticos
 
 ## Integrantes del grupo
  
-  Dulcinea Bonet | Legajo: 81506. $${\color{magenta}Responsable \space de \space testing/CI}$$.
+  Dulcinea Bonet | Legajo: 81506. $${\color{magenta} Responsable de documentacion/ Responsable \space de \space testing/CI}$$.
 
   Valentina De Piero | Legajo: 72221. $${\color{yellow}Responsable \space de \space procesamiento}$$.
 
