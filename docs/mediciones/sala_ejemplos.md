@@ -11,4 +11,11 @@ GRÁFICO RUIDO ROSA:  (PSD vs FRECUENCIA)
 
 La PSD (Densidad Espectral de Potencia) se expresa en dB/Hz para describir cómo se distribuye la potencia o energía de una señal en un espectro de frecuencias, es decir, a lo largo de las distintas frecuencias que la componen. 
 
-Podemmos ver que hay una caida de -3dB por banda de banda de octava   
+Podemmos ver que hay una caida de -3dB por banda de banda de octava.
+
+CHEQUEAR A PARTIR DE ACA: 
+
+Sine Sweep (barrido sinusoidal) es una oscilación sinusoidal en la cual la frecuencia de oscilación no se mantiene constante sino que aumenta continuamente.  En el caso del sine sweep logarítmico o exponencial aumenta continuamente pero divide el tiempo por octavas de bandas. Esto es por que buscamos igual energía por octava. ACA ES LO DE LA NORMA IEC 61260. 
+
+Se le aplica un filtro inverso invirtiendo temporalmente el sweep y se compensa la distribución no uniforme de energía cuando le aplicamos una corrección de amplitud, esto es debido a que se concentra por más tiempo la energía en las frecuencias bajas. Se realiza la convolución del sweep con el filtro inverso y se produce un impulso ideal. 
+
