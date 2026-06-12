@@ -61,7 +61,7 @@ def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[
 fs = 44100
 f1 = 20
 f2 = 20000
-duracion = 5
+duracion = 10
 
 sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
 convolucion = np.convolve(sweep, inverso, mode="full")
@@ -69,21 +69,25 @@ convolucion = np.convolve(sweep, inverso, mode="full")
 # fuente https://stackoverflow.com/questions/10812189/creating-a-log-frequency-axis-spectrogram-using-specgram-in-matplotlib
 # escalas logaritmicas: https://matplotlib.org/stable/gallery/scales/log_demo.html
 
-plt.xlabel('Tiempo en segundos')
-plt.ylabel('Frecuencia en Hz')
-plt.title("Sine Sweep")
-plt.yscale('symlog') 
+# plt.xlabel('Tiempo en segundos')
+# plt.ylabel('Frecuencia en Hz')
+# plt.title("Sine Sweep")
+# plt.yscale('symlog') 
     # esto setea la escala logaritmica en y
     # poner la escala en 'log' me estaba generando un grafico demasiado grande 
     # asi que lo cambie por 'symlog' aca se puede leer mas:
     # https://matplotlib.org/stable/gallery/scales/symlog_demo.html
     # symlog es mas util para rangos muy grandes de datos
-    
-plt.specgram(sweep, Fs=fs)
-plt.ylim([20,20000]) 
-plt.show()
 
-# plt2.xlabel('frecuencia en Hz')
-# plt2.title("sweep")
-# plt2.psd(convolucion, Fs=fs, color ='green')
-# plt2.show()
+# plt.specgram(sweep, Fs=fs)
+# plt.ylim([20,20000]) 
+# plt.show()
+
+tiempo = np.linspace(0, len(convolucion) / fs, num=len(convolucion))
+plt2.ylabel('Amplitud normalizada')
+plt2.xlabel('Tiempo respecto al pico (segundos)')
+plt2.title("sweep")
+plt2.plot(tiempo, convolucion)
+# plt2.xlim([-5,5])
+plt2.ylim([-1,1]) 
+plt2.show()
