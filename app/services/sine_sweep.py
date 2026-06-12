@@ -86,6 +86,7 @@ convolucion_normalizada = (convolucion - shift)*ratio
 # fuente https://stackoverflow.com/questions/10812189/creating-a-log-frequency-axis-spectrogram-using-specgram-in-matplotlib
 # escalas logaritmicas: https://matplotlib.org/stable/gallery/scales/log_demo.html
 
+# plot 1: sine sweep en escala logaritmica
 plt.xlabel('Tiempo en segundos')
 plt.ylabel('Frecuencia en Hz')
 plt.title("Sine Sweep")
@@ -100,7 +101,8 @@ plt.specgram(sweep, Fs=fs)
 plt.ylim([20,20000]) 
 plt.show()
 
-tiempo = np.linspace(0, len(convolucion_normalizada) / fs, num=len(convolucion_normalizada))
+# plot 2: convolucion con el filtro inverso (este no anda lol)
+tiempo = np.linspace(0, duracion / fs, num=len(convolucion))
 plt2.ylabel('Amplitud normalizada')
 plt2.xlabel('Tiempo respecto al pico (segundos)')
 plt2.title("sweep")

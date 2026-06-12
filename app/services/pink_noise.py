@@ -49,7 +49,7 @@ r_rosa = generar_ruido_rosa(duracion, fs)
 
 # aca encontre la funcion magnitude spectrum: https://www.geeksforgeeks.org/python/plot-the-magnitude-spectrum-in-python-using-matplotlib/
 # en la documentacion me fije como se usaba y que parametros pasarle https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.magnitude_spectrum.html
-# me di cuenta que habia que usar la funcion psd https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.psd.html#matplotlib.pyplot.psd
+# me di cuenta que habia que usar la funcion psd, que relaciona los dB con los Hz, me fije en la documentacion aca https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.psd.html#matplotlib.pyplot.psd
 
 plt.ylabel('PSD (dB/Hz)')
 plt.xlabel('Frecuencia en Hz')
@@ -57,7 +57,7 @@ plt.title("Ruido rosa")
 
 plt.psd(r_rosa, Fs=fs, color ='red', linewidth=1)
 plt.xscale('log') 
-plt.ylim([-85,-35]) 
+plt.ylim([-85,-35]) # aca seteo los limites de las escalas para q quede como el de los profes
 plt.xlim([20,24000]) 
 plt.show()
 
