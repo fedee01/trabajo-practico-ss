@@ -61,7 +61,7 @@ def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[
 fs = 44100
 f1 = 20
 f2 = 20000
-duracion = 10
+duracion = 1
 
 sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
 convolucion = np.convolve(sweep, inverso, mode="full")
