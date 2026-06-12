@@ -8,7 +8,6 @@ import numpy as np
 import sounddevice as sd
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt2
-import matplotlib.mlab as mlab # tuve q agregar otra libreria porque pyplot no puede imprimir en una escala que no sea lineal
 
 def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[np.ndarray, np.ndarray]:
     """
@@ -60,29 +59,39 @@ def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[
 
 #parametros de ejemplo
 fs = 44100
-f1 = 300
+f1 = 20
 f2 = 20000
-duracion = 1
+duracion = 5
 
 sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
 convolucion = np.convolve(sweep, inverso, mode="full")
 
-# si ponen [0] hace el sweep normal y si ponen [1] hace el inverso
-# y si en vez de lo otro ponen esto las convoluciona y hace cosas raras
+    # si ponen [0] hace el sweep normal y si ponen [1] hace el inverso
+    # y si en vez de lo otro ponen esto las convoluciona y hace cosas raras
 
     # ej = generar_sine_sweep(400, 4000, 1, 44100)
     # sd.play(np.convolve(ej[0], ej[1], mode="full"), 44100)
 
 
 # fuente https://stackoverflow.com/questions/10812189/creating-a-log-frequency-axis-spectrogram-using-specgram-in-matplotlib
+# escalas logaritmicas: https://matplotlib.org/stable/gallery/scales/log_demo.html
 
-plt.xlabel('tiempo en segundos')
-plt.ylabel('frecuencia')
-plt.title("sweep")
+# parece que matplotlib no tiene una forma directa de hacer graficos con escalas logaritmicas por lo que se tiene que usar Axes
+
+plt.xlabel('Tiempo en segundos')
+plt.ylabel('Frecuencia en Hz')
+plt.title("Sine Sweep")
+plt.yscale('symlog') 
+    # esto setea la escala logaritmica en y
+    # poner la escala en 'log' me estaba generando un grafico demasiado grande 
+    # asi que lo cambie por 'symlog' aca se puede leer mas:
+    # https://matplotlib.org/stable/gallery/scales/symlog_demo.html
+    # symlog es mas util para rangos muy grandes de datos
 plt.specgram(sweep, Fs=fs)
+plt.ylim([20,20000]) 
 plt.show()
 
-plt.xlabel('frecuencia en Hz')
-plt2.title("sweep")
-plt2.psd(convolucion, Fs=fs, color ='green')
-plt2.show()
+# plt2.xlabel('frecuencia en Hz')
+# plt2.title("sweep")
+# plt2.psd(convolucion, Fs=fs, color ='green')
+# plt2.show()
