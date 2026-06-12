@@ -4,22 +4,20 @@ import sounddevice as sd
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
     Genera ruido rosa usando el algoritmo de Voss-McCartney.
-import numpy as np
 
-
-    Parámetros
+    Parameters
     ----------
     duracion : float
         Duración de la señal en segundos.
     fs : int
         Frecuencia de muestreo en Hz.
 
-
     Returns
     -------
     np.ndarray
         Array con la señal de ruido rosa normalizada entre -1 y 1 (dtype float32).
     """
+    
     n_bits = 16
     n_muestras = int(duracion * fs)
 
