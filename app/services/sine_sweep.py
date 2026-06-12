@@ -30,21 +30,22 @@ def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[
     tuple[np.ndarray, np.ndarray]
         Tupla con (sweep, filtro_inverso), ambos normalizados.
     """
-
-    if f1 == 0:  # si la frecuencia pedida es 0, se usa un numero muy pequeño en su lugar para no dividir por cero
+    # para no dividir por cero
+    if f1 == 0:  
         f1 += 1e-10
 
+    # crea un array de muestras de la duracion que se haya pedido, ubicando cada muestra a una distancia de igual tamano entre ellas
     t = np.linspace(0, duracion, int(duracion * fs)) 
-    # crea un array de muestras de la duracion que se haya pedido, ubicando cada muestra a una distancia de igual tamano entre ellas. (eso hace el linspace)
-
+    
 # t = np.arange(n_muestras) / fs 
 
+    # hago la formula del apunte por cada muestra que necesito y lo meto en un array
     sine_sweep = [ma.sin
                     (2 * ma.pi * f1 * duracion * 
                         (ma.exp(n * (ma.log(f2 / f1) / duracion) - 1))
                     / ma.log(f2 / f1)) 
                 for n in t] 
-    # aca hago la formula esa que esta en el apunte por cada muestra que necesito y lo meto todo en un array
+    
 
 # k = ma.log(f2 / f1) / duracion
 # o = 2 * ma.pi * f1 / k
@@ -52,38 +53,23 @@ def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[
 # sine_sweep = np.sin(fase)
 # filt_inv = np.sin(o * (np.exp(k * (duracion - t)) - 1)) * np.exp(-k * t)
 
+    # lo mismo con el filtro, aplico la formula del apunte asignandole un seno a cada muestra
     filt_inv = [ma.sin(
                     (2 * ma.pi * f1 * duracion * 
                         (ma.exp((duracion - n) * ma.log(f2 / f1) / duracion) - 1))
                             / ma.log(f2 / f1)) 
                 / ma.exp(-n * ma.log(f2 / f1) / duracion) for n in t] 
-    # lo mismo con el filtro, aplico la formula del apunte asignandole un seno a cada muestra
-
+    
 
     funcion1 = np.asarray(sine_sweep, dtype=np.float64)
-    max1 = float(np.max(np.abs(funcion1)))  # normaliza
+    max1 = float(np.max(np.abs(funcion1))) 
     if max1 > 0:
-        funcion1 /= max1
-
+        funcion1 *= 0.9 / max1    # normaliza
 
     funcion2 = np.asarray(filt_inv, dtype=np.float64)
-    max2 = float(np.max(np.abs(funcion2)))  # normaliza
+    max2 = float(np.max(np.abs(funcion2)))  
     if max2 > 0:
-        funcion2 /= max2
+        funcion2 *= 0.9 / max2    # normaliza
 
-
-    return funcion1, funcion2
-
-
-if __name__ == "__main__":
-    sweep, inverso = generar_sine_sweep(20, 4000, 1, 44100)
-    sd.play(sweep)
-    # si ponen [0] hace el sweep normal y si ponen [1] hace el inverso
-
-
-    # y si en vez de lo otro ponen esto las convoluciona y hace cosas raras
-    """
-    ej = generar_sine_sweep(400, 4000, 1, 44100)
-    sd.play(np.convolve(ej[0], ej[1], mode="full"), 44100)
-    """
     sd.wait()
+    return funcion1, funcion2
