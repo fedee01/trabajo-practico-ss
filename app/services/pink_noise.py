@@ -57,7 +57,7 @@ plt.title("Ruido rosa")
 
 plt.psd(r_rosa, Fs=fs, color ='red', linewidth=1)
 plt.xscale('log') 
-plt.ylim([-85,-35]) 
+plt.ylim([-85,-35]) # aca seteo los limites de las escalas para q quede como el de los profes
 plt.xlim([20,24000]) 
 plt.show()
 
