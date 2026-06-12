@@ -102,7 +102,7 @@ plt.ylim([20,20000])
 plt.show()
 
 # plot 2: convolucion con el filtro inverso (este no anda lol)
-tiempo = np.linspace(0, duracion / fs, num=len(convolucion))
+tiempo = np.linspace(0, duracion, num=len(convolucion))
 plt2.ylabel('Amplitud normalizada')
 plt2.xlabel('Tiempo respecto al pico (segundos)')
 plt2.title("sweep")
