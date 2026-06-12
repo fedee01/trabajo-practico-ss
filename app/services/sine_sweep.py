@@ -69,19 +69,19 @@ convolucion = np.convolve(sweep, inverso, mode="full")
 # fuente https://stackoverflow.com/questions/10812189/creating-a-log-frequency-axis-spectrogram-using-specgram-in-matplotlib
 # escalas logaritmicas: https://matplotlib.org/stable/gallery/scales/log_demo.html
 
-# plt.xlabel('Tiempo en segundos')
-# plt.ylabel('Frecuencia en Hz')
-# plt.title("Sine Sweep")
-# plt.yscale('symlog') 
+plt.xlabel('Tiempo en segundos')
+plt.ylabel('Frecuencia en Hz')
+plt.title("Sine Sweep")
+plt.yscale('symlog') 
     # esto setea la escala logaritmica en y
     # poner la escala en 'log' me estaba generando un grafico demasiado grande 
     # asi que lo cambie por 'symlog' aca se puede leer mas:
     # https://matplotlib.org/stable/gallery/scales/symlog_demo.html
     # symlog es mas util para rangos muy grandes de datos
 
-# plt.specgram(sweep, Fs=fs)
-# plt.ylim([20,20000]) 
-# plt.show()
+plt.specgram(sweep, Fs=fs)
+plt.ylim([20,20000]) 
+plt.show()
 
 tiempo = np.linspace(0, len(convolucion) / fs, num=len(convolucion))
 plt2.ylabel('Amplitud normalizada')
