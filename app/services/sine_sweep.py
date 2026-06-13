@@ -4,7 +4,6 @@ Milestone 1: Generacion de senales.
 """
 
 import math as ma
-
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
