@@ -6,22 +6,21 @@ from scipy.stats import linregress
 
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
-        Genera ruido rosa usando el algoritmo de Voss-McCartney.
+    Genera ruido rosa usando el algoritmo de Voss-McCartney.
 
-        Parámetros
-        ----------
-        duracion : float
-            Duración de la señal en segundos.
-        fs : int
-            Frecuencia de muestreo en Hz.
+    Parámetros
+    ----------
+    duracion : float
+        Duración de la señal en segundos.
+    fs : int
+        Frecuencia de muestreo en Hz.
 
-
-        Returns
-        -------
-        np.ndarray
-            Array con la señal de ruido rosa normalizada entre -1 y 1 (dtype float32).
+    Returns
+    -------
+    np.ndarray
+        Array con la señal de ruido rosa normalizada entre -1 y 1 (dtype float32).
     """
-    n_bits = 20  # numero de bits, es decir numero de generadores. acá puse 20 en vez de 16, no hay mucha diferencia en procesamiento.
+    n_bits = 20  # numero de bits, es decir numero de generadores. acá cambié a 20 para que el ruido sea más suave.
     n_muestras = int(duracion * fs)  # numero de muestras
 
     generadores = np.random.randn(
@@ -41,14 +40,13 @@ def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
 
     return r_rosa
 
-
 # parametros de ejemplo:
 duracion = 10.0
 fs = 44100
 r_rosa = generar_ruido_rosa(duracion, fs)
 
 #acá empieza el calculo de la pendiente con welch
-f, Pxx = welch(r_rosa, fs=fs, nperseg=8192)
+f, Pxx = welch(r_rosa, fs=fs, nperseg=8192) #pxx es el psd
 
 mask = (f >= 100) & (f <= 10000) #acá tomo las frecuencias entre 100 y 1000 hz
 
