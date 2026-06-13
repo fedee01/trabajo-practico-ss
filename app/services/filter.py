@@ -4,7 +4,7 @@ Milestone 2: Procesamiento de la respuesta al impulso.
 """
 
 import numpy as np
-import scipy.signal 
+import scipy.signal
 
 
 def filtro_octava(x: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.ndarray:
@@ -46,7 +46,7 @@ def filtro_octava(x: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.ndarr
         sig = x
 
     # Usar formato SOS para mayor estabilidad numérica en órdenes altos
-    sos = scipy.signal.butter(orden, [wn0, wn1], btype='band', output='sos')
+    sos = scipy.signal.butter(orden, [wn0, wn1], btype="band", output="sos")
 
     # Filtrado cero-fase: forward + backward con sosfiltfilt
     try:
@@ -58,5 +58,3 @@ def filtro_octava(x: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.ndarr
         y = scipy.signal.sosfilt(sos, y_fwd[::-1])[::-1]
 
     return y
-
-    # return scipy.signal.filtfilt(b, a, signal)
