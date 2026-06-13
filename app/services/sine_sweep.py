@@ -32,7 +32,7 @@ def generar_sine_sweep(
         Tupla con (sweep, filtro_inverso), ambos normalizados.
     """
 
-    if (f1 == 0):  # si la fcia pedida es 0, usa un numero muy chico para no dividir por 0
+    if (f1 == 0):  # si la f pedida es 0, usa un numero muy chico para no dividir por 0
         f1 += 1e-10
 
     t = np.linspace(0, duracion, int(duracion * fs), endpoint=False)
@@ -40,28 +40,24 @@ def generar_sine_sweep(
     sine_sweep = np.array(
         [
             ma.sin(
-                2
-                * ma.pi
-                * f1
-                * duracion
+                2 * ma.pi * f1 * duracion
                 * (ma.exp(n * (ma.log(f2 / f1) / duracion)) - 1)
-                / ma.log(f2 / f1)
-            )
-            for n in t
+                / ma.log(f2 / f1)) for n in t
         ],
         dtype=float,)
     
-    R = (f2 / f1) #rel. entre la fcia final e inicial
+    # rel entre la f final e inicial
+    R = (f2 / f1)
 
     envolvente = np.exp(-t * np.log(R) / duracion)
 
-    filt_inv = sine_sweep[::-1] * envolvente  #esto es el metodo de farina
+    filt_inv = sine_sweep[::-1] * envolvente  # metodo de farina
 
     # normalizacion
     if np.max(sine_sweep) > 0:
-        ratio = 2 / (np.max(sine_sweep) - np.min(sine_sweep)) #escalado a 2 -1 y 1
+        ratio = 2 / (np.max(sine_sweep) - np.min(sine_sweep)) # escalado a 2 [-1, 1]
         shift = (np.max(sine_sweep) + np.min(sine_sweep)) / 2
-        # now you need to shift the center to the middle, this is not the average of the values.
+        # corre el centro al costado, no es el valor promedio
         sine_sweep_normalizada = (sine_sweep - shift) * ratio
 
     if np.max(filt_inv) > 0:
@@ -70,7 +66,6 @@ def generar_sine_sweep(
         filt_inv_normalizado = (filt_inv - shift) * ratio
 
     return sine_sweep_normalizada, filt_inv_normalizado
-
 
 # parametros de ejemplo
 fs = 44100
@@ -94,7 +89,7 @@ plt.title("Sine Sweep Logaritmico")
 plt.show()
 
 # plot 2: convolucion sweep x filtro inverso
-convolucion_normalizada = convolucion / np.max(np.abs(convolucion)) #normalizo tq que el pico sea 1
+convolucion_normalizada = convolucion / np.max(np.abs(convolucion)) # normalizo tq pico sea 1
 indice_pico = np.argmax(np.abs(convolucion))  # busco el pico
 pico = np.max(np.abs(convolucion))
 ventana = 1000  # calculo el piso excluyendo una ventana alrededor del pico
