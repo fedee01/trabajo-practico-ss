@@ -28,13 +28,16 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     """
     if not os.path.exists(ruta):
         raise FileNotFoundError(f"Archivo no encontrado: {ruta}")
+        
+    if not ruta.lower().endswith((".wav", ".flac")):
+        raise ValueError("Formato no válido")
 
     try:
         data, fs = sf.read(ruta, dtype="float64")
     except Exception as e:
         raise RuntimeError(f"Error al leer el archivo de audio: {e}")
 
-    # devuelve floats normalizados en [-1, 1] 
+    # devuelve floats normalizados
     data = np.asarray(data, dtype=np.float64)
 
     # como shape (n_channels, n_samples) — canales en filas, muestras en columnas.
@@ -42,6 +45,7 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
         return data, int(fs)
     # data.ndim == 2: shape (n_samples, n_channels) -> convertir a (n_channels, n_samples)
     transposed = data.T.copy()
+    
     return transposed, int(fs)
 
 
@@ -77,7 +81,7 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
 
         noise = np.random.normal(scale=1.0, size=n_samples).astype(np.float64)
 
-        # Diseño de filtro pasa-banda: usar ancho aproximado de octava (f0/sqrt(2) - f0*sqrt(2))
+        # filtro pasa banda
         low = f0 / np.sqrt(2.0)
         high = f0 * np.sqrt(2.0)
 
@@ -88,31 +92,32 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
             low = 1.0
 
         wp = [low / nyq, high / nyq]
-        # Orden razonable para bandpass
+        
+        # orden razonable para bandpass
         b, a = butter(N=4, Wn=wp, btype="band")
 
-        # Filtrado cero-fase con filtfilt
+        # filtrado cero-fase con filtfilt
         try:
             filtered = filtfilt(b, a, noise)
         except Exception:
-            # En caso de fallo del filtfilt (p. ej. bordes cortos), usar lfilter de respaldo
+            # si falla filtfilt usa lfilter de respaldo
             from scipy.signal import lfilter
 
             filtered = lfilter(b, a, noise)
 
-        # Envolvente exponencial a partir de T60: exp(-alpha * t)
+        # envolvente exponencial a partir de T60
         alpha = np.log(1000.0) / t60  # ln(1000) para -60 dB en T60
         envelope = np.exp(-alpha * t)
 
         band = filtered * envelope
-
         out += band
 
-    # Normalizar respecto al máximo absoluto
+    # normaliza
     max_abs = np.max(np.abs(out))
     if max_abs == 0:
         return out
     out = out / max_abs
+    
     return out
 
 
@@ -131,7 +136,7 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
     np.ndarray
         Respuesta al impulso estimada, normalizada.
     """
-    # Convolucion por FFT (deconvolucion mediante convolucion con filtro inverso)
+    # convolucion por FFT (deconvolucion mediante convolucion con filtro inverso)
     try:
         ri_full = fftconvolve(grabacion, filtro_inverso, mode="full")
     except Exception as e:
@@ -139,17 +144,20 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
 
     ri_full = np.asarray(ri_full, dtype=np.float64)
 
-    # Encontrar pico principal (llegada directa)
+    # encuentra pico principal (llegada directa)
     peak_idx = int(np.argmax(np.abs(ri_full)))
-    # Recortar para que comience en el pico o ligeramente antes (10 muestras antes si es posible)
+    
+    # hace empezar en el pico o un poco antes (10 muestras antes si es posible)
     start = max(0, peak_idx - 10)
     ri_trim = ri_full[start:]
 
-    # Normalizar respecto al pico
+    # normalizar
     peak_val = np.max(np.abs(ri_trim))
     if peak_val == 0:
         return ri_trim
+        
     ri_trim = ri_trim / peak_val
+    
     return ri_trim
 
 
@@ -166,19 +174,19 @@ def a_escala_log(signal: np.ndarray) -> np.ndarray:
     np.ndarray
         Senal en escala logaritmica (dB), normalizada a 0 dB en el maximo.
     """
-    # evitar negativos por si la señal es compleja
+    # evita negativos por si la señal es compleja
     mag = np.abs(signal.astype(np.float64))
 
-    # Evitar log(0): reemplazar por eps
+    # evita log(0) y reemplazar por eps
     eps = np.finfo(float).eps
     mag_clipped = np.where(mag <= 0.0, eps, mag)
 
     db = 20.0 * np.log10(mag_clipped)
 
-    # Normalizar para que el maximo sea 0 dB
+    # hace que el maximo sea 0 dB
     db = db - np.max(db)
 
-    # Piso de ruido para evitar valores extremadamente negativos
+    # piso de ruido para evitar valores extremadamente negativos
     floor_db = -120.0
     db = np.maximum(db, floor_db)
 
