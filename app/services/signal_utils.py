@@ -36,6 +36,11 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     if not os.path.exists(ruta):
         raise FileNotFoundError(f"Archivo no encontrado: {ruta}")
 
+    # verifica si es wav o flac
+    ext = os.path.splitext(ruta)[1].lower()
+    if ext not in (".wav", ".flac"):
+        raise ValueError(f"Formato de archivo no soportado: '{ext}'. Formatos soportados: .wav, .flac")
+        
     try:
         data, fs = sf.read(ruta, dtype="float64")
     except Exception as e:
@@ -51,6 +56,22 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     except Exception:
         fs = int(fs)
 
+    # ve si soporta mono y estéreo y lo vuelve mono
+    if data.ndim == 1:
+        signal = data
+    elif data.ndim == 2:
+        n_channels = data.shape[1]
+        if n_channels == 1:
+            signal = data[:, 0]
+        elif n_channels == 2:
+            # Mezcla simple a mono (promedio de canales)
+            signal = data.mean(axis=1)
+        else:
+            raise ValueError(f"Número de canales es: {n_channels}. Debe ser mono o estéreo (1 o 2)."
+            )
+    else:
+        raise ValueError("Formato de datos de audio desconocido: dimensiones inesperadas")
+        
     # normaliza
     max_abs = np.max(np.abs(data)) if data.size > 0 else 0.0
     if max_abs > 0:
