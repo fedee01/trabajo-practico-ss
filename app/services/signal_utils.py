@@ -173,66 +173,62 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
 
 def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) -> np.ndarray:
     """
-    Obtiene la respuesta al impulso mediante deconvolución de un sine sweep.
+    Obtiene la respuesta al impulso (RI) mediante la deconvolución de una grabación realizada con un sine sweep.
 
     Parameters
     ----------
     grabacion : np.ndarray
-        Señal grabada que contiene la respuesta de la sala.
+        Señal grabada que contiene la respuesta de la sala al sine sweep. Puede ser mono o estéreo.
 
     filtro_inverso : np.ndarray
-        Filtro inverso del sweep utilizado.
+        Filtro inverso correspondiente al sine sweep utilizado.
+        Puede ser mono o estéreo.
 
     Returns
     -------
     np.ndarray
-        Respuesta al impulso estimada, normalizada.
+        Respuesta al impulso estimada y normalizada entre -1 y 1.
     """
-
+    # validación de tipos
     if not isinstance(grabacion, np.ndarray):
         raise TypeError("grabacion debe ser un array numpy")
 
     if not isinstance(filtro_inverso, np.ndarray):
         raise TypeError("filtro_inverso debe ser un array numpy")
 
+    # conversión estéreo -> mono. si la señal tiene dos canales, se promedian para obtener una única señal mono.
+
     if grabacion.ndim > 1:
-        grab = grabacion.mean(axis=1)
-    else:
-        grab = grabacion
+
+        grabacion = grabacion.mean(axis=1)
 
     if filtro_inverso.ndim > 1:
-        filt_inv = filtro_inverso.mean(axis=1)
 
-    else:
-        filt_inv = filtro_inverso
-    grab = np.asarray(grab, dtype=np.float64)
+        filtro_inverso = filtro_inverso.mean(axis=1)
 
-    filt_inv = np.asarray(filt_inv, dtype=np.float64)
+    # conversión a float64 para mejorar la precisión numérica
+    
+    grabacion = np.asarray(grabacion, dtype=np.float64)
 
-    if grab.size == 0:
+    filtro_inverso = np.asarray(filtro_inverso, dtype=np.float64)
+
+    # validación de arrays vacíos
+
+    if grabacion.size == 0:
         raise ValueError("grabacion vacía")
 
-    if filt_inv.size == 0:
+    if filtro_inverso.size == 0:
         raise ValueError("filtro_inverso vacío")
 
-    ri_full = fftconvolve(grab, filt_inv, mode="full")
+    # deconvolución mediante FFT. la RI se obtiene convolucionando la grabación con el filtro inverso del sweep.
 
-    peak_idx = np.argmax(np.abs(ri_full))
+    ri = fftconvolve(grabacion, filtro_inverso, mode="full")
 
-    ri = ri_full[peak_idx:]
+    # normalización. se escala la RI para que su amplitud máxima sea 1.
 
-    peak = np.max(np.abs(ri))
-
-    if peak == 0:
-        return ri
-
-    threshold = 1e-6 * peak
-    indices = np.where(np.abs(ri) >= threshold)[0]
-
-    if indices.size > 0:
-        ri = ri[:indices[-1] + 1]
-
-    ri /= np.max(np.abs(ri))
+    max_abs = np.max(np.abs(ri))
+    if max_abs > 0:
+        ri /= max_abs
 
     return ri
 
