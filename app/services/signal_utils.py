@@ -7,7 +7,7 @@ import os
 
 import numpy as np
 import soundfile as sf
-from scipy.signal import butter, fftconvolve, filtfilt, sosfilt, sosfiltfilt
+from scipy.signal import butter, fftconvolve, sosfiltfilt
 
 
 def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
@@ -112,7 +112,7 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
 
     n_samples = int(np.ceil(duracion * fs)) #ceil es para redondear hacia arriba, así me aseguro de tener suficientes muestras para la duración pedida
     t = np.arange(n_samples, dtype=np.float64) / fs #acomoda las muestras a cada instante correspondiente del tiempo
-    ri = np.zeros(n_samples, dtype=np.float64) #np.zeros para crear un array de ceros del tamaño necesario para la duración pedida, que es donde voy a ir sumando cada banda filtrada con su envolvente correspondiente
+    ri_sintetizada = np.zeros(n_samples, dtype=np.float64) #np.zeros para crear un array de ceros del tamaño necesario para la duración pedida, que es donde voy a ir sumando cada banda filtrada con su envolvente correspondiente
     nyq = fs / 2
 
     for fc, t60 in t60_por_banda.items():
@@ -198,13 +198,28 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
 
     # conversión estéreo -> mono. si la señal tiene dos canales, se promedian para obtener una única señal mono.
 
-    if grabacion.ndim > 1:
+    if grabacion.ndim == 2:
 
-        grabacion = grabacion.mean(axis=1)
+    grabacion = grabacion.mean(axis=1)
+        
+    elif grabacion.ndim != 1:
 
-    if filtro_inverso.ndim > 1:
+    raise ValueError("grabacion debe ser mono o estéreo")
 
-        filtro_inverso = filtro_inverso.mean(axis=1)
+   if filtro_inverso.ndim == 2:
+
+        n_channels = filtro_inverso.shape[1]
+
+        if n_channels not in (1, 2):
+
+        raise ValueError(
+            f"Número de canales inválido:{n_channels}. "
+            "Debe ser mono o estéreo.")
+
+    filtro_inverso = filtro_inverso.mean(axis=1)
+
+    elif filtro_inverso.ndim != 1:
+        raise ValueError("filtro_inverso debe ser mono o estéreo.")
 
     # conversión a float64 para mejorar la precisión numérica
     
@@ -226,7 +241,7 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
     
     # ubicar el pico principal
     peak_idx = np.argmax(np.abs(ri_full))
-    ri= ri_full[peak_idx: ]
+    ri= ri_full[peak_idx:]
     
     # normalización. se escala la RI para que su amplitud máxima sea 1.
     max_abs = np.max(np.abs(ri))
