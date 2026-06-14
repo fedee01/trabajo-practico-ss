@@ -1,5 +1,6 @@
 import numpy as np
 import sounddevice as sd
+import matplotlib.pyplot as plt
 
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
@@ -23,10 +24,8 @@ import numpy as np
     n_bits = 16  # numero de bits, es decir numero de generadores
     n_muestras = int(duracion * fs)  # numero de muestras
 
-
     generadores = np.random.randn(n_bits)  # array de la profundidad de bits elegida con los generadores de ruido.
     r_rosa = np.empty(n_muestras, dtype=np.float32)
-
 
     for i in range(n_muestras):
         r_rosa[i] = float(np.sum(generadores))  # va sumando
@@ -41,11 +40,24 @@ import numpy as np
 
     return r_rosa
 
-  
-if __name__ == "__main__":
-    duracion = 3.0
-    fs = 44100
-    r_rosa = generar_ruido_rosa(duracion, fs)
-    print(f"Reproduciendo ruido rosa de {duracion} s a {fs} Hz...")
-    sd.play(r_rosa, samplerate=fs)
-    sd.wait()
+
+# parametros de ejemplo:
+
+duracion = 3.0
+fs = 44100
+r_rosa = generar_ruido_rosa(duracion, fs)
+
+# aca encontre la funcion magnitude spectrum: https://www.geeksforgeeks.org/python/plot-the-magnitude-spectrum-in-python-using-matplotlib/
+# en la documentacion me fije como se usaba y que parametros pasarle https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.magnitude_spectrum.html
+# me di cuenta que habia que usar la funcion psd, que relaciona los dB con los Hz, me fije en la documentacion aca https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.psd.html#matplotlib.pyplot.psd
+
+plt.ylabel('PSD (dB/Hz)')
+plt.xlabel('Frecuencia en Hz')
+plt.title("Ruido rosa")
+
+plt.psd(r_rosa, Fs=fs, color ='red', linewidth=1)
+plt.xscale('log') 
+plt.ylim([-85,-35]) # aca seteo los limites de las escalas para q quede como el de los profes
+plt.xlim([20,24000]) 
+plt.show()
+
