@@ -8,7 +8,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
 
-
 def generar_sine_sweep(
     f1: float, f2: float, duracion: float, fs: int
 ) -> tuple[np.ndarray, np.ndarray]:

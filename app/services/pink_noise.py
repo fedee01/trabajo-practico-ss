@@ -23,9 +23,7 @@ def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     n_bits = 20  # numero de bits, es decir numero de generadores. acá cambié a 20 para que el ruido sea más suave.
     n_muestras = int(duracion * fs)  # numero de muestras
 
-    generadores = np.random.randn(
-        n_bits
-    )  # array de la profundidad de bits elegida con los generadores de ruido.
+    generadores = np.random.randn(n_bits)  # array de la profundidad de bits elegida con los generadores de ruido.
     r_rosa = np.empty(n_muestras, dtype=np.float32)
 
     for i in range(n_muestras):
