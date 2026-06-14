@@ -24,3 +24,7 @@ Se le aplica un filtro inverso invirtiendo temporalmente el sweep y se compensa 
 o este texto: 
 Sine Sweep (barrido sinusoidal) es una oscilación sinusoidal en la cual la frecuencia de oscilación no se mantiene constante sino que aumenta continuamente. En el caso del sine sweep logarítmico o exponencial aumenta continuamente pero divide el tiempo por octavas de bandas. Debido a que se busca igual energía por octava. ACA ES LO DE LA NORMA IEC 61260. Se inviertio temporalmente el sweep con la aplicación de un filtro inverso para compensar la distribución no uniforme de energía. Esto se realizó aplicando una corrección de amplitud que compensa la distribución no uniforme de energía por frecuencia del sweep logarítmico.
 
+{INSERTAR GRAFICO}
+
+Se observa en el gráfico en el eje vertical las frecuencias y en el eje horizontal el tiempo. La intensidad del amarillo representa la amplitud de energía de la señal. Se observa que se concentra mayor energía en la línea amarilla brillante que tiene como trayectoria curva exponencial ascendente. Asimismo, en el extremo inferior izquierdo del gráfico, la mancha amarilla es muy ancha y se va difuminando de forma vertical debido a la baja resolución en frecuencias bajas por la longitud de la ventana. 
+
