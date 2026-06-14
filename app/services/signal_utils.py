@@ -162,28 +162,18 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         band = filtered * envelope # cada banda de la respuesta al impulso se obtiene multiplicando
                                    # el ruido filtrado por la envolvente exponencial correspondiente a esa banda
 
-        ri += band #la sumatoria de todas las bandas
+        ri_sintetizada += band #la sumatoria de todas las bandas
 
     # normalizado
-    max_abs = np.max(np.abs(ri)) 
+    max_abs = np.max(np.abs(ri_sintetizada)) 
     if max_abs > 0:
-        ri /= max_abs
+        ri_sintetizada /= max_abs
 
-    return ri
+    return ri_sintetizada
 
-
-```python
-import numpy as np
-from scipy.signal import fftconvolve
-
-
-def obtener_ri_desde_sweep(
-    grabacion: np.ndarray,
-    filtro_inverso: np.ndarray
-) -> np.ndarray:
+def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) -> np.ndarray:
     """
-    Obtiene la respuesta al impulso mediante
-    deconvolución de un sine sweep.
+    Obtiene la respuesta al impulso mediante deconvolución de un sine sweep.
 
     Parameters
     ----------
@@ -200,12 +190,10 @@ def obtener_ri_desde_sweep(
     """
 
     if not isinstance(grabacion, np.ndarray):
-        raise TypeError(
-            "grabacion debe ser un array numpy")
+        raise TypeError("grabacion debe ser un array numpy")
 
     if not isinstance(filtro_inverso, np.ndarray):
-        raise TypeError(
-            "filtro_inverso debe ser un array numpy")
+        raise TypeError("filtro_inverso debe ser un array numpy")
 
     if grabacion.ndim > 1:
         grab = grabacion.mean(axis=1)
