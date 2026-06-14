@@ -4,11 +4,10 @@ Milestone 2: Procesamiento de la respuesta al impulso.
 """
 
 import numpy as np
-from scipy.signal import butter, filtfilt, lfilter
+import scipy.signal
 
-def filtro_octava(
-    signal: np.ndarray, fc: float, fs: int, orden: int = 4
-) -> np.ndarray:
+
+def filtro_octava(x: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.ndarray:
     """Aplica un filtro pasabanda de una octava centrado en ``fc``.
 
     Implementa un filtro Butterworth pasabanda cuyas frecuencias de corte
@@ -18,7 +17,7 @@ def filtro_octava(
 
     Parameters
     ----------
-    signal : np.ndarray
+    x : np.ndarray
         Senal de entrada (array 1D).
     fc : float
         Frecuencia central de la banda de octava en Hz.
@@ -32,41 +31,30 @@ def filtro_octava(
     np.ndarray
         Senal filtrada (array 1D).
     """
-    
-    if not isinstance(x, np.ndarray):
-        raise TypeError("x debe ser un np.ndarray 1D")
-    if x.ndim != 1:
-        raise ValueError("x debe ser un array 1D (senal mono)")
-    if not (isinstance(fc, (int, float)) and fc > 0):
-        raise ValueError("fc debe ser una frecuencia positiva en Hz")
-    if not (isinstance(fs, (int, float)) and fs > 0):
-        raise ValueError("fs debe ser una frecuencia de muestreo positiva en Hz")
+    f_inf = float(fc) / np.sqrt(2.0)
+    f_sup = float(fc) * np.sqrt(2.0)
 
+    # normalizar a Nyquist (Wn en [0, 1], donde 1 corresponde a Nyquist)
     nyq = float(fs) / 2.0
-    low = float(fc) / np.sqrt(2.0)
-    high = float(fc) * np.sqrt(2.0)
+    wn0 = max(f_inf / nyq, 1e-12)
+    wn1 = min(f_sup / nyq, 1.0 - 1e-12)
 
-    if low <= 0:
-        low = 1.0
-    if high >= nyq:
-        high = nyq * 0.999
+    # Manejar entradas multi-canal: convertir a mono tomando la media por canales
+    if x.ndim > 1:
+        sig = x.mean(axis=1)
+    else:
+        sig = x
 
-    wn0 = low / nyq
-    wn1 = high / nyq
+    # Usar formato SOS para mayor estabilidad numérica en órdenes altos
+    sos = scipy.signal.butter(orden, [wn0, wn1], btype="band", output="sos")
 
-    # Evitar valores en los limites y asegurar wn0 < wn1
-    eps = 1e-6
-    wn0 = max(wn0, eps)
-    wn1 = min(wn1, 1.0 - eps)
-
-    # Intentar filtfilt (cero-fase). Si la señal es demasiado corta para filtfilt,
-    # capturamos la excepción y usamos lfilter como respaldo.
+    # Filtrado cero-fase: forward + backward con sosfiltfilt
     try:
-        filtered = filtfilt(b, a, x)
-    except Exception:
-        filtered = lfilter(b, a, x)
+        y = scipy.signal.sosfiltfilt(sos, sig)
+    except AttributeError:
+        # Compatibilidad con versiones antiguas de scipy
+        # Aplicar sosfilt forward y backward manualmente
+        y_fwd = scipy.signal.sosfilt(sos, sig)
+        y = scipy.signal.sosfilt(sos, y_fwd[::-1])[::-1]
 
-    # Asegurar 1D y tipo float64
-    filtered = np.asarray(filtered, dtype=np.float64).flatten()
-
-    return filtered
+    return y

@@ -1,12 +1,12 @@
-import numpy as np
-import sounddevice as sd
 import matplotlib.pyplot as plt
+import numpy as np
+from scipy.signal import welch
+from scipy.stats import linregress
+
 
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
     Genera ruido rosa usando el algoritmo de Voss-McCartney.
-import numpy as np
-
 
     Parámetros
     ----------
@@ -15,13 +15,12 @@ import numpy as np
     fs : int
         Frecuencia de muestreo en Hz.
 
-
     Returns
     -------
     np.ndarray
         Array con la señal de ruido rosa normalizada entre -1 y 1 (dtype float32).
     """
-    n_bits = 16  # numero de bits, es decir numero de generadores
+    n_bits = 20  # numero de bits, es decir numero de generadores. acá cambié a 20 para que el ruido sea más suave.
     n_muestras = int(duracion * fs)  # numero de muestras
 
     generadores = np.random.randn(n_bits)  # array de la profundidad de bits elegida con los generadores de ruido.
@@ -33,31 +32,49 @@ import numpy as np
             if (i + 1) % (2**n) == 0:
                 generadores[n] = np.random.randn()
 
-
     max_val = float(np.max(np.abs(r_rosa)))  # normaliza
     if max_val > 0:
         r_rosa /= max_val
 
     return r_rosa
 
-
 # parametros de ejemplo:
-
-duracion = 3.0
+duracion = 10.0
 fs = 44100
 r_rosa = generar_ruido_rosa(duracion, fs)
 
-# aca encontre la funcion magnitude spectrum: https://www.geeksforgeeks.org/python/plot-the-magnitude-spectrum-in-python-using-matplotlib/
-# en la documentacion me fije como se usaba y que parametros pasarle https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.magnitude_spectrum.html
-# me di cuenta que habia que usar la funcion psd, que relaciona los dB con los Hz, me fije en la documentacion aca https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.psd.html#matplotlib.pyplot.psd
+#acá empieza el calculo de la pendiente con welch
+f, Pxx = welch(r_rosa, fs=fs, nperseg=8192) #pxx es el psd
 
-plt.ylabel('PSD (dB/Hz)')
-plt.xlabel('Frecuencia en Hz')
+mask = (f >= 100) & (f <= 10000) #acá tomo las frecuencias entre 100 y 1000 hz
+
+x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el primedio de la pendiente sea en db/octava
+y = 10 * np.log10(Pxx[mask]) #esto me hace la escala y en db
+
+pendiente, _, _, _, _ = linregress(x, y) #lineregress toma todos los puntos de la respuesta espectral y hace un ajuste lineal
+
+#esta parte es la del gráfico
+plt.figure()
+
+plt.psd(r_rosa, Fs=fs, color="red", linewidth=1)
+
+plt.xlabel("Frecuencia [Hz]")
+plt.ylabel("PSD [dB/Hz]")
+plt.xscale("log")
+
+plt.xlim([20, 24000])
+plt.ylim([-85, -35])
+
 plt.title("Ruido rosa")
 
-plt.psd(r_rosa, Fs=fs, color ='red', linewidth=1)
-plt.xscale('log') 
-plt.ylim([-85,-35]) # aca seteo los limites de las escalas para q quede como el de los profes
-plt.xlim([20,24000]) 
-plt.show()
+plt.text(
+    0.6,
+    0.95,
+    f"Pendiente = {pendiente:.2f} dB/oct",
+    transform=plt.gca().transAxes,
+    verticalalignment="top",
+    bbox=dict(boxstyle="round", facecolor="white"),
+)
+#plt.text es para poner la cajita con el valor de la pendiente
 
+plt.show()
