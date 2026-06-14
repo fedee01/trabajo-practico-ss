@@ -30,6 +30,7 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     FileNotFoundError
         Si el archivo especificado no existe.
     """
+    # validacion
     if not isinstance(ruta, str):
         raise TypeError("'ruta' debe ser una cadena de texto")
     #si no es un string, no tiene sentido intentar cargar un archivo, así que lanzo un error de tipo
