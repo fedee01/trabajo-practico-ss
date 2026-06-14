@@ -53,60 +53,28 @@ def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[
                 / ma.exp(-n * ma.log(f2 / f1) / duracion) for n in t] 
     # lo mismo con el filtro, aplico la formula del apunte asignandole un seno a cada muestra
 
-    if np.max(sine_sweep) > 0:
-        ratio = 2/(np.max(sine_sweep) - np.min(sine_sweep)) 
-        #as you want your data to be between -1 and 1, everything should be scaled to 2, 
-        #if your desired min and max are other values, replace 2 with your_max - your_min
-        shift = (np.max(sine_sweep) + np.min(sine_sweep))/2 
-        #now you need to shift the center to the middle, this is not the average of the values.
-        sine_sweep_normalizada = (sine_sweep - shift)*ratio
+    funcion1 = np.asarray(sine_sweep, dtype=np.float64)
+    max1 = float(np.max(np.abs(funcion1)))  # normaliza
+    if max1 > 0:
+        funcion1 /= max1
 
-    if np.max(filt_inv) > 0:
-        ratio = 2/(np.max(filt_inv)-np.min(filt_inv)) 
-        shift = (np.max(filt_inv)+np.min(filt_inv))/2 
-        filt_inv_normalizado = (filt_inv - shift)*ratio
 
-    return sine_sweep_normalizada, filt_inv_normalizado
+    funcion2 = np.asarray(filt_inv, dtype=np.float64)
+    max2 = float(np.max(np.abs(funcion2)))  # normaliza
+    if max2 > 0:
+        funcion2 /= max2
 
-# parametros de ejemplo
-fs = 44100
-f1 = 20
-f2 = 20000
-duracion = 10
+    return funcion1, funcion2
 
-sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
+if __name__ == "__main__":
+    sweep, inverso = generar_sine_sweep(20, 4000, 1, 44100)
+    sd.play(sweep)
+    # si ponen [0] hace el sweep normal y si ponen [1] hace el inverso
 
-#codigo para normalizar la convolucion
-convolucion = signal.fftconvolve(sweep, inverso)
 
-ratio = 2/(np.max(convolucion)-np.min(convolucion)) 
-shift = (np.max(convolucion)+np.min(convolucion))/2 
-convolucion_normalizada = (convolucion - shift)*ratio
-
-# fuente https://stackoverflow.com/questions/10812189/creating-a-log-frequency-axis-spectrogram-using-specgram-in-matplotlib
-# escalas logaritmicas: https://matplotlib.org/stable/gallery/scales/log_demo.html
-
-# plot 1: sine sweep en escala logaritmica
-plt.xlabel('Tiempo en segundos')
-plt.ylabel('Frecuencia en Hz')
-plt.title("Sine Sweep")
-plt.yscale('symlog') 
-    # esto setea la escala logaritmica en y
-    # poner la escala en 'log' me estaba generando un grafico demasiado grande 
-    # asi que lo cambie por 'symlog' aca se puede leer mas:
-    # https://matplotlib.org/stable/gallery/scales/symlog_demo.html
-    # symlog es mas util para rangos muy grandes de datos
-
-plt.specgram(sweep, Fs=fs)
-plt.ylim([20,20000]) 
-plt.show()
-
-# plot 2: convolucion con el filtro inverso (este no anda lol)
-tiempo = np.linspace(0, duracion, num=len(convolucion))
-plt2.ylabel('Amplitud normalizada')
-plt2.xlabel('Tiempo respecto al pico (segundos)')
-plt2.title("convolucion")
-plt2.plot(tiempo, convolucion_normalizada)
-# plt2.xlim([-5,5])
-plt2.ylim([-1,1]) 
-plt2.show()
+    # y si en vez de lo otro ponen esto las convoluciona y hace cosas raras
+    """
+    ej = generar_sine_sweep(400, 4000, 1, 44100)
+    sd.play(np.convolve(ej[0], ej[1], mode="full"), 44100)
+    """
+    sd.wait()
