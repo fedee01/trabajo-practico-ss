@@ -31,54 +31,51 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
         Si el archivo especificado no existe.
     """
     if not isinstance(ruta, str):
-        raise TypeError("'ruta' debe ser una cadena con la ruta al archivo de audio")
+        raise TypeError("'ruta' debe ser una cadena de texto")
+    #si no es un string, no tiene sentido intentar cargar un archivo, así que lanzo un error de tipo
 
     if not os.path.exists(ruta):
         raise FileNotFoundError(f"Archivo no encontrado: {ruta}")
 
-    # verifica si es wav o flac
     ext = os.path.splitext(ruta)[1].lower()
+
     if ext not in (".wav", ".flac"):
-        raise ValueError(f"Formato de archivo no soportado: '{ext}'. Formatos soportados: .wav, .flac")
-        
+        raise ValueError(f"Formato '{ext}' no soportado. Sólo se aceptan archivos WAV o FLAC.")
+
     try:
-        data, fs = sf.read(ruta, dtype="float64")
+        signal, fs = sf.read(ruta, dtype="float64")
+
+    # cualquier error de lectura se captura y se lanza como RuntimeError con mensaje claro
     except Exception as e:
-        raise RuntimeError(f"Error al leer el archivo de audio: {e}")
+        raise RuntimeError(f"Error al leer el archivo: {e}") from e
 
-    # asegura dtype float64
-    data = np.asarray(data, dtype=np.float64)
+    signal = np.asarray(signal,dtype=np.float64)
 
-    # se fija si la frecuencia viene del header del archivo
-    try:
-        info = sf.info(ruta)
-        fs = int(info.samplerate)
-    except Exception:
-        fs = int(fs)
+    if signal.ndim == 2:
 
-    # ve si soporta mono y estéreo y lo vuelve mono
-    if data.ndim == 1:
-        signal = data
-    elif data.ndim == 2:
-        n_channels = data.shape[1]
-        if n_channels == 1:
-            signal = data[:, 0]
-        elif n_channels == 2:
-            # Mezcla simple a mono (promedio de canales)
-            signal = data.mean(axis=1)
-        else:
-            raise ValueError(f"Número de canales es: {n_channels}. Debe ser mono o estéreo (1 o 2)."
-            )
-    else:
-        raise ValueError("Formato de datos de audio desconocido: dimensiones inesperadas")
+        n_channels = signal.shape[1] #[1] es el numero de canales, [0] es el numero de muestras
+
+        if n_channels not in (1, 2):
+
+            raise ValueError(
+                f"Número de canales inválido: "
+                f"{n_channels}. "
+                "Debe ser mono o estéreo.")
+
+        signal = signal.mean(axis=1) # si es estéreo, promedia ambos canales para obtener mono
+
+    elif signal.ndim != 1:
+        raise ValueError("Formato de audio inválido.")
+
+    if signal.size == 0:
+        raise ValueError("El archivo de audio está vacío.")
         
-    # normaliza
-    max_abs = np.max(np.abs(data)) if data.size > 0 else 0.0
+    # normalizado
+    max_abs = np.max(np.abs(signal))
     if max_abs > 0:
-        data = data / float(max_abs)
-
-    # mantiene la forma que devuelve soundfile: (n_samples,) o (n_samples, n_channels)
-    return data, int(fs)
+        signal = signal / max_abs
+        
+    return signal, int(fs)
 
 
 def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -> np.ndarray:
