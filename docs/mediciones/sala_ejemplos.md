@@ -11,7 +11,8 @@ GRÁFICO RUIDO ROSA:  (PSD vs FRECUENCIA)
 
 La PSD (Densidad Espectral de Potencia) se expresa en dB/Hz para describir cómo se distribuye la potencia o energía de una señal en un espectro de frecuencias, es decir, a lo largo de las distintas frecuencias que la componen. 
 
-Se observa que hay una caída de 3dB por banda de banda de octava. Asimismo hay una especie de meseta (valor que se mantiene constante) desde las primeras frecuencias hasta un poco más que 170 Hz, esto se puede deber a la longitud de la ventana de análisis que se utilizó para el cálculo de la densidad espectral de potencia y el algoritmo de generación de ruido. En muchos casos el algoritmo no tiene la resolución suficiente para distinguir lo que sucede en las frecuencias bajas, por consiguiente se promedian los valores. También al utilizar el filtro digital, como Voss Mc-Carteney, necesitan muchos coeficientes para mantener la precisión en las bajas frecuencias, por lo tanto se aplana la pendiente. 
+Se observa que hay una caída de 3.18dB por banda de banda de octava, es decir, que paso el test de espectro de ruido rosa, donde se utilizó la función welch y tenia como criterio que la pendiente debia ser dentro de -3dB con un errore de 1dB. 
+Asimismo, en el grafico hay una especie de meseta (valor que se mantiene constante) desde las primeras frecuencias hasta un poco más que 170 Hz, esto se puede deber a la longitud de la ventana de análisis que se utilizó para el cálculo de la densidad espectral de potencia y el algoritmo de generación de ruido. En muchos casos el algoritmo no tiene la resolución suficiente para distinguir lo que sucede en las frecuencias bajas, por consiguiente se promedian los valores. También al utilizar el filtro digital, como Voss Mc-Carteney, necesitan muchos coeficientes para mantener la precisión en las bajas frecuencias, por lo tanto se aplana la pendiente. 
 
 ACA HAY QUE PONER SI CAMBIAMOS EL ERROR O LO DEJAMOS ASI!
 
@@ -31,3 +32,7 @@ Se observa en el gráfico en el eje vertical las frecuencias y en el eje horizon
 REDACTAR MÁS LINDO LA PARTE DE PROBLEMATICA: 
 
 Cuando se realizó el gráfico de sine sweep surgió como problemática que la resolución del gráfico era demasiado grande, se buscó información en matplotlib y se cambió en el código  plt.yscale(“symlog”),  “log ” por “symlog”. Debido a que este último es de utilidad para rangos muy grandes. 
+
+{Grafico del impulso EUGE}
+
+Se puede observar que se obtuvo como resultado de la convolucion del sine sweep y su filtro inverso un impulso con lobulos laterales pequeños que se atenuan de forma drastrica y simetrica a los milisegundos, también que dicho impulso obtiene su valor normalizado de amplitud maxima (1) en el tiempo 0s  {INSERTAR GRAFICO DE LAS CASITAS FEDE}
