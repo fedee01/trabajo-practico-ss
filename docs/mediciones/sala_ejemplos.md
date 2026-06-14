@@ -28,3 +28,6 @@ Sine Sweep (barrido sinusoidal) es una oscilación sinusoidal en la cual la frec
 
 Se observa en el gráfico en el eje vertical las frecuencias y en el eje horizontal el tiempo. La intensidad del amarillo representa la amplitud de energía de la señal. Se observa que se concentra mayor energía en la línea amarilla brillante que tiene como trayectoria curva exponencial ascendente. Asimismo, en el extremo inferior izquierdo del gráfico, la mancha amarilla es muy ancha y se va difuminando de forma vertical debido a la baja resolución en frecuencias bajas por la longitud de la ventana. 
 
+REDACTAR MÁS LINDO LA PARTE DE PROBLEMATICA: 
+
+Cuando se realizó el gráfico de sine sweep surgió como problemática que la resolución del gráfico era demasiado grande, se buscó información en matplotlib y se cambió en el código  plt.yscale(“symlog”),  “log ” por “symlog”. Debido a que este último es de utilidad para rangos muy grandes. 
