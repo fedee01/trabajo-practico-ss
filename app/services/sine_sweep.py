@@ -1,19 +1,17 @@
 """Servicio de generacion de sine sweep logaritmico.
 
+
 Milestone 1: Generacion de senales.
 """
-
 import math as ma
-import matplotlib.pyplot as plt
 import numpy as np
-from scipy import signal
+import sounddevice as sd
 
 
-def generar_sine_sweep(
-    f1: float, f2: float, duracion: float, fs: int
-) -> tuple[np.ndarray, np.ndarray]:
+def generar_sine_sweep(f1: float, f2: float, duracion: float, fs: int) -> tuple[np.ndarray, np.ndarray]:
     """
     Genera un sine sweep logaritmico y su filtro inverso.
+
 
     Parameters
     ----------
@@ -26,89 +24,55 @@ def generar_sine_sweep(
     fs : int
         Frecuencia de muestreo en Hz.
 
+
     Returns
     -------
     tuple[np.ndarray, np.ndarray]
         Tupla con (sweep, filtro_inverso), ambos normalizados.
     """
 
-    if (f1 == 0):  # si la f pedida es 0, usa un numero muy chico para no dividir por 0
+
+    if f1 == 0:  # asi no divide por cero
         f1 += 1e-10
 
-    t = np.linspace(0, duracion, int(duracion * fs), endpoint=False)
 
-    sine_sweep = np.array(
-        [
-            ma.sin(
-                2 * ma.pi * f1 * duracion
-                * (ma.exp(n * (ma.log(f2 / f1) / duracion)) - 1)
-                / ma.log(f2 / f1)) for n in t
-        ],
-        dtype=float,)
-    
-    # rel entre la f final e inicial
-    R = (f2 / f1)
+    n_muestras = int(duracion * fs)
 
-    envolvente = np.exp(-t * np.log(R) / duracion)
 
-    filt_inv = sine_sweep[::-1] * envolvente  # metodo de farina
+    t = np.arange(n_muestras) / fs
+    k = ma.log(f2 / f1) / duracion
+    o = 2 * ma.pi * f1 / k
 
-    # normalizacion
-    if np.max(sine_sweep) > 0:
-        ratio = 2 / (np.max(sine_sweep) - np.min(sine_sweep)) # escalado a 2 [-1, 1]
-        shift = (np.max(sine_sweep) + np.min(sine_sweep)) / 2
-        # corre el centro al costado, no es el valor promedio
-        sine_sweep_normalizada = (sine_sweep - shift) * ratio
 
-    if np.max(filt_inv) > 0:
-        ratio = 2 / (np.max(filt_inv) - np.min(filt_inv))
-        shift = (np.max(filt_inv) + np.min(filt_inv)) / 2
-        filt_inv_normalizado = (filt_inv - shift) * ratio
+    fase = o * (np.exp(k * t) - 1)
+    sine_sweep = np.sin(fase)
+    filt_inv = np.sin(o * (np.exp(k * (duracion - t)) - 1)) * np.exp(-k * t)
 
-    return sine_sweep_normalizada, filt_inv_normalizado
 
-# parametros de ejemplo
-fs = 44100
-f1 = 20
-f2 = 20000
-duracion = 10
+    funcion1 = np.asarray(sine_sweep, dtype=np.float64)
+    max1 = float(np.max(np.abs(funcion1)))  # normaliza
+    if max1 > 0:
+        funcion1 /= max1
 
-sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
 
-# normalizacion de la convolucion
-convolucion = signal.fftconvolve(sweep, inverso, mode="full")
+    funcion2 = np.asarray(filt_inv, dtype=np.float64)
+    max2 = float(np.max(np.abs(funcion2)))  # normaliza
+    if max2 > 0:
+        funcion2 /= max2
 
-# plot 1
-plt.figure(figsize=(10, 4))
-plt.specgram(sweep, Fs=fs)
-plt.yscale("log")
-plt.ylim([20, 20000])
-plt.xlabel("Tiempo [s]")
-plt.ylabel("Frecuencia [Hz]")
-plt.title("Sine Sweep Logaritmico")
-plt.show()
 
-# plot 2: convolucion sweep x filtro inverso
-convolucion_normalizada = convolucion / np.max(np.abs(convolucion)) # normalizo tq pico sea 1
-indice_pico = np.argmax(np.abs(convolucion))  # busco el pico
-pico = np.max(np.abs(convolucion))
-ventana = 1000  # calculo el piso excluyendo una ventana alrededor del pico
-sin_pico = np.concatenate(
-    (np.abs(convolucion[: indice_pico - ventana]), np.abs(convolucion[indice_pico + ventana :]))
-)
-piso = np.mean(sin_pico)
-relacion_db = 20 * np.log10(pico / piso)  # relacion pico/piso en dB
-ancho = 1000  # muestro solo alrededor del impulso
-inicio = indice_pico - ancho
-fin = indice_pico + ancho
-tiempo = np.arange(len(convolucion)) / fs
-tiempo_relativo = tiempo[inicio:fin] - tiempo[indice_pico]
+    return funcion1, funcion2
 
-plt.figure(figsize=(10, 4))
-plt.plot(tiempo_relativo, convolucion_normalizada[inicio:fin])
-plt.xlabel("Tiempo respecto al pico [s]")
-plt.ylabel("Amplitud normalizada")
-plt.title(f"Convolucion Sweep x Filtro Inverso - SNR pico/piso = {relacion_db:.1f} dB")
-plt.ylim([-1.1, 1.1])
-plt.grid()
-plt.show()
+
+if __name__ == "__main__":
+    sweep, inverso = generar_sine_sweep(400, 4000, 1, 44100)
+    sd.play(sweep)
+    # si ponen [0] hace el sweep normal y si ponen [1] hace el inverso
+
+
+    # y si en vez de lo otro ponen esto las convoluciona y hace cosas raras
+    """
+    ej = generar_sine_sweep(400, 4000, 1, 44100)
+    sd.play(np.convolve(ej[0], ej[1], mode="full"), 44100)
+    """
+    sd.wait()
