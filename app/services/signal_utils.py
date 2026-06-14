@@ -222,11 +222,16 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
 
     # deconvolución mediante FFT. la RI se obtiene convolucionando la grabación con el filtro inverso del sweep.
 
-    ri = fftconvolve(grabacion, filtro_inverso, mode="full")
+    ri_full = fftconvolve(grabacion, filtro_inverso, mode="full")
 
     # normalización. se escala la RI para que su amplitud máxima sea 1.
 
+    peak_idx = np.argmax(np.abs(ri_full))
+    ri= ri_full[peak_idx: ]
+    
     max_abs = np.max(np.abs(ri))
+
+    
     if max_abs > 0:
         ri /= max_abs
 
