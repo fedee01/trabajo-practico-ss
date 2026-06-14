@@ -135,30 +135,33 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
 
             f_sup = nyq * 0.999
 
-        w = [f_inf / nyq, f_sup / nyq] #w es la frecuencia de corte normalizada para el filtro bandpass, con f_inf y f_sup como frecuencias de corte inferior y superior respectivamente, normalizadas por la frecuencia de nyquist
+        w = [f_inf / nyq, f_sup / nyq] # w es la frecuencia de corte normalizada para el filtro bandpass, con f_inf y f_sup como frecuencias de corte inferior y superior respectivamente, normalizadas por la frecuencia de nyquist
 
-        sos = butter( N=4, Wn=w, btype="bandpass", output="sos")
+        sos = butter( N=4, Wn=w, btype="bandpass", output="sos") # sos es la representación en secciones de segundo orden del filtro Butterworth de orden 4, con las frecuencias de corte definidas por w, y tipo "bandpass"
+                                                                 # butterworth es un filtro pasabandas
 
-        filtered = sosfiltfilt(sos, noise)
+        filtered = sosfiltfilt(sos, noise) # filtro el ruido blanco con el filtro bandpass definido por sos, usando filtfilt para evitar desfases
 
-        rms = np.sqrt(np.mean(filtered**2))
+        rms = np.sqrt(np.mean(filtered**2)) 
 
         if rms > 0:
 
             filtered /= rms
 
-        alpha = np.log(1000.0) / t60
+        alpha = np.log(1000.0) / t60 # alfa es el coeficiente de atenuación para la envolvente exponencial, calculado a partir del T60 pedido para esa banda
+                                     # usando la fórmula que relaciona T60 con el tiempo que tarda la señal en atenuarse 1000 veces (60 dB)
 
-        envelope = np.exp(-alpha * t)
+        envelope = np.exp(-alpha * t) # envolvente exponencial que simula la decaimiento de la reverberación, 
+                                      # con el coeficiente de atenuación alpha calculado a partir del T60 pedido para esa banda
 
-        band = filtered * envelope
+        band = filtered * envelope # cada banda de la respuesta al impulso se obtiene multiplicando
+                                   # el ruido filtrado por la envolvente exponencial correspondiente a esa banda
 
-        ri += band
+        ri += band #la sumatoria de todas las bandas
 
-    max_abs = np.max(np.abs(ri))
-
+    # normalizado
+    max_abs = np.max(np.abs(ri)) 
     if max_abs > 0:
-
         ri /= max_abs
 
     return ri
