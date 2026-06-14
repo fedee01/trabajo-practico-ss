@@ -70,12 +70,12 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
 
     if signal.size == 0:
         raise ValueError("El archivo de audio está vacío.")
-        
+
     # normalizado
     max_abs = np.max(np.abs(signal))
     if max_abs > 0:
         signal = signal / max_abs
-        
+
     return signal, int(fs)
 
 
@@ -96,7 +96,7 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     np.ndarray
         Respuesta al impulso sintetizada (array 1D).
     """
-    
+
     #validaciones
     if not isinstance(t60_por_banda, dict):
         raise TypeError("t60_por_banda debe ser un diccionario {fc:T60}")
@@ -136,7 +136,7 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         if f_sup >= nyq:
 
             f_sup = nyq * 0.999
-        
+
         if f_inf >= f_sup:
             raise ValueError(f"Banda inválida para fc={fc}")
 
@@ -146,7 +146,7 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
                                                                  # butterworth es un filtro pasabandas
 
         filtered = sosfiltfilt(sos, noise) # filtro el ruido blanco con el filtro bandpass definido por sos, usando filtfilt para evitar desfases
-        
+
         # normalización RMS
         rms = np.sqrt(np.mean(filtered**2)) 
         if rms > 0:
@@ -200,31 +200,28 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
 
     if grabacion.ndim == 2:
 
-    grabacion = grabacion.mean(axis=1)
-        
+        grabacion = grabacion.mean(axis=1)
+
     elif grabacion.ndim != 1:
 
-    raise ValueError("grabacion debe ser mono o estéreo")
+        raise ValueError("grabacion debe ser mono o estéreo")
 
-   if filtro_inverso.ndim == 2:
+    if filtro_inverso.ndim == 2:
 
         n_channels = filtro_inverso.shape[1]
 
         if n_channels not in (1, 2):
 
-        raise ValueError(
-            f"Número de canales inválido:{n_channels}. "
-            "Debe ser mono o estéreo.")
+             raise ValueError(f"Número de canales inválido:{n_channels}. Debe ser mono o estéreo.")
 
-    filtro_inverso = filtro_inverso.mean(axis=1)
+        filtro_inverso = filtro_inverso.mean(axis=1)
 
     elif filtro_inverso.ndim != 1:
         raise ValueError("filtro_inverso debe ser mono o estéreo.")
 
-    # conversión a float64 para mejorar la precisión numérica
-    
-    grabacion = np.asarray(grabacion, dtype=np.float64)
+    # conversión a float64
 
+    grabacion = np.asarray(grabacion, dtype=np.float64)
     filtro_inverso = np.asarray(filtro_inverso, dtype=np.float64)
 
     # validación de arrays vacíos
@@ -238,15 +235,13 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
     # deconvolución mediante FFT. la RI se obtiene convolucionando la grabación con el filtro inverso del sweep.
 
     ri_full = fftconvolve(grabacion, filtro_inverso, mode="full")
-    
+
     # ubicar el pico principal
     peak_idx = np.argmax(np.abs(ri_full))
     ri= ri_full[peak_idx:]
-    
-    # normalización. se escala la RI para que su amplitud máxima sea 1.
-    max_abs = np.max(np.abs(ri))
 
-    
+    # normalizado
+    max_abs = np.max(np.abs(ri))
     if max_abs > 0:
         ri /= max_abs
 
