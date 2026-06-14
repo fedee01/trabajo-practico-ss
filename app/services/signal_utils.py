@@ -183,112 +183,60 @@ def obtener_ri_desde_sweep(
     Parameters
     ----------
     grabacion : np.ndarray
-
-        Señal grabada que contiene la
-        respuesta de la sala.
+        Señal grabada que contiene la respuesta de la sala.
 
     filtro_inverso : np.ndarray
-
         Filtro inverso del sweep utilizado.
 
     Returns
     -------
     np.ndarray
-
-        Respuesta al impulso estimada,
-        normalizada.
+        Respuesta al impulso estimada, normalizada.
     """
 
-    if not isinstance(
-        grabacion,
-        np.ndarray
-    ):
-
+    if not isinstance(grabacion, np.ndarray):
         raise TypeError(
-            "grabacion debe ser "
-            "un array numpy"
-        )
+            "grabacion debe ser un array numpy")
 
-    if not isinstance(
-        filtro_inverso,
-        np.ndarray
-    ):
-
+    if not isinstance(filtro_inverso, np.ndarray):
         raise TypeError(
-            "filtro_inverso debe ser "
-            "un array numpy"
-        )
+            "filtro_inverso debe ser un array numpy")
 
     if grabacion.ndim > 1:
-
-        grab = grabacion.mean(
-            axis=1
-        )
-
+        grab = grabacion.mean(axis=1)
     else:
-
         grab = grabacion
 
     if filtro_inverso.ndim > 1:
-
-        filt_inv = filtro_inverso.mean(
-            axis=1
-        )
+        filt_inv = filtro_inverso.mean(axis=1)
 
     else:
-
         filt_inv = filtro_inverso
+    grab = np.asarray(grab, dtype=np.float64)
 
-    grab = np.asarray(
-        grab,
-        dtype=np.float64
-    )
-
-    filt_inv = np.asarray(
-        filt_inv,
-        dtype=np.float64
-    )
+    filt_inv = np.asarray(filt_inv, dtype=np.float64)
 
     if grab.size == 0:
-
-        raise ValueError(
-            "grabacion vacía"
-        )
+        raise ValueError("grabacion vacía")
 
     if filt_inv.size == 0:
+        raise ValueError("filtro_inverso vacío")
 
-        raise ValueError(
-            "filtro_inverso vacío"
-        )
+    ri_full = fftconvolve(grab, filt_inv, mode="full")
 
-    ri_full = fftconvolve(
-        grab,
-        filt_inv,
-        mode="full"
-    )
-
-    peak_idx = np.argmax(
-        np.abs(ri_full)
-    )
+    peak_idx = np.argmax(np.abs(ri_full))
 
     ri = ri_full[peak_idx:]
 
-    peak = np.max(
-        np.abs(ri)
-    )
+    peak = np.max(np.abs(ri))
 
     if peak == 0:
-
         return ri
 
     threshold = 1e-6 * peak
-
-    indices = np.where(
-        np.abs(ri) >= threshold
-    )[0]
+    indices = np.where(np.abs(ri) >= threshold)[0]
 
     if indices.size > 0:
-
         ri = ri[:indices[-1] + 1]
 
     ri /= np.max(np.abs(ri))
