@@ -95,71 +95,37 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     np.ndarray
         Respuesta al impulso sintetizada (array 1D).
     """
+    #validaciones
+    
     if not isinstance(t60_por_banda, dict):
-
-        raise TypeError(
-            "t60_por_banda debe ser "
-            "un diccionario {fc:T60}"
-        )
+        raise TypeError("t60_por_banda debe ser un diccionario {fc:T60}")
 
     if len(t60_por_banda) == 0:
-
-        raise ValueError(
-            "t60_por_banda no puede estar vacío"
-        )
+        raise ValueError("t60_por_banda no puede estar vacío")
 
     if fs <= 0:
-
-        raise ValueError(
-            "fs debe ser positivo"
-        )
+        raise ValueError("fs debe ser positivo")
 
     if duracion <= 0:
+        raise ValueError("duracion debe ser positiva")
 
-        raise ValueError(
-            "duracion debe ser positiva"
-        )
-
-    n_samples = int(
-        np.ceil(
-            duracion * fs
-        )
-    )
-
-    t = np.arange(
-        n_samples,
-        dtype=np.float64
-    ) / fs
-
-    ri = np.zeros(
-        n_samples,
-        dtype=np.float64
-    )
-
+    n_samples = int(np.ceil(duracion * fs)) #ceil es para redondear hacia arriba, así me aseguro de tener suficientes muestras para la duración pedida
+    t = np.arange(n_samples, dtype=np.float64) / fs #acomoda las muestras a cada instante correspondiente del tiempo
+    ri = np.zeros(n_samples, dtype=np.float64) #np.zeros para crear un array de ceros del tamaño necesario para la duración pedida, que es donde voy a ir sumando cada banda filtrada con su envolvente correspondiente
+    nyq = fs / 2
     nyq = fs / 2
 
     for fc, t60 in t60_por_banda.items():
-
-        fc = float(fc)
+        fc = float(fc) #fc es la frecuencia central de la banda
         t60 = float(t60)
 
         if fc <= 0:
-
-            raise ValueError(
-                f"Frecuencia inválida: {fc}"
-            )
+            raise ValueError(f"Frecuencia inválida: {fc}")
 
         if t60 <= 0:
+            raise ValueError(f"T60 inválido: {t60}")
 
-            raise ValueError(
-                f"T60 inválido: {t60}"
-            )
-
-        noise = np.random.normal(
-            loc=0.0,
-            scale=1.0,
-            size=n_samples
-        )
+        noise = np.random.normal(loc=0.0, scale=1.0, size=n_samples) #np.random.normal para generar ruido blanco gaussiano, con media 0 y desviación estándar 1, del tamaño necesario para la duración pedida
 
         f_inf = fc / np.sqrt(2)
 
@@ -169,28 +135,13 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
 
             f_sup = nyq * 0.999
 
-        w = [
-            f_inf / nyq,
-            f_sup / nyq
-        ]
+        w = [f_inf / nyq, f_sup / nyq] #w es la frecuencia de corte normalizada para el filtro bandpass, con f_inf y f_sup como frecuencias de corte inferior y superior respectivamente, normalizadas por la frecuencia de nyquist
 
-        sos = butter(
-            N=4,
-            Wn=w,
-            btype="bandpass",
-            output="sos"
-        )
+        sos = butter( N=4, Wn=w, btype="bandpass", output="sos")
 
-        filtered = sosfiltfilt(
-            sos,
-            noise
-        )
+        filtered = sosfiltfilt(sos, noise)
 
-        rms = np.sqrt(
-            np.mean(
-                filtered**2
-            )
-        )
+        rms = np.sqrt(np.mean(filtered**2))
 
         if rms > 0:
 
@@ -198,17 +149,13 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
 
         alpha = np.log(1000.0) / t60
 
-        envelope = np.exp(
-            -alpha * t
-        )
+        envelope = np.exp(-alpha * t)
 
         band = filtered * envelope
 
         ri += band
 
-    max_abs = np.max(
-        np.abs(ri)
-    )
+    max_abs = np.max(np.abs(ri))
 
     if max_abs > 0:
 
