@@ -167,67 +167,133 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     return ri
 
 
-def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) -> np.ndarray:
-    """Obtiene la respuesta al impulso mediante deconvolucion de un sine sweep.
+```python
+import numpy as np
+from scipy.signal import fftconvolve
+
+
+def obtener_ri_desde_sweep(
+    grabacion: np.ndarray,
+    filtro_inverso: np.ndarray
+) -> np.ndarray:
+    """
+    Obtiene la respuesta al impulso mediante
+    deconvolución de un sine sweep.
 
     Parameters
     ----------
     grabacion : np.ndarray
-        Senal grabada que contiene la respuesta de la sala al sweep.
+
+        Señal grabada que contiene la
+        respuesta de la sala.
+
     filtro_inverso : np.ndarray
+
         Filtro inverso del sweep utilizado.
 
     Returns
     -------
     np.ndarray
-        Respuesta al impulso estimada, normalizada.
-    """
-    if not isinstance(grabacion, np.ndarray) or not isinstance(filtro_inverso, np.ndarray):
-        raise TypeError("grabacion y filtro_inverso deben ser arrays numpy")
 
-    # convierte a mono si es multicanal
+        Respuesta al impulso estimada,
+        normalizada.
+    """
+
+    if not isinstance(
+        grabacion,
+        np.ndarray
+    ):
+
+        raise TypeError(
+            "grabacion debe ser "
+            "un array numpy"
+        )
+
+    if not isinstance(
+        filtro_inverso,
+        np.ndarray
+    ):
+
+        raise TypeError(
+            "filtro_inverso debe ser "
+            "un array numpy"
+        )
+
     if grabacion.ndim > 1:
-        grab = grabacion.mean(axis=1)
+
+        grab = grabacion.mean(
+            axis=1
+        )
+
     else:
+
         grab = grabacion
+
     if filtro_inverso.ndim > 1:
-        filt_inv = filtro_inverso.mean(axis=1)
+
+        filt_inv = filtro_inverso.mean(
+            axis=1
+        )
+
     else:
+
         filt_inv = filtro_inverso
 
-    # Convolucion por FFT (deconvolucion mediante convolucion con filtro inverso)
-    try:
-        ri_full = fftconvolve(grab, filt_inv, mode="full")
-    except Exception as e:
-        raise RuntimeError(f"Error durante la convolucion para obtener RI: {e}")
+    grab = np.asarray(
+        grab,
+        dtype=np.float64
+    )
 
-    ri_full = np.asarray(ri_full, dtype=np.float64)
+    filt_inv = np.asarray(
+        filt_inv,
+        dtype=np.float64
+    )
 
-    # encontrar pico principal (llegada directa)
-    peak_idx = int(np.argmax(np.abs(ri_full)))
+    if grab.size == 0:
 
-    # recorta inicio (unos samples antes del pico) y recortar la cola donde la señal es insignificante
-    start = max(0, peak_idx - 10)
-    trimmed = ri_full[start:]
+        raise ValueError(
+            "grabacion vacía"
+        )
 
-    peak_val = np.max(np.abs(trimmed))
-    if peak_val == 0:
-        return trimmed
+    if filt_inv.size == 0:
 
-    # busca último índice significativo (ej > 1e-6 * pico)
-    thresh = 1e-6 * peak_val
-    above = np.where(np.abs(trimmed) >= thresh)[0]
-    if above.size == 0:
-        ri_trim = trimmed
-    else:
-        end = above[-1] + 1
-        ri_trim = trimmed[:end]
+        raise ValueError(
+            "filtro_inverso vacío"
+        )
 
-    # normaliza
-    ri_trim = ri_trim / float(np.max(np.abs(ri_trim)))
-    
-    return ri_trim
+    ri_full = fftconvolve(
+        grab,
+        filt_inv,
+        mode="full"
+    )
 
+    peak_idx = np.argmax(
+        np.abs(ri_full)
+    )
+
+    ri = ri_full[peak_idx:]
+
+    peak = np.max(
+        np.abs(ri)
+    )
+
+    if peak == 0:
+
+        return ri
+
+    threshold = 1e-6 * peak
+
+    indices = np.where(
+        np.abs(ri) >= threshold
+    )[0]
+
+    if indices.size > 0:
+
+        ri = ri[:indices[-1] + 1]
+
+    ri /= np.max(np.abs(ri))
+
+    return ri
 
 def a_escala_log(signal: np.ndarray) -> np.ndarray:
     """Convierte una senal a escala logaritmica (dB) normalizada.
