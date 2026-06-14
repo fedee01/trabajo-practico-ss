@@ -96,80 +96,125 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         Respuesta al impulso sintetizada (array 1D).
     """
     if not isinstance(t60_por_banda, dict):
-        raise TypeError("t60_por_banda debe ser un diccionario {f_central: T60_seg}")
 
-    n_samples = int(np.ceil(duracion * fs))
-    t = np.arange(n_samples) / float(fs)
+        raise TypeError(
+            "t60_por_banda debe ser "
+            "un diccionario {fc:T60}"
+        )
 
-    out = np.zeros(n_samples, dtype=np.float64)
+    if len(t60_por_banda) == 0:
 
-    # si no se pasan bandas, usar las centradas en octave bands típicas
-    if not t60_por_banda:
-        centers = [31.5, 63.0, 125.0, 250.0, 500.0, 1000.0, 2000.0, 4000.0, 8000.0, 16000.0]
-        # asignar un T60 por defecto si faltan
-        t60_por_banda = {f: 1.0 for f in centers}
+        raise ValueError(
+            "t60_por_banda no puede estar vacío"
+        )
 
-    # procesa cada banda: genera ruido, filtra, normaliza por RMS y aplica envolvente
-    for f0, t60 in t60_por_banda.items():
-        f0 = float(f0)
+    if fs <= 0:
+
+        raise ValueError(
+            "fs debe ser positivo"
+        )
+
+    if duracion <= 0:
+
+        raise ValueError(
+            "duracion debe ser positiva"
+        )
+
+    n_samples = int(
+        np.ceil(
+            duracion * fs
+        )
+    )
+
+    t = np.arange(
+        n_samples,
+        dtype=np.float64
+    ) / fs
+
+    ri = np.zeros(
+        n_samples,
+        dtype=np.float64
+    )
+
+    nyq = fs / 2
+
+    for fc, t60 in t60_por_banda.items():
+
+        fc = float(fc)
         t60 = float(t60)
-        if f0 <= 0:
-            raise ValueError(f"Frecuencia central inválida: {f0}")
+
+        if fc <= 0:
+
+            raise ValueError(
+                f"Frecuencia inválida: {fc}"
+            )
+
         if t60 <= 0:
-            raise ValueError(f"T60 inválido para banda {f0} Hz: {t60}")
 
-        # generar ruido blanco
-        noise = np.random.normal(scale=1.0, size=n_samples).astype(np.float64)
+            raise ValueError(
+                f"T60 inválido: {t60}"
+            )
 
-        # diseño de filtro pasa-banda (ancho aproximado de banda de octava)
-        low = f0 / np.sqrt(2.0)
-        high = f0 * np.sqrt(2.0)
+        noise = np.random.normal(
+            loc=0.0,
+            scale=1.0,
+            size=n_samples
+        )
 
-        nyq = fs / 2.0
-        if high >= nyq:
-            high = nyq * 0.999
-        if low <= 0:
-            low = 1.0
+        f_inf = fc / np.sqrt(2)
 
-        wp = [low / nyq, high / nyq]
-        sos = butter(N=4, Wn=wp, btype="band", output="sos")
+        f_sup = fc * np.sqrt(2)
 
-        # filtrado cero-fase con sosfiltfilt; fallback a sosfilt si falla
-        try:
-            filtered = sosfiltfilt(sos, noise)
-        except Exception:
-            try:
-                # aplicar forward+backward manualmente con sosfilt
-                forward = sosfilt(sos, noise)
-                filtered = forward[::-1].copy()
-                filtered = sosfilt(sos, filtered)[::-1]
-            except Exception:
-                # último recurso: usar filtfilt con coeficientes b,a
-                b, a = butter(N=4, Wn=wp, btype="band")
-                try:
-                    filtered = filtfilt(b, a, noise)
-                except Exception:
-                    filtered = noise
+        if f_sup >= nyq:
 
-        # normalizar cada banda por su RMS antes de aplicar la envolvente
-        rms = np.sqrt(np.mean(filtered**2))
+            f_sup = nyq * 0.999
+
+        w = [
+            f_inf / nyq,
+            f_sup / nyq
+        ]
+
+        sos = butter(
+            N=4,
+            Wn=w,
+            btype="bandpass",
+            output="sos"
+        )
+
+        filtered = sosfiltfilt(
+            sos,
+            noise
+        )
+
+        rms = np.sqrt(
+            np.mean(
+                filtered**2
+            )
+        )
+
         if rms > 0:
-            filtered = filtered / float(rms)
 
-        # envolvente exponencial a partir de T60: exp(-alpha * t)
-        alpha = np.log(1000.0) / t60  # ln(1000) para -60 dB en T60
-        envelope = np.exp(-alpha * t)
+            filtered /= rms
+
+        alpha = np.log(1000.0) / t60
+
+        envelope = np.exp(
+            -alpha * t
+        )
 
         band = filtered * envelope
-        out += band
 
-    # normalizar respecto al pico
-    max_abs = np.max(np.abs(out))
-    if max_abs == 0:
-        return out
-        
-    out = out / max_abs
-    return out
+        ri += band
+
+    max_abs = np.max(
+        np.abs(ri)
+    )
+
+    if max_abs > 0:
+
+        ri /= max_abs
+
+    return ri
 
 
 def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) -> np.ndarray:
