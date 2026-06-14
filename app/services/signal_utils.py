@@ -95,8 +95,8 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     np.ndarray
         Respuesta al impulso sintetizada (array 1D).
     """
-    #validaciones
     
+    #validaciones
     if not isinstance(t60_por_banda, dict):
         raise TypeError("t60_por_banda debe ser un diccionario {fc:T60}")
 
@@ -113,7 +113,6 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     t = np.arange(n_samples, dtype=np.float64) / fs #acomoda las muestras a cada instante correspondiente del tiempo
     ri = np.zeros(n_samples, dtype=np.float64) #np.zeros para crear un array de ceros del tamaño necesario para la duración pedida, que es donde voy a ir sumando cada banda filtrada con su envolvente correspondiente
     nyq = fs / 2
-    nyq = fs / 2
 
     for fc, t60 in t60_por_banda.items():
         fc = float(fc) #fc es la frecuencia central de la banda
@@ -125,8 +124,10 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         if t60 <= 0:
             raise ValueError(f"T60 inválido: {t60}")
 
+        # ruido blanco
         noise = np.random.normal(loc=0.0, scale=1.0, size=n_samples) #np.random.normal para generar ruido blanco gaussiano, con media 0 y desviación estándar 1, del tamaño necesario para la duración pedida
 
+        # filtro de octava
         f_inf = fc / np.sqrt(2)
 
         f_sup = fc * np.sqrt(2)
@@ -134,6 +135,9 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         if f_sup >= nyq:
 
             f_sup = nyq * 0.999
+        
+        if f_inf >= f_sup:
+            raise ValueError(f"Banda inválida para fc={fc}")
 
         w = [f_inf / nyq, f_sup / nyq] # w es la frecuencia de corte normalizada para el filtro bandpass, con f_inf y f_sup como frecuencias de corte inferior y superior respectivamente, normalizadas por la frecuencia de nyquist
 
@@ -141,13 +145,13 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
                                                                  # butterworth es un filtro pasabandas
 
         filtered = sosfiltfilt(sos, noise) # filtro el ruido blanco con el filtro bandpass definido por sos, usando filtfilt para evitar desfases
-
+        
+        # normalización RMS
         rms = np.sqrt(np.mean(filtered**2)) 
-
         if rms > 0:
-
             filtered /= rms
 
+        # envolvente
         alpha = np.log(1000.0) / t60 # alfa es el coeficiente de atenuación para la envolvente exponencial, calculado a partir del T60 pedido para esa banda
                                      # usando la fórmula que relaciona T60 con el tiempo que tarda la señal en atenuarse 1000 veces (60 dB)
 
