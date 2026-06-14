@@ -11,7 +11,7 @@ GRÁFICO RUIDO ROSA:  (PSD vs FRECUENCIA)
 
 La PSD (Densidad Espectral de Potencia) se expresa en dB/Hz para describir cómo se distribuye la potencia o energía de una señal en un espectro de frecuencias, es decir, a lo largo de las distintas frecuencias que la componen. 
 
-Se observa que hay una caída de 3.18dB por banda de banda de octava, es decir, que paso el test de espectro de ruido rosa, donde se utilizó la función welch y tenia como criterio que la pendiente debia ser dentro de -3dB con un errore de 1dB. 
+Se observa que hay una caída de 3.18dB por banda de banda de octava, es decir, que pasó el test de espectro de ruido rosa, donde se utilizó la función welch y tenía como criterio que la pendiente debía ser dentro de -3dB con un error de 1dB. 
 Asimismo, en el grafico hay una especie de meseta (valor que se mantiene constante) desde las primeras frecuencias hasta un poco más que 170 Hz, esto se puede deber a la longitud de la ventana de análisis que se utilizó para el cálculo de la densidad espectral de potencia y el algoritmo de generación de ruido. En muchos casos el algoritmo no tiene la resolución suficiente para distinguir lo que sucede en las frecuencias bajas, por consiguiente se promedian los valores. También al utilizar el filtro digital, como Voss Mc-Carteney, necesitan muchos coeficientes para mantener la precisión en las bajas frecuencias, por lo tanto se aplana la pendiente. 
 
 ACA HAY QUE PONER SI CAMBIAMOS EL ERROR O LO DEJAMOS ASI!
@@ -35,4 +35,6 @@ Cuando se realizó el gráfico de sine sweep surgió como problemática que la r
 
 {Grafico del impulso EUGE}
 
-Se puede observar que se obtuvo como resultado de la convolucion del sine sweep y su filtro inverso un impulso con lobulos laterales pequeños que se atenuan de forma drastrica y simetrica a los milisegundos, también que dicho impulso obtiene su valor normalizado de amplitud maxima (1) en el tiempo 0s  {INSERTAR GRAFICO DE LAS CASITAS FEDE}
+Se puede observar que se obtuvo como resultado de la convolución del sine sweep y su filtro inverso un impulso con lóbulos laterales pequeños que se atenúan de forma drástica y simétrica a los milisegundos, también que dicho impulso obtiene su valor normalizado de amplitud máxima (1) en el tiempo 0s  {INSERTAR GRÁFICO DE LAS CASITAS FEDE}
+Asimismo se validó el test de convolución-impulso, el cual tiene como criterio que la relación pico - piso sea mayor o igual a 40 dB, siendo que se obtuvo un valor de 109.5 dB. 
+
