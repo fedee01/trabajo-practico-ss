@@ -11,7 +11,7 @@ GRÁFICO RUIDO ROSA:  (PSD vs FRECUENCIA)
 
 La PSD (Densidad Espectral de Potencia) se expresa en dB/Hz para describir cómo se distribuye la potencia o energía de una señal en un espectro de frecuencias, es decir, a lo largo de las distintas frecuencias que la componen. 
 
-Podemmos ver que hay una caida de -3dB por banda de banda de octava.
+Podemos ver que hay una caida de -3dB por banda de banda de octava.
 
 CHEQUEAR A PARTIR DE ACA: 
 
