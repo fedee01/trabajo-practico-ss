@@ -26,7 +26,7 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     FileNotFoundError
         Si el archivo especificado no existe.
     """
-    if not os.path.exists(ruta):
+    if not os.path.exists(ruta): 
         raise FileNotFoundError(f"Archivo no encontrado: {ruta}")
 
     try:
@@ -34,8 +34,11 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     except Exception as e:
         raise RuntimeError(f"Error al leer el archivo de audio: {e}")
 
-    # devuelve floats normalizados en [-1, 1] 
+    # devuelve floats normalizados en [-1, 1]
     data = np.asarray(data, dtype=np.float64)
+    max1 = float(np.max(np.abs(data)))  # normaliza
+    if max1 > 0:
+        data /= max1
 
     # como shape (n_channels, n_samples) — canales en filas, muestras en columnas.
     if data.ndim == 1:
