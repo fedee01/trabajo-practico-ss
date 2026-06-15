@@ -42,3 +42,19 @@ Se puede observar que se obtuvo como resultado de la convolución del sine sweep
 
 Asimismo se validó el test de convolución-impulso, el cual tiene como criterio que la relación pico - piso sea mayor o igual a 40 dB, siendo que se obtuvo un valor de 109.5 dB. 
 
+
+Grabación y reproducción 
+<img width="352" height="326" alt="image" src="https://github.com/user-attachments/assets/ad0f33ec-7663-46e5-a5dd-5f2b34e5263f" />
+
+Para comprobar que las funciones “generar_ruido_rosa” y “reproducir_y_grabar” funcionen correctamente se realizo una prueba de la siguiente manera: 
+
+ ```python
+from app.services.pink_noise import generar_ruido_rosa
+from app.services.reproducir_grabar import reproducir_y_grabar
+
+prueba = generar_ruido_rosa(3,44100)
+reproducir_y_grabar(prueba, 44100, 4)
+   ```
+de forma tal que se genera un ruido rosa por 3 segundos a una frecuencia de muestreo de 44100 Hz y se grabe por 4 segundos. Luego se coloco el archivo en audacity y se graficó.
+Estas pruebas se realizaron diez veces a diferentes intensidades sonoras utilizando para su reproducción y grabación un Noga vintage mic-2030 px cardioide. Se puede observar en el grafico de la figura: X el ruido rosa a una intendidad de COMPLETAR INTENSIDAD, cumple con una caida logaritmica (DESARROLLAR UN POCO MAS) 
+En caso de querer repetir este experimento se puede copiar el codigo en un nuevo archivo, ejecutar y arrastrar la grabación realizada (dentro de la carpeta grabaciones) a audacity (para graficar se deberá tocar “Analizar/Trazar espectro”).
