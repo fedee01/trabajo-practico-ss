@@ -1,7 +1,8 @@
 from sine_sweep import generar_sine_sweep
 from pink_noise import generar_ruido_rosa
+from signal_utils import sintetizar_ri
 from scipy import signal
-from scipy.signal import welch
+from scipy.signal import welch, envelope
 from scipy.stats import linregress
 import numpy as np
 import matplotlib.pyplot as plt
@@ -16,6 +17,7 @@ duracion = 10
 # ploteo('plotsinesweep')       devuelve grafico espectral del sine sweep
 # ploteo('plotconvolucion')     devuelve convolucion del sine sweep y filtro inverso
 # ploteo('plotruidorosa')       devuelve grafico de ruido rosa
+# ploteo('plotriAMP')           devuelve grafico de amplitud de nuestro RI sintetizado
 
 def ploteo(plot):
 
@@ -26,7 +28,6 @@ def ploteo(plot):
         convolucion = signal.fftconvolve(sweep, inverso, mode="full")
 
         if plot == 'plotsinesweep':
-
             # plot 1
             plt.figure(figsize=(10, 4))
             plt.specgram(sweep, Fs=fs)
@@ -102,4 +103,46 @@ def ploteo(plot):
 
         plt.show()
 
-ploteo('plotruidorosa')
+    if plot == 'plotriAMP' or plot == 'plotriRMS':
+
+        # parametros de ejemplo
+        fs = 44100
+        duracion = 0.4
+        freq_central = 1000
+        T60_segundos = 1.2
+
+        ri = sintetizar_ri({freq_central: T60_segundos},fs, duracion)
+        time = np.linspace(0,len(ri) / fs, num = len(ri))
+
+        plt.figure(figsize=(10, 4))
+        plt.title(f"IR sintética: T60 {T60_segundos:.1f} segundos, duración {duracion:.1f} segundos")
+        plt.xlabel("Tiempo [s]")
+        
+        if plot == 'plotriAMP':
+            plt.ylabel("Amplitud normalizada")
+            plt.xlim([0, 4])
+            plt.ylim([-1, 1])
+            plt.plot(time, ri, linewidth=1)
+            plt.grid()
+            plt.show()
+
+        elif plot == 'plotriRMS':
+            # no se como hacer este
+            envolvente = envelope(ri, residual=None)
+            plt.ylabel("Envolvente RMS (dB)")
+            plt.xlim([0, 4])
+            plt.ylim([-80, 0])
+            plt.plot(time, envolvente)
+            plt.grid()
+            plt.show()
+
+    if plot == 'plotridesdesweep':
+        plt.ylabel("Amplitud normalizada")
+        plt.xlim([0, 4])
+        plt.ylim([-1, 1])
+        plt.plot(time, ri, linewidth=1)
+        plt.grid()
+        plt.show()
+
+
+ploteo('plotriRMS')
