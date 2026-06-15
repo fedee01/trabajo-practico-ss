@@ -4,7 +4,6 @@ Milestone 2: Procesamiento de la respuesta al impulso.
 """
 
 import os
-
 import numpy as np
 import soundfile as sf
 from scipy.signal import butter, fftconvolve, sosfiltfilt
@@ -53,11 +52,9 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     signal = np.asarray(signal,dtype=np.float64)
 
     if signal.ndim == 2:
-
         n_channels = signal.shape[1] #[1] es el numero de canales, [0] es el numero de muestras
 
         if n_channels not in (1, 2):
-
             raise ValueError(
                 f"Número de canales inválido: "
                 f"{n_channels}. "
@@ -107,9 +104,9 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     if fs <= 0:
         raise ValueError("fs debe ser positivo")
 
-    n_samples = int(np.ceil(duracion * fs)) #ceil es para redondear hacia arriba, así me aseguro de tener suficientes muestras para la duración pedida
-    t = np.arange(n_samples, dtype=np.float64) / fs #acomoda las muestras a cada instante correspondiente del tiempo
-    ri_sintetizada = np.zeros(n_samples, dtype=np.float64) #np.zeros para crear un array de ceros del tamaño necesario para la duración pedida, que es donde voy a ir sumando cada banda filtrada con su envolvente correspondiente
+    n_samples = int(np.ceil(duracion * fs))                 # ceil es para redondear hacia arriba, así me aseguro de tener suficientes muestras para la duración pedida
+    t = np.arange(n_samples, dtype=np.float64) / fs         # acomoda las muestras a cada instante correspondiente del tiempo
+    ri_sintetizada = np.zeros(n_samples, dtype=np.float64)  # np.zeros crea array de ceros = a la duración pedida, donde voy a ir sumando cada banda filtrada con su envolvente
     nyq = fs / 2
 
     for fc, t60 in t60_por_banda.items():
@@ -123,43 +120,41 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
             raise ValueError(f"T60 inválido: {t60}")
 
         # ruido blanco
-        noise = np.random.normal(loc=0.0, scale=1.0, size=n_samples) #np.random.normal para generar ruido blanco gaussiano, con media 0 y desviación estándar 1, del tamaño necesario para la duración pedida
+        noise = np.random.normal(loc=0.0, scale=1.0, size=n_samples) # np.random.normal genera ruido blanco gaussiano (media 0, desviación estándar 1) del tamaño de la duración pedida
 
         # filtro de octava
         f_inf = fc / np.sqrt(2)
-
         f_sup = fc * np.sqrt(2)
 
         if f_sup >= nyq:
-
             f_sup = nyq * 0.999
 
         if f_inf >= f_sup:
             raise ValueError(f"Banda inválida para fc={fc}")
 
-        w = [f_inf / nyq, f_sup / nyq] # w es la frecuencia de corte normalizada para el filtro bandpass, con f_inf y f_sup como frecuencias de corte inferior y superior respectivamente, normalizadas por la frecuencia de nyquist
+        w = [f_inf / nyq, f_sup / nyq] # w es la fc normalizada para el filtro bandpass (f_inf y f_sup son frecs de corte inf y sup) normalizadas por la frec de nyquist
 
-        sos = butter( N=4, Wn=w, btype="bandpass", output="sos") # sos es la representación en secciones de segundo orden del filtro Butterworth de orden 4, con las frecuencias de corte definidas por w, y tipo "bandpass"
+        sos = butter( N=4, Wn=w, btype="bandpass", output="sos") # sos es la representación en secciones de 2° orden del filtro Butterworth de orden 4, con las fc definidas por w y tipo "bandpass"
                                                                  # butterworth es un filtro pasabandas
 
-        filtered = sosfiltfilt(sos, noise) # filtro el ruido blanco con el filtro bandpass definido por sos, usando filtfilt para evitar desfases
+        filtrado = sosfiltfilt(sos, noise) # filtro el ruido blanco con el filtro bandpass definido por sos (filtfilt para evitar desfases)
 
         # normalización RMS
-        rms = np.sqrt(np.mean(filtered**2)) 
+        rms = np.sqrt(np.mean(filtrado**2)) 
         if rms > 0:
-            filtered /= rms
+            filtrado /= rms
 
         # envolvente
-        alpha = np.log(1000.0) / t60 # alfa es el coeficiente de atenuación para la envolvente exponencial, calculado a partir del T60 pedido para esa banda
+        alfa = np.log(1000.0) / t60 # alfa es el coef de atenuación para la envolvente exponencial, calculado a partir del T60 pedido para esa banda
                                      # usando la fórmula que relaciona T60 con el tiempo que tarda la señal en atenuarse 1000 veces (60 dB)
 
-        envelope = np.exp(-alpha * t) # envolvente exponencial que simula la decaimiento de la reverberación, 
-                                      # con el coeficiente de atenuación alpha calculado a partir del T60 pedido para esa banda
+        envolv = np.exp(-alfa * t) # envolvente exponencial que simula la decaimiento de la reverberación, 
+                                      # con el alfa calculado a partir del T60 pedido para esa banda
 
-        band = filtered * envelope # cada banda de la respuesta al impulso se obtiene multiplicando
+        banda = filtrado * envolv # cada banda de la respuesta al impulso se obtiene multiplicando
                                    # el ruido filtrado por la envolvente exponencial correspondiente a esa banda
 
-        ri_sintetizada += band #la sumatoria de todas las bandas
+        ri_sintetizada += banda #la sumatoria de todas las bandas
 
     # normalizado
     max_abs = np.max(np.abs(ri_sintetizada)) 
@@ -193,22 +188,17 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
     if not isinstance(filtro_inverso, np.ndarray):
         raise TypeError("filtro_inverso debe ser un array numpy")
 
-    # conversión estéreo -> mono. si la señal tiene dos canales, se promedian para obtener una única señal mono.
-
+    # conversión estéreo -> mono, se promedian para obtener una única señal mono.
     if grabacion.ndim == 2:
-
         grabacion = grabacion.mean(axis=1)
 
     elif grabacion.ndim != 1:
-
         raise ValueError("grabacion debe ser mono o estéreo")
 
     if filtro_inverso.ndim == 2:
-
         n_channels = filtro_inverso.shape[1]
-
+        
         if n_channels not in (1, 2):
-
              raise ValueError(f"Número de canales inválido:{n_channels}. Debe ser mono o estéreo.")
 
         filtro_inverso = filtro_inverso.mean(axis=1)
@@ -217,23 +207,19 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
         raise ValueError("filtro_inverso debe ser mono o estéreo.")
 
     # conversión a float64
-
     grabacion = np.asarray(grabacion, dtype=np.float64)
     filtro_inverso = np.asarray(filtro_inverso, dtype=np.float64)
 
     # validación de arrays vacíos
-
     if grabacion.size == 0:
         raise ValueError("grabacion vacía")
-
     if filtro_inverso.size == 0:
         raise ValueError("filtro_inverso vacío")
 
-    # deconvolución mediante FFT. la RI se obtiene convolucionando la grabación con el filtro inverso del sweep.
-
+    # deconvolución con FFT, la RI sale de convolucionar la grabación con el filtro inverso del sweep.
     ri_full = fftconvolve(grabacion, filtro_inverso, mode="full")
 
-    # ubicar el pico principal
+    # ubica el pico principal
     peak_idx = np.argmax(np.abs(ri_full))
     ri= ri_full[peak_idx:]
 
@@ -243,6 +229,7 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
         ri /= max_abs
 
     return ri
+
 
 def a_escala_log(signal: np.ndarray) -> np.ndarray:
     """Convierte una senal a escala logaritmica (dB) normalizada.
