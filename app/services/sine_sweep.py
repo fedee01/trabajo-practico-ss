@@ -37,7 +37,7 @@ def generar_sine_sweep(
         raise ValueError("la frecuencia final (f2) debe ser mayor a la inicial (f1)")
 
     if duracion <= 0:
-        raise ValueError("la duracion debe ser un numero positivo)")
+        raise ValueError("la duracion debe ser un numero positivo")
 
     if fs <= 0:
         raise ValueError("la frecuencia de muestreo debe ser un numero positivo")
