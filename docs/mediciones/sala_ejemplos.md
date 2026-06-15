@@ -37,6 +37,7 @@ Cuando se realizó el gráfico de sine sweep surgió como problemática que la r
 <img width="1000" height="400" alt="image" src="https://github.com/user-attachments/assets/4a08f7c0-86d1-4da5-826a-3d2394441e42" />
 
 
-Se puede observar que se obtuvo como resultado de la convolución del sine sweep y su filtro inverso un impulso con lóbulos laterales pequeños que se atenúan de forma drástica y simétrica a los milisegundos, también que dicho impulso obtiene su valor normalizado de amplitud máxima (1) en el tiempo 0s  {INSERTAR GRÁFICO DE LAS CASITAS FEDE}
+Se puede observar que se obtuvo como resultado de la convolución del sine sweep y su filtro inverso un impulso con lóbulos laterales pequeños que se atenúan de forma drástica y simétrica a los milisegundos, también que dicho impulso obtiene su valor normalizado de amplitud máxima (1) en el tiempo 0s  <img width="992" height="466" alt="image" src="https://github.com/user-attachments/assets/555d67ef-895f-44a8-81ae-caf5a92eaedb" />
+
 Asimismo se validó el test de convolución-impulso, el cual tiene como criterio que la relación pico - piso sea mayor o igual a 40 dB, siendo que se obtuvo un valor de 109.5 dB. 
 
