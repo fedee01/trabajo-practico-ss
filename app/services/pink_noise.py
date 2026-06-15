@@ -1,8 +1,4 @@
-import matplotlib.pyplot as plt
 import numpy as np
-from scipy.signal import welch
-from scipy.stats import linregress
-
 
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
@@ -37,44 +33,3 @@ def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
         r_rosa /= max_val
 
     return r_rosa
-
-# parametros de ejemplo:
-duracion = 10.0
-fs = 44100
-r_rosa = generar_ruido_rosa(duracion, fs)
-
-#acá empieza el calculo de la pendiente con welch
-f, Pxx = welch(r_rosa, fs=fs, nperseg=8192) #pxx es el psd
-
-mask = (f >= 100) & (f <= 10000) #acá tomo las frecuencias entre 100 y 1000 hz
-
-x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el primedio de la pendiente sea en db/octava
-y = 10 * np.log10(Pxx[mask]) #esto me hace la escala y en db
-
-pendiente, _, _, _, _ = linregress(x, y) #lineregress toma todos los puntos de la respuesta espectral y hace un ajuste lineal
-
-#esta parte es la del gráfico
-plt.figure()
-
-plt.psd(r_rosa, Fs=fs, color="red", linewidth=1)
-
-plt.xlabel("Frecuencia [Hz]")
-plt.ylabel("PSD [dB/Hz]")
-plt.xscale("log")
-
-plt.xlim([20, 24000])
-plt.ylim([-85, -35])
-
-plt.title("Ruido rosa")
-
-plt.text(
-    0.6,
-    0.95,
-    f"Pendiente = {pendiente:.2f} dB/oct",
-    transform=plt.gca().transAxes,
-    verticalalignment="top",
-    bbox=dict(boxstyle="round", facecolor="white"),
-)
-#plt.text es para poner la cajita con el valor de la pendiente
-
-plt.show()
