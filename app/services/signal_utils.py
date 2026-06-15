@@ -107,9 +107,6 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     if fs <= 0:
         raise ValueError("fs debe ser positivo")
 
-    if duracion <= 0:
-        raise ValueError("duracion debe ser positiva")
-
     n_samples = int(np.ceil(duracion * fs)) #ceil es para redondear hacia arriba, así me aseguro de tener suficientes muestras para la duración pedida
     t = np.arange(n_samples, dtype=np.float64) / fs #acomoda las muestras a cada instante correspondiente del tiempo
     ri_sintetizada = np.zeros(n_samples, dtype=np.float64) #np.zeros para crear un array de ceros del tamaño necesario para la duración pedida, que es donde voy a ir sumando cada banda filtrada con su envolvente correspondiente
