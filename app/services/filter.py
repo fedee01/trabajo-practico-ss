@@ -66,10 +66,8 @@ def filtro_octava(signal: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.
     sos = scipy.signal.butter(orden, [W_inf, W_sup], btype="bandpass", output="sos")
 
     # filtrado de fase cero
-    senal_filtrada = scipy.signal.sosfiltfilt(sos, signal) #sos es una lista de matrices de
-                                                           # coeficientes del filtro. signal es la
-                                                           # señal de entrada. sosfiltfilt aplica el
-                                                           # filtro en ambas direcciones para evitar
-                                                           # distorsión de fase. devuelve la señal filtrada y
+    senal_filtrada = scipy.signal.sosfiltfilt(sos, signal) 
+    # sos es una lista de matrices de coef del filtro
+    # sosfiltfilt aplica el filtro en ambas direcciones para evitar distorsión de fase
 
     return senal_filtrada
