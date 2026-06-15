@@ -7,7 +7,7 @@ Uso:
 """
 
 from fastapi import FastAPI
-# from app.routers import health
+from app.routers import health
 from app.services.sine_sweep import generar_sine_sweep
 from app.services.pink_noise import generar_ruido_rosa
 from app.services.reproducir_grabar import reproducir_y_grabar
@@ -20,7 +20,7 @@ app = FastAPI(
 )
 
 # Routers
-# app.include_router(health.router)
+app.include_router(health.router)
 
 # TODO (M3): Agregar routers de signals, filters, acoustics, analysis, utils
 # app.include_router(signals.router, prefix="/api/v1/signals", tags=["signals"])
