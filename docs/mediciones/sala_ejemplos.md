@@ -33,7 +33,8 @@ REDACTAR MÁS LINDO LA PARTE DE PROBLEMATICA:
 
 Cuando se realizó el gráfico de sine sweep surgió como problemática que la resolución del gráfico era demasiado grande, se buscó información en matplotlib y se cambió en el código  plt.yscale(“symlog”),  “log ” por “symlog”. Debido a que este último es de utilidad para rangos muy grandes. 
 
-{Grafico del impulso EUGE}
+{Grafico del impulso EUGE<img width="1000" height="400" alt="image" src="https://github.com/user-attachments/assets/4a08f7c0-86d1-4da5-826a-3d2394441e42" />
+
 
 Se puede observar que se obtuvo como resultado de la convolución del sine sweep y su filtro inverso un impulso con lóbulos laterales pequeños que se atenúan de forma drástica y simétrica a los milisegundos, también que dicho impulso obtiene su valor normalizado de amplitud máxima (1) en el tiempo 0s  {INSERTAR GRÁFICO DE LAS CASITAS FEDE}
 Asimismo se validó el test de convolución-impulso, el cual tiene como criterio que la relación pico - piso sea mayor o igual a 40 dB, siendo que se obtuvo un valor de 109.5 dB. 
