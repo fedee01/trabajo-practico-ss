@@ -7,7 +7,7 @@ Uso:
 """
 
 from fastapi import FastAPI
-# from app.routers import health
+from app.routers import health
 from services.sine_sweep import generar_sine_sweep
 from services.pink_noise import generar_ruido_rosa
 from services.reproducir_grabar import reproducir_y_grabar
