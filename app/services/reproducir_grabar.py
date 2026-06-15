@@ -4,6 +4,8 @@ Milestone 1: Generacion de senales.
 """
 import numpy as np
 import sounddevice as sd
+import soundfile as sf
+from pathlib import Path
 
 def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) -> np.ndarray:
     """
@@ -78,5 +80,18 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
         if rel_diff > 0.01:
             raise RuntimeError(f"Duración de grabación inesperada: solicitada {duracion_grabacion:.6f}s, "
                 f"registrada {recorded_seconds:.6f}s dando una diferencia del ({rel_diff*100:.2f}%)")
+
+    # la carpeta se guarda en "grabaciones" en la raíz del proyecto
+    app_dir = Path(__file__).resolve().parent.parent.parent / "grabaciones"
+
+    # numera la grabacion y la guarda como .wav
+    graba_num = 1
+    filename = f"grabacion_{graba_num}.wav"
+    while (app_dir / filename).exists():
+        graba_num += 1
+        filename = f"grabacion_{graba_num}.wav"
+
+    out_path = app_dir / filename
+    sf.write(str(out_path), recording, int(fs))
 
     return recording
