@@ -33,7 +33,16 @@ def generar_sine_sweep(
 
     if (f1 == 0):  # si la f pedida es 0, usa un numero muy chico para no dividir por 0
         f1 += 1e-10
+        
+    if f2 <= f1:
+        raise ValueError("la frecuencia final (f2) debe ser mayor a la inicial (f1)")
 
+    if duracion <= 0:
+        raise ValueError("la duracion debe ser un numero positivo)
+
+    if fs <= 0:
+        raise ValueError("la frecuencia de muestreo debe ser un numero positivo")
+   
     t = np.linspace(0, duracion, int(duracion * fs), endpoint=False)
 
     sine_sweep = np.array(

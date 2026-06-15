@@ -24,6 +24,9 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
     np.ndarray
         Array con la señal grabada.
     """
+    if fs <= 0 :
+        raise ValueError("la frecuencia de muestreo debe ser positiva")
+    
     # acepta señal mono (1D) o multicanal (2D)
     if signal.ndim == 1:
         channels = 1
