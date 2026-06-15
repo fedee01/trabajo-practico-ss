@@ -29,7 +29,12 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     FileNotFoundError
         Si el archivo especificado no existe.
     """
-    if not os.path.exists(ruta): 
+    # validacion
+    if not isinstance(ruta, str):
+        raise TypeError("'ruta' debe ser una cadena de texto")
+    #si no es un string, no tiene sentido intentar cargar un archivo, así que lanzo un error de tipo
+
+    if not os.path.exists(ruta):
         raise FileNotFoundError(f"Archivo no encontrado: {ruta}")
 
     ext = os.path.splitext(ruta)[1].lower()
@@ -49,11 +54,11 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     if signal.ndim == 2:
         n_channels = signal.shape[1] #[1] es el numero de canales, [0] es el numero de muestras
 
-    # devuelve floats normalizados en [-1, 1]
-    data = np.asarray(data, dtype=np.float64)
-    max1 = float(np.max(np.abs(data)))  # normaliza
-    if max1 > 0:
-        data /= max1
+        if n_channels not in (1, 2):
+            raise ValueError(
+                f"Número de canales inválido: "
+                f"{n_channels}. "
+                "Debe ser mono o estéreo.")
 
         signal = signal.mean(axis=1) # si es estéreo, promedia ambos canales para obtener mono
 
