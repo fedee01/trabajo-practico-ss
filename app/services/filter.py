@@ -4,11 +4,10 @@ Milestone 2: Procesamiento de la respuesta al impulso.
 """
 
 import numpy as np
-from scipy.signal import butter, filtfilt, lfilter
+import scipy.signal
 
-def filtro_octava(
-    signal: np.ndarray, fc: float, fs: int, orden: int = 4
-) -> np.ndarray:
+
+def filtro_octava(signal: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.ndarray:
     """Aplica un filtro pasabanda de una octava centrado en ``fc``.
 
     Implementa un filtro Butterworth pasabanda cuyas frecuencias de corte
@@ -18,7 +17,7 @@ def filtro_octava(
 
     Parameters
     ----------
-    signal : np.ndarray
+    x : np.ndarray
         Senal de entrada (array 1D).
     fc : float
         Frecuencia central de la banda de octava en Hz.
@@ -32,41 +31,38 @@ def filtro_octava(
     np.ndarray
         Senal filtrada (array 1D).
     """
-    
-    if not isinstance(x, np.ndarray):
-        raise TypeError("x debe ser un np.ndarray 1D")
-    if x.ndim != 1:
-        raise ValueError("x debe ser un array 1D (senal mono)")
-    if not (isinstance(fc, (int, float)) and fc > 0):
-        raise ValueError("fc debe ser una frecuencia positiva en Hz")
-    if not (isinstance(fs, (int, float)) and fs > 0):
-        raise ValueError("fs debe ser una frecuencia de muestreo positiva en Hz")
+    # validaciones
+    if not isinstance(signal, np.ndarray):
+        raise TypeError("signal debe ser un np.ndarray")
+    if fc <= 0:
+        raise ValueError("fc debe ser positiva")
+    if fs <= 0:
+        raise ValueError("fs debe ser positivo")
+    if orden <= 0:
+        raise ValueError("orden debe ser positivo")
 
-    nyq = float(fs) / 2.0
-    low = float(fc) / np.sqrt(2.0)
-    high = float(fc) * np.sqrt(2.0)
+    # convertir a mono si es multicanal
+    if signal.ndim > 1:
+        signal = signal.mean(axis=1)
 
-    if low <= 0:
-        low = 1.0
-    if high >= nyq:
-        high = nyq * 0.999
+    # límites de la banda IEC 61260
+    f_inf = fc / np.sqrt(2)
+    f_sup = fc * np.sqrt(2)
+    nyquist = fs / 2
 
-    wn0 = low / nyq
-    wn1 = high / nyq
+    if f_sup >= nyquist:
+        raise ValueError("La frecuencia superior excede Nyquist")
 
-    # Evitar valores en los limites y asegurar wn0 < wn1
-    eps = 1e-6
-    wn0 = max(wn0, eps)
-    wn1 = min(wn1, 1.0 - eps)
+    # frecuencias normalizadas
+    W_inf = 2 * f_inf / fs
+    W_sup = 2 * f_sup / fs
 
-    # Intentar filtfilt (cero-fase). Si la señal es demasiado corta para filtfilt,
-    # capturamos la excepción y usamos lfilter como respaldo.
-    try:
-        filtered = filtfilt(b, a, x)
-    except Exception:
-        filtered = lfilter(b, a, x)
+    # Butterworth en formato SOS
+    sos = scipy.signal.butter(orden, [W_inf, W_sup], btype="bandpass", output="sos")
 
-    # Asegurar 1D y tipo float64
-    filtered = np.asarray(filtered, dtype=np.float64).flatten()
+    # filtrado de fase cero
+    senal_filtrada = scipy.signal.sosfiltfilt(sos, signal)
+    # sos es una lista de matrices de coef del filtro
+    # sosfiltfilt aplica el filtro en ambas direcciones para evitar distorsión de fase
 
-    return filtered
+    return senal_filtrada
