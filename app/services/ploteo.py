@@ -1,6 +1,6 @@
 from sine_sweep import generar_sine_sweep
 from pink_noise import generar_ruido_rosa
-from signal_utils import sintetizar_ri
+from signal_utils import sintetizar_ri, obtener_ri_desde_sweep
 from scipy import signal
 from scipy.signal import welch, envelope
 from scipy.stats import linregress
@@ -107,11 +107,11 @@ def ploteo(plot):
 
         # parametros de ejemplo
         fs = 44100
-        duracion = 0.4
+        duracion = 4
         freq_central = 1000
         T60_segundos = 1.2
 
-        ri = sintetizar_ri({freq_central: T60_segundos},fs, duracion)
+        ri = sintetizar_ri({freq_central: T60_segundos}, fs, duracion)
         time = np.linspace(0,len(ri) / fs, num = len(ri))
 
         plt.figure(figsize=(10, 4))
@@ -122,7 +122,7 @@ def ploteo(plot):
             plt.ylabel("Amplitud normalizada")
             plt.xlim([0, 4])
             plt.ylim([-1, 1])
-            plt.plot(time, ri, linewidth=1)
+            plt.plot(time, ri, linewidth=0.5)
             plt.grid()
             plt.show()
 
@@ -137,6 +137,8 @@ def ploteo(plot):
             plt.show()
 
     if plot == 'plotridesdesweep':
+        ridesdesweep = obtener_ri_desde_sweep('/home/hola/Documents/trabajo-practico-ss/app/mono_s1r1.wav',)
+
         plt.ylabel("Amplitud normalizada")
         plt.xlim([0, 4])
         plt.ylim([-1, 1])
@@ -144,5 +146,4 @@ def ploteo(plot):
         plt.grid()
         plt.show()
 
-
-ploteo('plotriRMS')
+ploteo('plotriAMP')

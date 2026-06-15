@@ -8,7 +8,6 @@ import numpy as np
 import soundfile as sf
 from scipy.signal import butter, fftconvolve, sosfiltfilt
 
-
 def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     """Carga un archivo de audio y retorna la senal y la frecuencia de muestreo.
 
