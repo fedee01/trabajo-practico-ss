@@ -67,4 +67,5 @@ Cualquier sonido que se reproduzca en la sala (x(t)) saldrá modificado como una
 
 y(t)=h(t)* x(t)
 
+Si se pudiera reproducir un impulso ideal, es decir, x(T)= delta de dirac. ENTONCES, NOS TERMINARÍA QUEDANDO QUE Y(T)=H(T),  es decir, que nuestra grabación sería directamente nuestra respuesta al impulso.
 
