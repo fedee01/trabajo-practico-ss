@@ -69,3 +69,13 @@ y(t)=h(t)* x(t)
 
 Si se pudiera reproducir un impulso ideal, es decir, x(T)= delta de dirac. ENTONCES, NOS TERMINARÍA QUEDANDO QUE Y(T)=H(T),  es decir, que nuestra grabación sería directamente nuestra respuesta al impulso.
 
+Recordemos que generamos un impulso con el sine sweep convolucionado con sul filtro inverso. (M1).
+
+Hay que realizar la deconvolución. Recordemos que x(t)= sine sweep * filtro inverso= impulso no perfecto.
+
+Se utilizó la transformada rápida de Fourier.
+
+Grafico de IR sintetica:
+
+<img width="558" height="298" alt="image" src="https://github.com/user-attachments/assets/8e3f0860-d42d-4031-95cd-52b9472c10db" />
+
