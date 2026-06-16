@@ -138,6 +138,8 @@ def ploteo(plot):
             plt.show()
 
     if plot == 'plotridesdesweep':
+        fs = 44100
+        duracion = 10
 
         sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
         
