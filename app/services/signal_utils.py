@@ -222,6 +222,12 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
     # ubica el pico principal
     peak_idx = np.argmax(np.abs(ri_full))
     ri= ri_full[peak_idx:]
+    # o se puede hacer ri= ri_full para no perder las primeras reflexiones
+    # pero es más difícil medir el T60 después porque la curva no empieza en 0 dB
+    # sino que tiene un pico inicial que puede ser mucho mayor que las reflexiones posteriores
+    # lo que hace que la curva de decaimiento sea más difícil de analizar.
+    # Al cortar desde el pico principal, me aseguro de que la curva de decaimiento empiece en 0 dB
+    # y sea más fácil de medir el T60.
 
     # normalizado
     max_abs = np.max(np.abs(ri))
