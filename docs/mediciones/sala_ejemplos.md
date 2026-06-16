@@ -81,6 +81,7 @@ Grafico de IR sintetica:
 
 Forma de onda líneal. Eje horizontal tiempo y Eje vertical amplitud. 
 
-Se concentra en el tiempo t=0 s con una amplitud máxima de 1 y esta decae de forma exponencial a cero de forma natural. 
+Se concentra en el tiempo t=0 s con una amplitud máxima de 1 y esta decae de forma exponencial a cero de forma natural. La energía decrece de forma muy rapida
 
 FALTA GRAFICO ESPECTRAL!
+En este es la misma señal pero promediado RMS y luego escalado a escala logartimica, esto se da para poder observar la pendiente de como deae la energia de forma linealmente. 
