@@ -3,4 +3,6 @@ Asumimos que el recinto se comporta como un sistema Lineal e Invariante en el Ti
 Cualquier sonido que se reproduzca en la sala (x(t)) saldrá modificado como una grabación (y(t)) que es el resultado de la convolución matemática: 
 y(t)=h(t)* x(t)
 
+Si se pudiera reproducir un impulso ideal, es decir, x(T)= delta de dirac. ENTONCES, NOS TERMINARÍA QUEDANDO QUE Y(T)=H(T),  es decir, que nuestra grabación sería directamente nuestra respuesta al impulso.
+
 
