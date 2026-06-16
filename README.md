@@ -100,6 +100,9 @@ flowchart LR
 
 ```
 rir-api/
+├── RI/                                   # Respuestas al impulso extraidas de:
+|   ├── 1a_marble_hall.wav                # https://www.openair.hosted.york.ac.uk/?page_id=459
+|   └── mh3_000_ortf_48k.wav              # https://www.openair.hosted.york.ac.uk/?page_id=602
 ├── app/
 │   ├── __init__.py
 │   ├── main.py                           # Punto de entrada FastAPI
@@ -111,6 +114,8 @@ rir-api/
 │   │   └── utils.py                      # Endpoints de utilidades (M3)
 │   ├── schemas/
 │   │   └── ...                           # Modelos Pydantic de request/response
+|   ├── _pycache_/
+│   │   └── ...                           # cache
 │   └── services/
 │       ├── generación/
 │       │   ├── pink_noise.py             # Generacion de ruido rosa (M1)
@@ -126,11 +131,13 @@ rir-api/
 │   ├── test_analisis.py                  # Tests de analisis (M3)
 │   └── test_api.py                       # Tests de endpoints (M3)
 ├── docs/                                 # Documentacion
-│   ├── imagenes                          
+│   ├── imagenes
+│   │   └── ...                                           
 │   ├── teoria                            # Informacion adicional
 │   │   ├── iso_3382.md
 │   │   └── parametros.md              
 │   ├── mediciones
+│   │   └── sala_ejemplos.md
 │   └── README.md                         # Documentacion de RIR-API
 ├── uv.lock
 ├── .github/workflows/ci.yml              # Integracion continua
