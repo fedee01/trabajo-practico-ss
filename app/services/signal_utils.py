@@ -58,7 +58,7 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
                 f"Número de canales inválido: "
                 f"{n_channels}. "
                 "Debe ser mono o estéreo.")
-
+            
         signal = signal.mean(axis=1) # si es estéreo, promedia ambos canales para obtener mono
 
     elif signal.ndim != 1:
@@ -220,6 +220,12 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
     # ubica el pico principal
     peak_idx = np.argmax(np.abs(ri_full))
     ri= ri_full[peak_idx:]
+    # o se puede hacer ri= ri_full para no perder las primeras reflexiones
+    # pero es más difícil medir el T60 después porque la curva no empieza en 0 dB
+    # sino que tiene un pico inicial que puede ser mucho mayor que las reflexiones posteriores
+    # lo que hace que la curva de decaimiento sea más difícil de analizar.
+    # Al cortar desde el pico principal, me aseguro de que la curva de decaimiento empiece en 0 dB
+    # y sea más fácil de medir el T60.
 
     # normalizado
     max_abs = np.max(np.abs(ri))
@@ -229,39 +235,36 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
     return ri
 
 def a_escala_log(signal: np.ndarray) -> np.ndarray:
-    """Convierte una senal a escala logaritmica (dB) normalizada.
+    """Convierte una señal a escala logarítmica (dB) normalizada.
 
     Parameters
     ----------
     signal : np.ndarray
-        Senal de entrada (array 1D).
+        Señal de entrada.
 
     Returns
     -------
     np.ndarray
-        Senal en escala logaritmica (dB), normalizada a 0 dB en el maximo.
+        Señal en escala logarítmica (dB), normalizada a 0 dB.
     """
+    # validaciones (no se si son necesarias acá)
     if not isinstance(signal, np.ndarray):
         raise TypeError("signal debe ser un np.ndarray")
 
-    # convierte a mono si es multicanal
+    if signal.size == 0:
+        raise ValueError("signal no puede estar vacía")
+
+    # pasar a mono si tiene mas canales
     if signal.ndim > 1:
-        sig = signal.mean(axis=1)
-    else:
-        sig = signal
+        signal = signal.mean(axis=1)
 
-    # evita negativos por si la señal es compleja
-    mag = np.abs(sig.astype(np.float64))
+    # protección contra log(0)
+    safe = np.where(signal == 0, np.finfo(float).eps, np.abs(signal))
 
-    # evitar log(0): usar clip
-    mag_safe = np.clip(mag, 1e-10, None)
+    # Normalización al máximo y conversión a dB
+    db = 20 * np.log10(safe / np.max(safe))
 
-    db = 20.0 * np.log10(mag_safe)
-
-    # normalizar para que el maximo sea 0 dB
-    db = db - np.max(db)
-
-    piso_ruido = -120.0
-    db = np.maximum(db, piso_ruido)
+    # piso de ruido opcional
+    db = np.maximum(db, -120.0)
 
     return db
