@@ -137,20 +137,24 @@ def ploteo(plot):
             plt.grid()
             plt.show()
 
-    if plot == 'plotridesdesweep':
+    if plot == "plotridesdesweep":
         fs = 44100
         duracion = 10
 
         sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
-        
-        grabacion = reproducir_y_grabar(sweep, fs, duracion)
-        ridesdesweep = obtener_ri_desde_sweep(grabacion, inverso)
+        audio = cargar_audio(r"RI\1a_marble_hall.wav")
+        convo = fftconvolve(audio[0], sweep)
 
-        plt.ylabel("Amplitud dB")
-        plt.xlabel("Amplitud dB")
-        plt.xlim([0, 1.5])
-        plt.ylim([-100, 0])
-        plt.plot(ridesdesweep)
+        ridesdesweep = obtener_ri_desde_sweep(convo, inverso)
+
+        tiempo = np.linspace(0, len(ridesdesweep) / fs, num=len(ridesdesweep))
+
+        plt.xlabel("Tiempo [s]")
+        plt.ylabel("Amplitud [dB]")
+        plt.xlim([0, 4])
+        plt.ylim([-1, 1])
+        plt.title("obtener_ri_desde_sweep")
+        plt.plot(tiempo, ridesdesweep)
         plt.grid()
         plt.show()
 
