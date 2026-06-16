@@ -1,5 +1,6 @@
 from sine_sweep import generar_sine_sweep
 from pink_noise import generar_ruido_rosa
+from reproducir_grabar import reproducir_y_grabar
 from signal_utils import sintetizar_ri, obtener_ri_desde_sweep
 from scipy import signal
 from scipy.signal import welch, envelope
@@ -137,13 +138,18 @@ def ploteo(plot):
             plt.show()
 
     if plot == 'plotridesdesweep':
-        ridesdesweep = obtener_ri_desde_sweep('/home/hola/Documents/trabajo-practico-ss/app/mono_s1r1.wav',)
 
-        plt.ylabel("Amplitud normalizada")
-        plt.xlim([0, 4])
-        plt.ylim([-1, 1])
-        plt.plot(time, ri, linewidth=1)
+        sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
+        
+        grabacion = reproducir_y_grabar(sweep, fs, duracion)
+        ridesdesweep = obtener_ri_desde_sweep(grabacion, inverso)
+
+        plt.ylabel("Amplitud dB")
+        plt.xlabel("Amplitud dB")
+        plt.xlim([0, 1.5])
+        plt.ylim([-100, 0])
+        plt.plot(ridesdesweep)
         plt.grid()
         plt.show()
 
-ploteo('plotriAMP')
+ploteo('plotridesdesweep')
