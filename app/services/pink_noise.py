@@ -1,5 +1,4 @@
 import numpy as np
-import sounddevice as sd
 
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
@@ -23,7 +22,6 @@ import numpy as np
     n_bits = 16  # numero de bits, es decir numero de generadores
     n_muestras = int(duracion * fs)  # numero de muestras
 
-
     generadores = np.random.randn(n_bits)  # array de la profundidad de bits elegida con los generadores de ruido.
     r_rosa = np.empty(n_muestras, dtype=np.float32)
 
@@ -40,12 +38,3 @@ import numpy as np
         r_rosa /= max_val
 
     return r_rosa
-
-  
-if __name__ == "__main__":
-    duracion = 3.0
-    fs = 44100
-    r_rosa = generar_ruido_rosa(duracion, fs)
-    print(f"Reproduciendo ruido rosa de {duracion} s a {fs} Hz...")
-    sd.play(r_rosa, samplerate=fs)
-    sd.wait()
