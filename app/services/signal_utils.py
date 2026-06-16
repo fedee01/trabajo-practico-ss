@@ -8,7 +8,6 @@ import numpy as np
 import soundfile as sf
 from scipy.signal import butter, fftconvolve, sosfiltfilt
 
-
 def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     """Carga un archivo de audio y retorna la senal y la frecuencia de muestreo.
 
@@ -74,7 +73,6 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
         signal = signal / max_abs
 
     return signal, int(fs)
-
 
 def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -> np.ndarray:
     """Sintetiza una respuesta al impulso artificial a partir de valores T60 por banda.
@@ -235,7 +233,6 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
         ri /= max_abs
 
     return ri
-
 
 def a_escala_log(signal: np.ndarray) -> np.ndarray:
     """Convierte una señal a escala logarítmica (dB) normalizada.
