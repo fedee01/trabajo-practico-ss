@@ -1,17 +1,18 @@
 """Servicio de generacion de sine sweep logaritmico.
 
+
 Milestone 1: Generacion de senales.
 """
-
 import math as ma
 import numpy as np
-from scipy import signal
+import sounddevice as sd
 
 def generar_sine_sweep(
     f1: float, f2: float, duracion: float, fs: int
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Genera un sine sweep logaritmico y su filtro inverso.
+
 
     Parameters
     ----------
@@ -24,13 +25,15 @@ def generar_sine_sweep(
     fs : int
         Frecuencia de muestreo en Hz.
 
+
     Returns
     -------
     tuple[np.ndarray, np.ndarray]
         Tupla con (sweep, filtro_inverso), ambos normalizados.
     """
 
-    if (f1 == 0):  # si la f pedida es 0, usa un numero muy chico para no dividir por 0
+
+    if f1 == 0:  # asi no divide por cero
         f1 += 1e-10
         
     if f2 <= f1:
@@ -53,14 +56,12 @@ def generar_sine_sweep(
         ],
         dtype=float,)
     
-    # rel entre la f final e inicial
     R = (f2 / f1)
 
     envolvente = np.exp(-t * np.log(R) / duracion)
 
     filt_inv = sine_sweep[::-1] * envolvente  # metodo de farina
 
-    # normalizacion
     if np.max(sine_sweep) > 0:
         ratio = 2 / (np.max(sine_sweep) - np.min(sine_sweep)) # escalado a 2 [-1, 1]
         shift = (np.max(sine_sweep) + np.min(sine_sweep)) / 2
