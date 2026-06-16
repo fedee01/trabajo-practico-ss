@@ -92,3 +92,11 @@ sintetizar_ri: T60 medido dentro del 10% del especificado por banda
 
 Sintetizar RI con T60=2.0s a 1000Hz.Filtrar la RI sintetizada en la banda de 1000 Hz.Calcular la curva de decaimiento en dB (Schroeder).Medir el tiempo en que la curva cruza -60 dB.
 
+Deconvolución: Correlación cruzada con RI original > 0.9.
+
+<img width="597" height="283" alt="image" src="https://github.com/user-attachments/assets/435842e6-dff4-4570-95bb-4037801c0b8f" />
+
+<img width="567" height="255" alt="image" src="https://github.com/user-attachments/assets/843fba01-2942-4037-9419-298b9b79f203" />
+
+<img width="526" height="245" alt="image" src="https://github.com/user-attachments/assets/e2a47b27-d5bb-491d-9473-f9621a152a9f" />
+
