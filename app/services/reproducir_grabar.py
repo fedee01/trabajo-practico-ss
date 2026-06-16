@@ -2,8 +2,10 @@
 
 Milestone 1: Generacion de senales.
 """
+from pathlib import Path
 import numpy as np
 import sounddevice as sd
+import soundfile as sf
 
 def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) -> np.ndarray:
     """
@@ -51,8 +53,6 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
     if duracion_grabacion < playback_length:
         raise ValueError(f"La duración de grabación debe ser al menos de ({playback_length:.3f}s)")
 
-    n_samples_rec = int(round(duracion_grabacion * fs))
-
     # verifica dispositivos de entrada y salida
     try:
         sd.check_input_settings(samplerate=int(fs), channels=channels)
@@ -67,8 +67,7 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
     else:
         senal_final = senal_final.astype(np.float32)
 
-    recording = sd.rec(frames=n_samples_rec, samplerate=int(fs), channels=channels, dtype="float32")
-    sd.play(senal_final, samplerate=int(fs))
+    recording = sd.playrec(senal_final, samplerate=int(fs), channels=channels, dtype="float32")
     sd.wait()
 
     # verifica que la duración grabada coincida con la solicitada (± 1%)
@@ -79,4 +78,17 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
             raise RuntimeError(f"Duración de grabación inesperada: solicitada {duracion_grabacion:.6f}s, "
                 f"registrada {recorded_seconds:.6f}s dando una diferencia del ({rel_diff*100:.2f}%)")
 
+    # la carpeta se guarda en "grabaciones" en la raíz del proyecto
+    app_dir = Path(__file__).resolve().parent.parent.parent / "grabaciones"
+
+    # nombra la grabacion y la guarda como .wav
+    graba_num = 1
+    filename = f"grabacion_{graba_num}.wav"
+    while (app_dir / filename).exists():
+        graba_num += 1
+        filename = f"grabacion_{graba_num}.wav"
+
+    out_path = app_dir / filename
+    sf.write(str(out_path), recording, int(fs))
+    
     return recording
