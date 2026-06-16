@@ -79,3 +79,4 @@ Grafico de IR sintetica:
 
 <img width="558" height="298" alt="image" src="https://github.com/user-attachments/assets/8e3f0860-d42d-4031-95cd-52b9472c10db" />
 
+Forma de onda líneal. Eje horizontal tiempo y Eje vertical amplitud. 
