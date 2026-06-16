@@ -3,3 +3,5 @@
 /app/__pycache__/
 /app/services/__pycache__/
 .pytest_cache/
+RI/
+grabaciones/
