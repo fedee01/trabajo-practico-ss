@@ -80,3 +80,7 @@ Grafico de IR sintetica:
 <img width="558" height="298" alt="image" src="https://github.com/user-attachments/assets/8e3f0860-d42d-4031-95cd-52b9472c10db" />
 
 Forma de onda líneal. Eje horizontal tiempo y Eje vertical amplitud. 
+
+Se concentra en el tiempo t=0 s con una amplitud máxima de 1 y esta decae de forma exponencial a cero de forma natural. 
+
+FALTA GRAFICO ESPECTRAL!
