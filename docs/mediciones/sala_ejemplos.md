@@ -58,3 +58,13 @@ reproducir_y_grabar(prueba, 44100, 4)
 de forma tal que se genera un ruido rosa por 3 segundos a una frecuencia de muestreo de 44100 Hz y se grabe por 4 segundos. Luego se coloco el archivo en audacity y se graficó.
 Estas pruebas se realizaron diez veces a diferentes intensidades sonoras utilizando para su reproducción y grabación un Noga vintage mic-2030 px cardioide. Se puede observar en el grafico de la figura: X el ruido rosa a una intendidad de COMPLETAR INTENSIDAD, cumple con una caida logaritmica (DESARROLLAR UN POCO MAS) 
 En caso de querer repetir este experimento se puede copiar el codigo en un nuevo archivo, ejecutar y arrastrar la grabación realizada (dentro de la carpeta grabaciones) a audacity (para graficar se deberá tocar “Analizar/Trazar espectro”).
+
+
+# Informe de la Medición 2:
+
+Asumimos que el recinto se comporta como un sistema Lineal e Invariante en el Tiempo (LTI). Bajo esta hipótesis, la sala queda completamente caracterizada por una única función: su Respuesta al Impulso (h(t)). 
+Cualquier sonido que se reproduzca en la sala (x(t)) saldrá modificado como una grabación (y(t)) que es el resultado de la convolución matemática: 
+
+y(t)=h(t)* x(t)
+
+
