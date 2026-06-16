@@ -10,34 +10,38 @@ import scipy.signal
 def filtro_octava(signal: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.ndarray:
     """Aplica un filtro pasabanda de una octava centrado en ``fc``.
 
-    Implementa un filtro Butterworth pasabanda cuyas frecuencias de corte
-    corresponden a los limites de una banda de octava segun IEC 61260:
-    - Frecuencia inferior: ``fc / sqrt(2)``
-    - Frecuencia superior: ``fc * sqrt(2)``
+    Implementa un filtro Butterworth pasabanda cuyas frecuencias
+    de corte siguen la norma IEC 61260:
+
+    - Frecuencia inferior: fc / sqrt(2)
+    - Frecuencia superior: fc * sqrt(2)
 
     Parameters
     ----------
-    x : np.ndarray
-        Senal de entrada (array 1D).
+    signal : np.ndarray
+        Señal de entrada.
     fc : float
         Frecuencia central de la banda de octava en Hz.
     fs : int
         Frecuencia de muestreo en Hz.
     orden : int, optional
-        Orden del filtro Butterworth (por defecto 4).
+        Orden del filtro Butterworth, por defecto 4.
 
     Returns
     -------
     np.ndarray
-        Senal filtrada (array 1D).
+        Señal filtrada.
     """
     # validaciones
     if not isinstance(signal, np.ndarray):
         raise TypeError("signal debe ser un np.ndarray")
+
     if fc <= 0:
         raise ValueError("fc debe ser positiva")
+
     if fs <= 0:
         raise ValueError("fs debe ser positivo")
+
     if orden <= 0:
         raise ValueError("orden debe ser positivo")
 
@@ -48,6 +52,7 @@ def filtro_octava(signal: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.
     # límites de la banda IEC 61260
     f_inf = fc / np.sqrt(2)
     f_sup = fc * np.sqrt(2)
+
     nyquist = fs / 2
 
     if f_sup >= nyquist:
@@ -61,7 +66,7 @@ def filtro_octava(signal: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.
     sos = scipy.signal.butter(orden, [W_inf, W_sup], btype="bandpass", output="sos")
 
     # filtrado de fase cero
-    senal_filtrada = scipy.signal.sosfiltfilt(sos, signal)
+    senal_filtrada = scipy.signal.sosfiltfilt(sos, signal) 
     # sos es una lista de matrices de coef del filtro
     # sosfiltfilt aplica el filtro en ambas direcciones para evitar distorsión de fase
 
