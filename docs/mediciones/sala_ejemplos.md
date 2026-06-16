@@ -85,3 +85,10 @@ Se concentra en el tiempo t=0 s con una amplitud máxima de 1 y esta decae de fo
 
 FALTA GRAFICO ESPECTRAL!
 En este es la misma señal pero promediado RMS y luego escalado a escala logartimica, esto se da para poder observar la pendiente de como deae la energia de forma linealmente. 
+
+
+sintetizar_ri: T60 medido dentro del 10% del especificado por banda
+<img width="422" height="318" alt="image" src="https://github.com/user-attachments/assets/0b7ca016-be15-4420-bcb7-b8bcaa40465f" />
+
+Sintetizar RI con T60=2.0s a 1000Hz.Filtrar la RI sintetizada en la banda de 1000 Hz.Calcular la curva de decaimiento en dB (Schroeder).Medir el tiempo en que la curva cruza -60 dB.
+
