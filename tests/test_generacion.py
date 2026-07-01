@@ -27,6 +27,17 @@ class TestGenerarRuidoRosa:
         ruido = generar_ruido_rosa(1.0, 44100)
         assert np.max(np.abs(ruido)) <= 1.0
 
+    def test_ruido_rosa_espectro(self):
+        np.random.seed(0)
+        ruido = generar_ruido_rosa(10, 44100)
+        frecuencias, psd = welch(ruido, fs=44100, nperseg=8192)
+        mascara = (frecuencias >= 100) & (frecuencias <= 10000)
+        psd_db = 10 * np.log10(psd[mascara])
+        octavas = np.log2(frecuencias[mascara])
+        pendiente, _ = np.polyfit(octavas, psd_db, 1)
+        assert -4 <= pendiente <= -2
+
+
 
 class TestGenerarSineSweep:
     """Tests para la funcion generar_sine_sweep."""
