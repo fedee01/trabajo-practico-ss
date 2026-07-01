@@ -46,8 +46,6 @@
 
 ## M2
 
-**Fecha:** 2026-07-01
-
 **Herramienta:** ChatGPT
 
 **Uso:**
