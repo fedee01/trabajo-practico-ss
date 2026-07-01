@@ -2,8 +2,10 @@
 
 Milestone 1: Generacion de senales.
 """
+
 import numpy as np
 import sounddevice as sd
+
 
 def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) -> np.ndarray:
     """
@@ -24,9 +26,9 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
     np.ndarray
         Array con la señal grabada.
     """
-    if fs <= 0 :
+    if fs <= 0:
         raise ValueError("la frecuencia de muestreo debe ser positiva")
-    
+
     # acepta señal mono (1D) o multicanal (2D)
     if signal.ndim == 1:
         channels = 1
@@ -76,7 +78,10 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
     if duracion_grabacion > 0:
         rel_diff = abs(recorded_seconds - duracion_grabacion) / duracion_grabacion
         if rel_diff > 0.01:
-            raise RuntimeError(f"Duración de grabación inesperada: solicitada {duracion_grabacion:.6f}s, "
-                f"registrada {recorded_seconds:.6f}s dando una diferencia del ({rel_diff*100:.2f}%)")
+            raise RuntimeError(
+                f"Duración de grabación inesperada: solicitada {duracion_grabacion:.6f}s, "
+                f"registrada {recorded_seconds:.6f}s dando una diferencia del "
+                f"({rel_diff * 100:.2f}%)"
+            )
 
     return recording

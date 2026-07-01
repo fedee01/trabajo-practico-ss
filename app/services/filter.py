@@ -4,7 +4,7 @@ Milestone 2: Procesamiento de la respuesta al impulso.
 """
 
 import numpy as np
-import scipy.signal
+from scipy.signal import butter, sosfilt, sosfiltfilt
 
 
 def filtro_octava(x: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.ndarray:
@@ -40,21 +40,18 @@ def filtro_octava(x: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.ndarr
     wn1 = min(f_sup / nyq, 1.0 - 1e-12)
 
     # Manejar entradas multi-canal: convertir a mono tomando la media por canales
-    if x.ndim > 1:
-        sig = x.mean(axis=1)
-    else:
-        sig = x
+    sig = x.mean(axis=1) if x.ndim > 1 else x
 
     # Usar formato SOS para mayor estabilidad numérica en órdenes altos
-    sos = scipy.signal.butter(orden, [wn0, wn1], btype="band", output="sos")
+    sos = butter(orden, [wn0, wn1], btype="band", output="sos")
 
     # Filtrado cero-fase: forward + backward con sosfiltfilt
     try:
-        y = scipy.signal.sosfiltfilt(sos, sig)
+        y = sosfiltfilt(sos, sig)
     except AttributeError:
         # Compatibilidad con versiones antiguas de scipy
         # Aplicar sosfilt forward y backward manualmente
-        y_fwd = scipy.signal.sosfilt(sos, sig)
-        y = scipy.signal.sosfilt(sos, y_fwd[::-1])[::-1]
+        y_fwd = sosfilt(sos, sig)
+        y = sosfilt(sos, y_fwd[::-1])[::-1]
 
-    return y
+    return np.asarray(y)

@@ -1,10 +1,10 @@
-from sine_sweep import generar_sine_sweep
+import matplotlib.pyplot as plt
+import numpy as np
 from pink_noise import generar_ruido_rosa
 from scipy import signal
 from scipy.signal import welch
 from scipy.stats import linregress
-import numpy as np
-import matplotlib.pyplot as plt
+from sine_sweep import generar_sine_sweep
 
 # parametros de ejemplo
 fs = 44100
@@ -17,16 +17,16 @@ duracion = 10
 # ploteo('plotconvolucion')     devuelve convolucion del sine sweep y filtro inverso
 # ploteo('plotruidorosa')       devuelve grafico de ruido rosa
 
+
 def ploteo(plot):
 
-    if plot == 'plotsinesweep' or plot == 'plotconvolucion':
+    if plot == "plotsinesweep" or plot == "plotconvolucion":
         sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
 
         # normalizacion de la convolucion
         convolucion = signal.fftconvolve(sweep, inverso, mode="full")
 
-        if plot == 'plotsinesweep':
-
+        if plot == "plotsinesweep":
             # plot 1
             plt.figure(figsize=(10, 4))
             plt.specgram(sweep, Fs=fs)
@@ -37,14 +37,17 @@ def ploteo(plot):
             plt.title("Sine Sweep Logaritmico")
             plt.show()
 
-        elif plot == 'plotconvolucion':
+        elif plot == "plotconvolucion":
             # plot 2: convolucion sweep x filtro inverso
-            convolucion_normalizada = convolucion / np.max(np.abs(convolucion)) # normalizo tq pico sea 1
+            convolucion_normalizada = convolucion / np.max(np.abs(convolucion))
             indice_pico = np.argmax(np.abs(convolucion))  # busco el pico
             pico = np.max(np.abs(convolucion))
             ventana = 1000  # calculo el piso excluyendo una ventana alrededor del pico
             sin_pico = np.concatenate(
-                (np.abs(convolucion[: indice_pico - ventana]), np.abs(convolucion[indice_pico + ventana :]))
+                (
+                    np.abs(convolucion[: indice_pico - ventana]),
+                    np.abs(convolucion[indice_pico + ventana :]),
+                )
             )
             piso = np.mean(sin_pico)
             relacion_db = 20 * np.log10(pico / piso)  # relacion pico/piso en dB
@@ -63,20 +66,20 @@ def ploteo(plot):
             plt.grid()
             plt.show()
 
-    if plot == 'plotruidorosa':  
+    if plot == "plotruidorosa":
         r_rosa = generar_ruido_rosa(duracion, fs)
 
-        #acá empieza el calculo de la pendiente con welch
-        f, Pxx = welch(r_rosa, fs=fs, nperseg=8192) #pxx es el psd
+        # acá empieza el calculo de la pendiente con welch
+        f, pxx = welch(r_rosa, fs=fs, nperseg=8192)  # pxx es el psd
 
-        mask = (f >= 100) & (f <= 10000) #acá tomo las frecuencias entre 100 y 1000 hz
+        mask = (f >= 100) & (f <= 10000)  # acá tomo las frecuencias entre 100 y 1000 hz
 
-        x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el primedio de la pendiente sea en db/octava
-        y = 10 * np.log10(Pxx[mask]) #esto me hace la escala y en db
+        x = np.log2(f[mask])
+        y = 10 * np.log10(pxx[mask])
 
-        pendiente, _, _, _, _ = linregress(x, y) #lineregress toma todos los puntos de la respuesta espectral y hace un ajuste lineal
+        pendiente, _, _, _, _ = linregress(x, y)
 
-        #esta parte es la del gráfico
+        # esta parte es la del gráfico
         plt.figure()
 
         plt.psd(r_rosa, Fs=fs, color="red", linewidth=1)
@@ -98,8 +101,9 @@ def ploteo(plot):
             verticalalignment="top",
             bbox=dict(boxstyle="round", facecolor="white"),
         )
-        #plt.text es para poner la cajita con el valor de la pendiente
+        # plt.text es para poner la cajita con el valor de la pendiente
 
         plt.show()
 
-ploteo('plotruidorosa')
+
+ploteo("plotruidorosa")

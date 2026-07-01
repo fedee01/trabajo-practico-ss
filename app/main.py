@@ -7,11 +7,8 @@ Uso:
 """
 
 from fastapi import FastAPI
-# from app.routers import health
-from app.services.sine_sweep import generar_sine_sweep
-from app.services.pink_noise import generar_ruido_rosa
-from app.services.reproducir_grabar import reproducir_y_grabar
-import sounddevice as sd
+
+from app.routers import health
 
 app = FastAPI(
     title="RIR-API",
@@ -20,7 +17,7 @@ app = FastAPI(
 )
 
 # Routers
-# app.include_router(health.router)
+app.include_router(health.router)
 
 # TODO (M3): Agregar routers de signals, filters, acoustics, analysis, utils
 # app.include_router(signals.router, prefix="/api/v1/signals", tags=["signals"])
@@ -39,11 +36,3 @@ async def root():
         "description": "Room Impulse Response API",
         "docs": "/docs",
     }
-
-sine_sweep = generar_sine_sweep(400,4000,1,44100)
-pink_noise = generar_ruido_rosa(1,44100)
-
-if __name__ == "__main__":
-    # import uvicorn
-    # uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
-    reproducir_y_grabar(sine_sweep,44100)

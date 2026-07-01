@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
     Genera ruido rosa usando el algoritmo de Voss-McCartney.
@@ -16,10 +17,10 @@ def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     np.ndarray
         Array con la señal de ruido rosa normalizada entre -1 y 1 (dtype float32).
     """
-    n_bits = 20  # numero de bits, es decir numero de generadores. acá cambié a 20 para que el ruido sea más suave.
+    n_bits = 20
     n_muestras = int(duracion * fs)  # numero de muestras
 
-    generadores = np.random.randn(n_bits)  # array de la profundidad de bits elegida con los generadores de ruido.
+    generadores = np.random.randn(n_bits)
     r_rosa = np.empty(n_muestras, dtype=np.float32)
 
     for i in range(n_muestras):
