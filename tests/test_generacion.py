@@ -1,7 +1,7 @@
 """Tests para los servicios de generacion de senales (Milestone 1)."""
 
 import numpy as np
-from scipy.signal import welch
+from scipy.signal import welch, fftconvolve
 
 from app.services.pink_noise import generar_ruido_rosa
 from app.services.sine_sweep import generar_sine_sweep
@@ -58,3 +58,21 @@ class TestGenerarSineSweep:
         expected_length = int(duracion * fs)
         assert len(sweep) == expected_length
         assert len(filtro_inv) == expected_length
+        
+    def test_sweep_convolucion_impulso(self):
+        """
+        Verifica que la convolución del sweep con su filtro inverso
+        produce una aproximación a un impulso.
+        """
+        sweep, filtro = generar_sine_sweep(f1=20, f2=20000, duracion=5, fs=48000)
+        convolucion = fftconvolve(sweep, filtro, mode="full")
+        pico_max = np.argmax(np.abs(convolucion))
+        energia_pico = convolucion[pico_max] ** 2
+        ventana = 100
+        mascara = np.ones(len(convolucion), dtype=bool)
+        inicio = max(0, pico_max - ventana)
+        fin = min(len(convolucion), pico_max + ventana + 1)
+        mascara[inicio:fin] = False
+        energia_resto = np.mean(convolucion[mascara] ** 2)  # energía promedio del resto de senal
+        relacion_db = 10 * np.log10(energia_pico / energia_resto)
+        assert relacion_db >= 40
