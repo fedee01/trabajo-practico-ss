@@ -1,9 +1,12 @@
 """Tests para los servicios de generacion de senales (Milestone 1)."""
 
 import numpy as np
+import pytest
+import sounddevice as sd
 from scipy.signal import fftconvolve, welch
 
 from app.services.pink_noise import generar_ruido_rosa
+from app.services.reproducir_grabar import reproducir_y_grabar
 from app.services.sine_sweep import generar_sine_sweep
 
 
@@ -76,3 +79,47 @@ class TestGenerarSineSweep:
         energia_resto = np.mean(convolucion[mascara] ** 2)  # energía promedio del resto de senal
         relacion_db = 10 * np.log10(energia_pico / energia_resto)
         assert relacion_db >= 40
+
+class TestReproducirYGrabar:
+    """Tests para la funcion reproducir_y_grabar."""
+
+    @pytest.mark.parametrize("channels", [1, 2])
+    def test_reproducir_y_grabar_forma(self, monkeypatch, channels):
+        """
+        Verifica que la función acepta señales mono (1D) y estéreo (2D),
+        y que la grabación tiene la duración esperada.
+        """
+        fs = 48000
+        duracion = 2.0
+        # generar señal mono (1D) o estéreo (2D)
+        shape = (fs,) if channels == 1 else (fs, channels)
+        signal = np.random.randn(*shape)
+
+        # simular dispositivo de audio
+        monkeypatch.setattr(sd, "check_input_settings", lambda **kwargs: None)
+        monkeypatch.setattr(sd, "check_output_settings", lambda **kwargs: None)
+        monkeypatch.setattr(
+            sd,
+            "rec",
+            lambda frames, samplerate, channels, dtype: np.zeros(
+                (frames, channels), dtype=np.float32),)
+
+        monkeypatch.setattr(sd, "play", lambda *args, **kwargs: None)
+        monkeypatch.setattr(sd, "wait", lambda: None)
+
+        recording = reproducir_y_grabar(signal, fs, duracion)
+        assert recording.shape == (int(fs * duracion), channels)
+
+        n_esperado = int(fs * duracion)
+        assert (abs(recording.shape[0] - n_esperado) <= 0.01 * n_esperado)
+
+    def test_reproducir_y_grabar_sin_dispositivo(self, monkeypatch):
+        """Verifica que se informa correctamente cuando no hay dispositivo de audio."""
+        fs = 48000
+        duracion = 2.0
+        signal = np.random.randn(fs)
+        def error(**kwargs):
+            raise Exception("No hay dispositivo disponible")
+        monkeypatch.setattr(sd, "check_input_settings", error)
+        with pytest.raises(RuntimeError, match="Problema con la configuración"):
+            reproducir_y_grabar(signal, fs, duracion)
