@@ -6,7 +6,6 @@ from scipy.signal import welch, fftconvolve
 from app.services.pink_noise import generar_ruido_rosa
 from app.services.sine_sweep import generar_sine_sweep
 
-
 class TestGenerarRuidoRosa:
     """Tests para la funcion generar_ruido_rosa."""
 
@@ -58,7 +57,7 @@ class TestGenerarSineSweep:
         expected_length = int(duracion * fs)
         assert len(sweep) == expected_length
         assert len(filtro_inv) == expected_length
-        
+    
     def test_sweep_convolucion_impulso(self):
         """
         Verifica que la convolución del sweep con su filtro inverso
