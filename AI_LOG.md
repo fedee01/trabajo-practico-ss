@@ -16,7 +16,7 @@
 
 ## M1
 
-###Herramienta: ChatGPT
+### Herramienta: ChatGPT
 
 **Uso:**
 | Prompt | Uso | Resultado |
