@@ -33,3 +33,13 @@ class TestAEscalaLog:
         x = np.array([1.0, 0.5])
         db = a_escala_log(x)
         assert isinstance(db, np.ndarray)
+        
+    def test_a_escala_log_relacion(self):
+        """Verificar que una senal con amplitud mitad da -6 dB."""
+        x = np.array([1.0, 0.5])
+        db = a_escala_log(x)
+        assert db[0] == pytest.approx(0.0)
+        assert db[1] == pytest.approx(
+            20 * np.log10(0.5),
+            abs=1e-12, )
+
