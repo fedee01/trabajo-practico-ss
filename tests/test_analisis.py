@@ -1,4 +1,4 @@
-"""Tests para los servicios de analisis de parametros acusticos (Milestone 3).
+"""Tests para los servicios de analisis de parametros acusticos (Milestone 3)."""
 
 import numpy as np
 
@@ -44,4 +44,3 @@ class TestIntegralSchroeder:
         ri = np.random.randn(1000)
         edc = integral_schroeder(ri)
         assert np.all(np.diff(edc) <= 0)
-"""
