@@ -58,7 +58,7 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
         sd.check_input_settings(samplerate=int(fs), channels=channels)
         sd.check_output_settings(samplerate=int(fs), channels=channels)
     except Exception as e:
-        raise RuntimeError(f"Problema con la configuración del dispositivo de audio: {e}")
+        raise RuntimeError(f"Problema con la configuración del dispositivo de audio: {e}") from e
 
     # normaliza
     max_abso = np.nanmax(np.abs(senal_final))
