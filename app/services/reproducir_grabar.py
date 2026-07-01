@@ -6,6 +6,8 @@ Milestone 1: Generacion de senales.
 import numpy as np
 import sounddevice as sd
 
+PRE_ROLL = 0.5  # segundos
+
 
 def reproducir_y_grabar(
     signal: np.ndarray,
@@ -41,28 +43,38 @@ def reproducir_y_grabar(
     if duracion_grabacion <= 0:
         raise ValueError("la duración de grabación debe ser positiva")
 
+    if signal.size == 0:
+        raise ValueError("la señal no puede estar vacía")
+
     # acepta señal mono (1D) o estéreo/multicanal (2D)
     if signal.ndim == 1:
         channels = 1
     elif signal.ndim == 2:
         channels = signal.shape[1]
     else:
-        raise ValueError("`signal` debe ser mono o stereo (1D o 2D)")
+        raise ValueError("`signal` debe ser mono o estéreo (1D o 2D)")
 
-    # pre-roll
-    pre_roll = np.zeros(int(0.5 * fs), dtype=signal.dtype)
+    # ---------- Pre-roll ----------
+    pre_roll = np.zeros(
+        int(PRE_ROLL * fs),
+        dtype=signal.dtype,
+    )
 
     # duración de pre-roll + señal (sin contar el post-roll)
-    playback_length = 0.5 + signal.shape[0] / float(fs)
+    playback_length = PRE_ROLL + signal.shape[0] / fs
 
     if duracion_grabacion < playback_length:
         raise ValueError(f"La duración de grabación debe ser al menos de {playback_length:.3f} s.")
 
-    # post-roll
-    post_roll_samples = int(round((duracion_grabacion - playback_length) * fs))
+    # ---------- Post-roll ----------
+    extra_time = duracion_grabacion - playback_length
+    post_roll_samples = int(round(extra_time * fs))
 
     if signal.ndim == 1:
-        post_roll = np.zeros(post_roll_samples, dtype=signal.dtype)
+        post_roll = np.zeros(
+            post_roll_samples,
+            dtype=signal.dtype,
+        )
 
         senal_final = np.concatenate(
             (
