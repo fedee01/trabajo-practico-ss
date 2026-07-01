@@ -1,13 +1,14 @@
 """Tests para los servicios de analisis de parametros acusticos (Milestone 3)."""
 
 import numpy as np
+import pytest
 
 from app.services.acoustic_parameters import integral_schroeder, regresion_lineal
 
 
 class TestRegresionLineal:
     """Tests para la funcion regresion_lineal."""
-    
+
     @pytest.mark.skip(reason="Aún no implementado en la función correspondiente")
     def test_regresion_lineal_conocida(self):
         """Verifica con una recta conocida y = 2x + 1."""
@@ -16,7 +17,7 @@ class TestRegresionLineal:
         pendiente, ordenada = regresion_lineal(x, y)
         assert abs(pendiente - 2.0) < 1e-10
         assert abs(ordenada - 1.0) < 1e-10
-        
+
     @pytest.mark.skip(reason="Aún no implementado en la función correspondiente")
     def test_regresion_lineal_con_ruido(self):
         """Verifica que la regresion se aproxima a la recta con datos ruidosos."""
@@ -37,7 +38,7 @@ class TestIntegralSchroeder:
         ri = np.random.randn(1000)
         edc = integral_schroeder(ri)
         assert len(edc) == len(ri)
-        
+
     @pytest.mark.skip(reason="Aún no implementado en la función correspondiente")
     def test_integral_schroeder_decreciente(self):
         """Verifica que la EDC es monotonamente decreciente."""
