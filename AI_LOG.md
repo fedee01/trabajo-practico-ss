@@ -16,7 +16,7 @@
 
 ## M1
 
-**Herramienta:** ChatGPT
+###Herramienta: ChatGPT
 
 **Uso:**
 | Prompt | Uso | Resultado |
@@ -33,12 +33,14 @@
 | Revisión de la implementación de `reproducir_y_grabar` | Se solicitó una revisión completa del código para detectar errores lógicos y oportunidades de mejora. | Se agregaron validaciones adicionales y se mejoró la legibilidad del código. |
 | Actualización de los tests de grabación | Se pidió adaptar los tests a la nueva implementación basada en `sd.playrec()`. | Se actualizaron los *mocks* y se adecuaron los tests al nuevo funcionamiento de la función. |
 
-**Herramienta:** Copilot (VSC)
+### Herramienta: Copilot (Visual Studio Code)
 
-**Uso:**
-- Se estructuró un prompt para realizar la función reproducir_y_grabar en base a los requisitos.
-- Se hizo uso del autocompletado para modificar el código de las funciones sine_sweep y pink_noise de forma eficiente. Asimismo, se utilizó la funcion de autocompletado para comentar sobre los procedimientos, lo cual permitó un mejor entendimiento del lenguaje y el código entre los integrantes del grupo.
-
+| Prompt | Uso | Resultado |
+|--------|-----|-----------|
+| Implementación de `reproducir_y_grabar` | Se estructuró un prompt para generar una primera versión de la función `reproducir_y_grabar` a partir de los requisitos establecidos en la especificación. | Se obtuvo una implementación inicial que luego fue revisada, adaptada y corregida manualmente para cumplir con la especificación del proyecto. |
+| Autocompletado en `generar_sine_sweep` | Se utilizó el autocompletado para agilizar la escritura y modificación del código de la función `generar_sine_sweep`. | Se redujo el tiempo de edición del código, manteniendo la lógica definida por el equipo. |
+| Autocompletado en `generar_ruido_rosa` | Se utilizó el autocompletado para agilizar la implementación y modificación de la función `generar_ruido_rosa`. | Se facilitaron tareas repetitivas de escritura y refactorización sin modificar el diseño del algoritmo. |
+| Generación de comentarios | Se utilizó el autocompletado para sugerir comentarios descriptivos y documentación del código. | Se mejoró la legibilidad del código y la comprensión de los procedimientos implementados por parte de los integrantes del grupo. |
 
 ---
 
