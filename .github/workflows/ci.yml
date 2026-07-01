@@ -23,6 +23,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install PortAudio
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y portaudio19-dev
+
       - name: Instalar uv
         uses: astral-sh/setup-uv@v4
 
@@ -38,7 +43,3 @@ jobs:
       - name: Ejecutar tests (pytest)
         run: |
           uv run pytest -v
-
-      - name: Install PortAudio
-        run: |
-          sudo apt-get update && sudo apt-get install -y portaudio19-dev
