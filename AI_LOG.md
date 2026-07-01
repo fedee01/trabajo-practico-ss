@@ -2,15 +2,11 @@
 
 ## M0
 
-**Herramienta:** ChatGPT
+### Herramienta: ChatGPT
 
-**Uso:**
-- Se consultó cómo estructurar el proyecto.
-- Se pidió ayuda para entender el uso de Ruff y la organización del repositorio.
-- Se pidió ayuda para modificar el diagrama de estructura con lenguaje mermaid.
-
-**Resultado:**
-- Se organizó la estructura inicial del proyecto y se corrigieron problemas de estilo.
+| Prompt | Uso | Resultado |
+|--------|-----|-----------|
+| Modificación del diagrama de estructura | Se solicitó ayuda para modificar el diagrama de arquitectura utilizando lenguaje Mermaid. | Se actualizó el diagrama para representar correctamente la estructura del proyecto y facilitar su documentación en el README. |
 
 ---
 
