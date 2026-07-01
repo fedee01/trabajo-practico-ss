@@ -34,7 +34,3 @@ jobs:
       - name: Ejecutar tests (pytest)
         run: |
           uv run pytest -v
-
-      - name: Install PortAudio
-        run: |
-          sudo apt-get update && sudo apt-get install -y portaudio19-dev
