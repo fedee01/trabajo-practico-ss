@@ -85,41 +85,38 @@ class TestReproducirYGrabar:
 
     @pytest.mark.parametrize("channels", [1, 2])
     def test_reproducir_y_grabar_forma(self, monkeypatch, channels):
-        """
-        Verifica que la función acepta señales mono (1D) y estéreo (2D),
-        y que la grabación tiene la duración esperada.
-        """
+        """Verifica que la función acepta señales mono y estéreo."""
+
         fs = 48000
         duracion = 2.0
-        # generar señal mono (1D) o estéreo (2D)
+
+        # señal de 1 segundo
         shape = (fs,) if channels == 1 else (fs, channels)
         signal = np.random.randn(*shape)
 
-        # simular dispositivo de audio
-        monkeypatch.setattr(sd, "check_input_settings", lambda **kwargs: None)
-        monkeypatch.setattr(sd, "check_output_settings", lambda **kwargs: None)
-        monkeypatch.setattr(
-            sd,
-            "rec",
-            lambda frames, samplerate, channels, dtype: np.zeros(
-                (frames, channels), dtype=np.float32),)
-
-        monkeypatch.setattr(sd, "play", lambda *args, **kwargs: None)
+        monkeypatch.setattr(sd, "check_input_settings", lambda **kwargs: None, )
+        monkeypatch.setattr(sd, "check_output_settings", lambda **kwargs: None, )
+        monkeypatch.setattr(sd, "playrec",
+            lambda data, samplerate, channels, dtype: np.zeros(
+                (data.shape[0], channels), dtype=np.float32, ), )
         monkeypatch.setattr(sd, "wait", lambda: None)
 
-        recording = reproducir_y_grabar(signal, fs, duracion)
-        assert recording.shape == (int(fs * duracion), channels)
+        recording = reproducir_y_grabar(signal, fs, duracion,)
 
         n_esperado = int(fs * duracion)
-        assert (abs(recording.shape[0] - n_esperado) <= 0.01 * n_esperado)
+        assert recording.shape == (n_esperado, channels, )
 
     def test_reproducir_y_grabar_sin_dispositivo(self, monkeypatch):
         """Verifica que se informa correctamente cuando no hay dispositivo de audio."""
         fs = 48000
         duracion = 2.0
         signal = np.random.randn(fs)
+
         def error(**kwargs):
             raise Exception("No hay dispositivo disponible")
+
         monkeypatch.setattr(sd, "check_input_settings", error)
+
         with pytest.raises(RuntimeError, match="Problema con la configuración"):
             reproducir_y_grabar(signal, fs, duracion)
+
