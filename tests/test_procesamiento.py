@@ -18,6 +18,37 @@ class TestCargarAudio:
         """Verifica que retorna una tupla (signal, fs) — requiere archivo de prueba."""
         pytest.skip("Requiere archivo de audio de prueba")
 
+    @pytest.mark.parametrize("extension", [".wav", ".flac"])
+    def test_cargar_audio(self, extension, tmp_path):
+        """Verificar carga correcta de archivos WAV y FLAC."""
+        fs = 48000
+        x = np.array([0.0, 0.5, -0.5, 1.0])
+        archivo = tmp_path / f"audio{extension}"
+        sf.write(archivo, x, fs)
+        resultado, fs_resultado = cargar_audio(str(archivo))
+        assert isinstance(resultado, np.ndarray)
+        assert fs_resultado == fs
+        assert resultado.ndim == 1
+        assert len(resultado) == len(x)
+
+    def test_cargar_audio_formato_invalido(self, tmp_path):
+        """Verificar que lanza error con formato no soportado."""
+        archivo = tmp_path / "audio.mp3"
+        archivo.write_text("contenido de prueba")
+        with pytest.raises(ValueError, match="Formato"):
+            cargar_audio(str(archivo))
+
+    def test_cargar_audio_normalizacion(self, tmp_path):
+        """Verificar que la salida esta normalizada entre -1 y 1."""
+        fs = 48000
+        x = np.array([0.2, -0.4, 0.6])
+        archivo = tmp_path / "audio.wav"
+        sf.write(archivo, x, fs)
+        resultado, _ = cargar_audio(str(archivo))
+        assert np.max(np.abs(resultado)) == pytest.approx(1.0)
+        assert np.all(np.abs(resultado) <= 1.0 + 1e-12)
+
+
 
 class TestAEscalaLog:
     """Tests para la funcion a_escala_log."""
