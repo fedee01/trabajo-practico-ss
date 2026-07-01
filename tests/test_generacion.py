@@ -1,6 +1,7 @@
 """Tests para los servicios de generacion de senales (Milestone 1)."""
 
 import numpy as np
+from scipy.signal import welch
 
 from app.services.pink_noise import generar_ruido_rosa
 from app.services.sine_sweep import generar_sine_sweep
