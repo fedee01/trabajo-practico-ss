@@ -2,6 +2,7 @@
 
 import numpy as np
 import pytest
+import soundfile as sf
 
 from app.services.signal_utils import a_escala_log, cargar_audio
 
