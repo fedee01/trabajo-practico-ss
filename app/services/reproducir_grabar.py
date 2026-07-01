@@ -37,9 +37,6 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
     else:
         raise ValueError("`signal` debe ser mono o stereo (1D o 2D)")
 
-    if duracion_grabacion < len(signal) / fs:
-        raise ValueError("La duración de grabación debe ser mayor o igual a la de la señal")
-
     pre_roll = np.zeros(int(0.5 * fs), dtype=signal.dtype)
 
     if signal.ndim == 1:
