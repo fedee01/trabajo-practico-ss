@@ -11,6 +11,7 @@ from app.services.signal_utils import (
     sintetizar_ri,
 )
 
+
 class TestCargarAudio:
     """Tests para la funcion cargar_audio."""
 
@@ -53,6 +54,7 @@ class TestCargarAudio:
         assert np.max(np.abs(resultado)) == pytest.approx(1.0)
         assert np.all(np.abs(resultado) <= 1.0 + 1e-12)
 
+
 class TestAEscalaLog:
     """Tests para la funcion a_escala_log."""
 
@@ -75,7 +77,10 @@ class TestAEscalaLog:
         assert db[0] == pytest.approx(0.0)
         assert db[1] == pytest.approx(
             20 * np.log10(0.5),
-            abs=1e-12, )
+            abs=1e-12,
+        )
+
+
 class TestSintetizarRI:
     """Tests para la funcion sintetizar_ri."""
 
@@ -85,21 +90,33 @@ class TestSintetizarRI:
         fs = 48000
         fc = 1000
         t60_objetivo = 2.0
-        ri = sintetizar_ri(t60_por_banda={fc: t60_objetivo}, fs=fs, duracion=4.0, )
-        ri_filtrada = filtro_octava( x=ri, fc=fc, fs=fs, )
 
-        # curva de decaimiento energético (schroeder)
+        ri = sintetizar_ri(
+            t60_por_banda={fc: t60_objetivo},
+            fs=fs,
+            duracion=4.0,
+        )
+
+        ri_filtrada = filtro_octava(
+            x=ri,
+            fc=fc,
+            fs=fs,
+        )
+
+        # Curva de decaimiento energético (Schroeder)
         schroeder = np.cumsum((ri_filtrada**2)[::-1])[::-1]
         schroeder /= np.max(schroeder)
         schroeder_db = 10 * np.log10(schroeder + np.finfo(float).eps)
 
-        # buscar el primer cruce por debajo de -60 dB
+        # Buscar el primer cruce por debajo de -60 dB
         indices = np.where(schroeder_db <= -60)[0]
 
         assert len(indices) > 0, "La curva de decaimiento no alcanza los -60 dB."
 
         t60_medido = indices[0] / fs
 
-        # debe coincidir con el valor objetivo dentro del 10 %
-        assert t60_medido == pytest.approx(t60_objetivo, rel=0.1, )
-
+        # Debe coincidir con el valor objetivo dentro del 10 %
+        assert t60_medido == pytest.approx(
+            t60_objetivo,
+            rel=0.1,
+        )
