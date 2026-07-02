@@ -12,6 +12,7 @@ from app.services.signal_utils import (
     sintetizar_ri, )
 from app.services.sine_sweep import generar_sine_sweep
 
+
 class TestCargarAudio:
     """Tests para la funcion cargar_audio."""
 
