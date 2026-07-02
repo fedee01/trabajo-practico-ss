@@ -11,7 +11,6 @@ from app.services.signal_utils import (
     sintetizar_ri,
 )
 
-
 class TestCargarAudio:
     """Tests para la funcion cargar_audio."""
 
@@ -54,6 +53,67 @@ class TestCargarAudio:
         assert np.max(np.abs(resultado)) == pytest.approx(1.0)
         assert np.all(np.abs(resultado) <= 1.0 + 1e-12)
 
+class TestSintetizarRI:
+    """Tests para la funcion sintetizar_ri."""
+
+    def test_sintetizar_ri_decaimiento(self):
+        """Verifica que el T60 medido por banda coincide con el especificado."""
+        np.random.seed(0)
+        fs = 48000
+        fc = 1000
+        t60_objetivo = 2.0
+        ri = sintetizar_ri(t60_por_banda={fc: t60_objetivo}, fs=fs, duracion=4.0, )
+        ri_filtrada = filtro_octava(x=ri, fc=fc, fs=fs, )
+
+        # Curva de decaimiento energético (Schroeder)
+        schroeder = np.cumsum((ri_filtrada**2)[::-1])[::-1]
+        schroeder /= np.max(schroeder)
+        schroeder_db = 10 * np.log10(schroeder + np.finfo(float).eps)
+
+        # Buscar el primer cruce por debajo de -60 dB
+        indices = np.where(schroeder_db <= -60)[0]
+        assert len(indices) > 0, "La curva de decaimiento no alcanza los -60 dB."
+
+        t60_medido = indices[0] / fs
+
+        # Debe coincidir con el valor objetivo dentro del 10 %
+        assert t60_medido == pytest.approx(t60_objetivo, rel=0.1, )
+
+class TestObtenerRIdesdeSweep:
+    """Tests para la función obtener_ri_desde_sweep."""
+
+    def test_obtener_ri_desde_sweep(self):
+        """
+        Verifica que la respuesta al impulso recuperada se parece a la original.
+
+        La función obtener_ri_desde_sweep devuelve la RI alineada al impulso
+        directo (pico principal), por lo que la RI original también se alinea
+        antes de calcular la correlación cruzada normalizada.
+        """
+
+        np.random.seed(0)
+        fs = 48000
+        sweep, filtro_inverso = generar_sine_sweep(f1=20, f2=20000, duracion=2.0, fs=fs, )
+        ri_original = sintetizar_ri(t60_por_banda={1000.0: 1.5}, fs=fs, duracion=2.0, )
+        grabacion = np.convolve(sweep, ri_original, mode="full", )
+        ri_recuperada = obtener_ri_desde_sweep(grabacion=grabacion, filtro_inverso=filtro_inverso, )
+
+        # alinear la RI original al impulso directo
+        pico_original = np.argmax(np.abs(ri_original))
+        ri_original = ri_original[pico_original:]
+
+        # Igualar longitudes
+        n = min(len(ri_original), len(ri_recuperada))
+        ri_original = ri_original[:n]
+        ri_recuperada = ri_recuperada[:n]
+
+        # correlación cruzada normalizada
+        correlacion = np.correlate(ri_recuperada, ri_original, mode="full", )
+
+        correlacion = np.max(np.abs(correlacion)) / (
+            np.linalg.norm(ri_recuperada) * np.linalg.norm(ri_original))
+
+        assert correlacion > 0.9
 
 class TestAEscalaLog:
     """Tests para la funcion a_escala_log."""
@@ -78,45 +138,4 @@ class TestAEscalaLog:
         assert db[1] == pytest.approx(
             20 * np.log10(0.5),
             abs=1e-12,
-        )
-
-
-class TestSintetizarRI:
-    """Tests para la funcion sintetizar_ri."""
-
-    def test_sintetizar_ri_decaimiento(self):
-        """Verifica que el T60 medido por banda coincide con el especificado."""
-        np.random.seed(0)
-        fs = 48000
-        fc = 1000
-        t60_objetivo = 2.0
-
-        ri = sintetizar_ri(
-            t60_por_banda={fc: t60_objetivo},
-            fs=fs,
-            duracion=4.0,
-        )
-
-        ri_filtrada = filtro_octava(
-            x=ri,
-            fc=fc,
-            fs=fs,
-        )
-
-        # Curva de decaimiento energético (Schroeder)
-        schroeder = np.cumsum((ri_filtrada**2)[::-1])[::-1]
-        schroeder /= np.max(schroeder)
-        schroeder_db = 10 * np.log10(schroeder + np.finfo(float).eps)
-
-        # Buscar el primer cruce por debajo de -60 dB
-        indices = np.where(schroeder_db <= -60)[0]
-
-        assert len(indices) > 0, "La curva de decaimiento no alcanza los -60 dB."
-
-        t60_medido = indices[0] / fs
-
-        # Debe coincidir con el valor objetivo dentro del 10 %
-        assert t60_medido == pytest.approx(
-            t60_objetivo,
-            rel=0.1,
         )
