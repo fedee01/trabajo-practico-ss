@@ -9,7 +9,8 @@ from app.services.signal_utils import (
     a_escala_log,
     cargar_audio,
     obtener_ri_desde_sweep,
-    sintetizar_ri, )
+    sintetizar_ri,
+)
 from app.services.sine_sweep import generar_sine_sweep
 
 
