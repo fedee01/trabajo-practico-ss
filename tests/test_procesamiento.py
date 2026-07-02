@@ -4,8 +4,12 @@ import numpy as np
 import pytest
 import soundfile as sf
 
-from app.services.signal_utils import a_escala_log, cargar_audio
-
+from app.services.filter import filtro_octava
+from app.services.signal_utils import (
+    a_escala_log,
+    cargar_audio,
+    sintetizar_ri,
+)
 
 class TestCargarAudio:
     """Tests para la funcion cargar_audio."""
