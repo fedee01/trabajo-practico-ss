@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy import signal
 from scipy.signal import envelope, welch, fftconvolve
 from scipy.stats import linregress
 
@@ -27,7 +28,7 @@ def ploteo(plot):
         sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
 
         # normalizacion de la convolucion
-        convolucion = fftconvolve(sweep, inverso, mode="full")
+        convolucion = signal.fftconvolve(sweep, inverso, mode="full")
 
         if plot == 'plotsinesweep':
             # plot 1
