@@ -3,6 +3,7 @@
 import numpy as np
 import pytest
 import soundfile as sf
+from scipy.signal import butter, sosfreqz
 
 from app.services.filter import filtro_octava
 from app.services.signal_utils import (
@@ -13,6 +14,8 @@ from app.services.signal_utils import (
 )
 from app.services.sine_sweep import generar_sine_sweep
 
+
+# ---------------------------------------------------------------------
 
 class TestCargarAudio:
     """Tests para la funcion cargar_audio."""
@@ -56,6 +59,9 @@ class TestCargarAudio:
         assert np.max(np.abs(resultado)) == pytest.approx(1.0)
         assert np.all(np.abs(resultado) <= 1.0 + 1e-12)
 
+
+# ---------------------------------------------------------------------
+
 class TestSintetizarRI:
     """Tests para la funcion sintetizar_ri."""
 
@@ -81,6 +87,9 @@ class TestSintetizarRI:
 
         # Debe coincidir con el valor objetivo dentro del 10 %
         assert t60_medido == pytest.approx(t60_objetivo, rel=0.1, )
+
+
+# ---------------------------------------------------------------------
 
 class TestObtenerRIdesdeSweep:
     """Tests para la función obtener_ri_desde_sweep."""
@@ -117,6 +126,97 @@ class TestObtenerRIdesdeSweep:
             np.linalg.norm(ri_recuperada) * np.linalg.norm(ri_original))
 
         assert correlacion > 0.9
+
+
+# ---------------------------------------------------------------------
+# Helpers compartidos
+# ---------------------------------------------------------------------
+
+def _sos_octava(fc, fs, orden=4):
+    """Reconstruye el mismo filtro SOS que arma filtro_octava, para poder
+    analizar su respuesta en frecuencia con freqz."""
+    f_inf = fc / np.sqrt(2.0)
+    f_sup = fc * np.sqrt(2.0)
+    nyq = fs / 2.0
+    wn0 = max(f_inf / nyq, 1e-12)
+    wn1 = min(f_sup / nyq, 1.0 - 1e-12)
+    return butter(orden, [wn0, wn1], btype="band", output="sos")
+
+def _ganancia_db_en(sos, fs, freqs_hz):
+    """Devuelve la ganancia en dB del filtro en las frecuencias pedidas."""
+    w, h = sosfreqz(sos, worN=8192, fs=fs)  # h es complejo: NO castear a float
+    mag_db = 20 * np.log10(np.abs(h) + 1e-20)
+    return np.interp(freqs_hz, w, mag_db)
+
+
+# ---------------------------------------------------------------------
+
+class TestFiltroOctava:
+    def test_filtro_octava_frecuencia_central(self):
+        """Verificar que el filtro pasa correctamente la frecuencia central."""
+        fs = 44100
+        fc = 1000.0
+        orden = 4
+
+        sos = _sos_octava(fc, fs, orden)
+        ganancia_fc = _ganancia_db_en(sos, fs, [fc])[0]
+
+        # En fc la ganancia debe ser maxima, ~0 dB
+        assert ganancia_fc == pytest.approx(0.0, abs=0.5)
+
+    def test_filtro_octava_atenuacion(self):
+        """Verificar atenuacion fuera de banda."""
+        fs = 44100
+        fc = 1000.0
+        orden = 4
+
+        sos = _sos_octava(fc, fs, orden)
+
+        f_baja = fc / 2.0
+        f_alta = fc * 2.0
+
+        ganancias = _ganancia_db_en(sos, fs, [f_baja, f_alta])
+
+        # Atenuacion fuera de banda: mayor a 20 dB por debajo de 0 dB
+        assert ganancias[0] < -20.0
+        assert ganancias[1] < -20.0
+
+    def test_filtro_octava_respuesta_frecuencia(self):
+        """Verificar que la respuesta cumple -3 dB en frecuencias de corte."""
+        fs = 48000
+        fc = 1000.0
+        orden = 4
+
+        f_inf = fc / np.sqrt(2.0)
+        f_sup = fc * np.sqrt(2.0)
+
+        sos = _sos_octava(fc, fs, orden)
+
+        # 1. Calcular la respuesta en frecuencia del filtro con sosfreqz
+        w, h = sosfreqz(sos, worN=16384, fs=fs)
+        mag_db = 20 * np.log10(np.abs(h) + 1e-20)
+
+        ganancia_fc = np.interp(fc, w, mag_db)
+        ganancia_f_inf = np.interp(f_inf, w, mag_db)
+        ganancia_f_sup = np.interp(f_sup, w, mag_db)
+        ganancia_octava_inf = np.interp(fc / 2.0, w, mag_db)
+        ganancia_octava_sup = np.interp(fc * 2.0, w, mag_db)
+
+        # 2. Ganancia en fc maxima (0 dB, tolerancia 0.5 dB)
+        assert ganancia_fc == pytest.approx(0.0, abs=0.5)
+        assert ganancia_fc >= ganancia_f_inf
+        assert ganancia_fc >= ganancia_f_sup
+
+        # 3. Ganancia en f_inf y f_sup aprox -3 dB (tolerancia 1 dB)
+        assert ganancia_f_inf == pytest.approx(-3.0, abs=1.0)
+        assert ganancia_f_sup == pytest.approx(-3.0, abs=1.0)
+
+        # 4. Atenuacion a una octava de distancia (fc/2 y 2*fc) mayor a 20 dB
+        assert ganancia_octava_inf < -20.0
+        assert ganancia_octava_sup < -20.0
+
+
+# ---------------------------------------------------------------------
 
 class TestAEscalaLog:
     """Tests para la funcion a_escala_log."""
