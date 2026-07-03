@@ -57,10 +57,19 @@
 
 
 ### Herramienta: Claude
-Acá tenés la tabla para tu AI log:
 
 | Prompt | Uso | Resultado |
 |--------|-----|-----------|
 | Implementar tests para `filtro_octava` (frecuencia central, atenuación, respuesta en frecuencia) según el Test 4 del enunciado | Generación de código de test con pytest, reconstruyendo el filtro SOS con `scipy.signal.butter` y analizando su respuesta con `sosfreqz` | Se generaron los 3 tests (`test_filtro_octava_frecuencia_central`, `test_filtro_octava_atenuacion`, `test_filtro_octava_respuesta_frecuencia`) con helpers `_sos_octava` y `_ganancia_db_en` reutilizables |
 | Corregir `ComplexWarning: Casting complex values to real discards the imaginary part` en los tests de filtro de octava | Debugging de un warning de numpy al castear el array complejo `h` (salida de `sosfreqz`) a `dtype=float` | Se identificó y eliminó el cast `np.asarray(h, dtype=float)`; se usó `np.abs(h)` directamente sobre el complejo para calcular la magnitud en dB |
 | Reescribir y reorganizar `test_procesamiento.py` completo integrando todas las clases de test existentes (`TestObtenerRIdesdeSweep`, `TestCargarAudio`, `TestAEscalaLog`, `TestSintetizarRI`, `TestFiltroOctava`) | Reestructuración de archivo de tests para mejorar legibilidad y evitar duplicación de código | Archivo consolidado con imports y helpers al inicio, separadores por bloque, y sin el error de casting complejo |
+
+
+### Herramienta: Copilot (Visual Studio Code)
+
+| **Prompt**                                                                           | **Uso**                                                                                                                                   | **Resultado**                                                                                                                                                  |
+| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Generación preliminar de funciones a partir de las especificaciones del Milestone 2. | Se solicitaron implementaciones iniciales de las funciones para comprender el flujo general del código y contar con una base de trabajo.  | Se obtuvo una primera versión de las funciones, que luego fue revisada y modificada manualmente para adecuarse a los requisitos del proyecto.                  |
+| Simplificación y refactorización del código.                                         | Se consultaron alternativas para reducir complejidad, eliminar pasos repetitivos y mejorar la legibilidad de las funciones implementadas. | Se simplificó la estructura del código, eliminando operaciones redundantes y realizando modificaciones para obtener implementaciones más claras y mantenibles. |
+| Autocompletado de documentación del código.                                          | Se utilizó el autocompletado de Copilot para generar docstrings y comentarios descriptivos durante el desarrollo.                         | Se documentaron las funciones siguiendo un formato consistente, facilitando la comprensión del código por parte del resto de los integrantes del equipo.       |
+
