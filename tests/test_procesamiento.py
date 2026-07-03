@@ -5,7 +5,6 @@ import pytest
 import soundfile as sf
 from scipy.signal import butter, sosfreqz
 
-from app.services.filter import filtro_octava
 from app.services.signal_utils import (
     a_escala_log,
     cargar_audio,
