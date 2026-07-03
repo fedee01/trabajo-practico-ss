@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import signal
-from scipy.signal import envelope, welch, fftconvolve
+from scipy.signal import envelope, welch
 from scipy.stats import linregress
 
 from app.services.pink_noise import generar_ruido_rosa
