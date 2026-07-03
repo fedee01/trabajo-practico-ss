@@ -69,12 +69,12 @@ def ploteo(plot):
         r_rosa = generar_ruido_rosa(duracion, fs)
 
         #acá empieza el calculo de la pendiente con welch
-        f, Pxx = welch(r_rosa, fs=fs, nperseg=8192) #pxx es el psd
+        f, pxx = welch(r_rosa, fs=fs, nperseg=8192) #pxx es el psd
 
         mask = (f >= 100) & (f <= 10000) #acá tomo las frecuencias entre 100 y 1000 hz
 
         x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el primedio de la pendiente sea en db/octava
-        y = 10 * np.log10(Pxx[mask]) #esto me hace la escala y en db
+        y = 10 * np.log10(pxx[mask]) #esto me hace la escala y en db
 
         pendiente, _, _, _, _ = linregress(x, y) #lineregress toma todos los puntos de la respuesta espectral y hace un ajuste lineal
 
@@ -116,7 +116,7 @@ def ploteo(plot):
         time = np.linspace(0,len(ri) / fs, num = len(ri))
 
         plt.figure(figsize=(10, 4))
-        plt.title(f"IR sintética: T60 {T60_segundos:.1f} segundos, duración {duracion:.1f} segundos")
+        plt.title(f"IR sintética: t60 {T60_segundos:.1f} segundos, duración {duracion:.1f} segundos")
         plt.xlabel("Tiempo [s]")
         
         if plot == 'plotriAMP':
