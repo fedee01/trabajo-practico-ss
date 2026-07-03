@@ -45,11 +45,15 @@
 
 **Herramienta:** ChatGPT
 
-**Uso:**
-- Se pidió ayuda para diseñar tests con `pytest`.
+| **Prompt**                                                      | **Uso**                                                                                                                                                       | **Resultado**                                                                                                                                 |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ayuda para diseñar tests unitarios del Milestone 2.             | Se consultó cómo estructurar y redactar tests para las funciones `cargar_audio`, `a_escala_log`, `sintetizar_ri`, `obtener_ri_desde_sweep` y `filtro_octava`. | Se obtuvieron propuestas de tests que luego fueron adaptadas e integradas al proyecto.                                                        |
+| Validación del tiempo de reverberación (T60).                   | Se pidió ayuda para verificar que la respuesta al impulso sintetizada reprodujera el T60 especificado utilizando la integral de Schroeder.                    | Se implementó un procedimiento de validación y un test que estima el T60 y lo compara con el valor objetivo dentro de una tolerancia.         |
+| Recuperación de la respuesta al impulso mediante deconvolución. | Se consultó cómo comprobar que la función `obtener_ri_desde_sweep` recupera correctamente una RI conocida a partir de un sweep y su filtro inverso.           | Se definió un criterio de comparación basado en la correlación normalizada considerando el alineamiento realizado por la función.             |
+| Revisión y depuración de tests.                                 | Se solicitaron explicaciones sobre fallos en los tests y diferencias entre validaciones manuales y automáticas.                                               | Se identificaron las causas de las discrepancias y se ajustaron los procedimientos de prueba para obtener resultados consistentes.            |
+| Verificación del filtro de octava.                              | Se consultó cuál era la estrategia más adecuada para comprobar el funcionamiento del filtro solicitado por la consigna.                                       | Se analizaron distintas alternativas de validación y se evaluó cuál representaba mejor el comportamiento esperado de la función implementada. |
+| Corrección de errores de calidad de código.                     | Se pidió ayuda para interpretar errores reportados por Ruff y revisar la organización del archivo de tests.                                                   | Se corrigieron problemas de formato y organización del código para cumplir con las verificaciones automáticas del proyecto.                   |
 
-**Resultado:**
-- Se implementaron los tests de duración, tipo, normalización y espectro.
 
 ### Herramienta: Claude
 Acá tenés la tabla para tu AI log:
