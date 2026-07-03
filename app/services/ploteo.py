@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.signal import envelope, welch
+from scipy.signal import envelope, welch, fftconvolve
 from scipy.stats import linregress
 
 from .pink_noise import generar_ruido_rosa
@@ -27,7 +27,7 @@ def ploteo(plot):
         sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
 
         # normalizacion de la convolucion
-        convolucion = signal.fftconvolve(sweep, inverso, mode="full")
+        convolucion = fftconvolve(sweep, inverso, mode="full")
 
         if plot == 'plotsinesweep':
             # plot 1
