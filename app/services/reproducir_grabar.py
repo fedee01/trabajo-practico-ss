@@ -139,4 +139,13 @@ def reproducir_y_grabar(
 
     sd.wait()
 
+    # verifica que la duración grabada coincida con la solicitada (±1%)
+    recorded_seconds = recording.shape[0] / float(fs)
+    rel_diff = abs(recorded_seconds - duracion_grabacion) / duracion_grabacion
+    if rel_diff > 0.01:
+        raise RuntimeError(
+            f"Duración de grabación inesperada: solicitada {duracion_grabacion:.6f}s, "
+            f"registrada {recorded_seconds:.6f}s dando una diferencia del "
+            f"({rel_diff * 100:.2f}%)"
+
     return recording
