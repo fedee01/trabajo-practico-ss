@@ -41,12 +41,14 @@ def ploteo(plot):
 
         elif plot == 'plotconvolucion':
             # plot 2: convolucion sweep x filtro inverso
-            convolucion_normalizada = convolucion / np.max(np.abs(convolucion)) # normalizo tq pico sea 1
+            convolucion_normalizada = convolucion / np.max(np.abs(convolucion)) # normalizo tq
+                                                                                #el pico sea 1
             indice_pico = np.argmax(np.abs(convolucion))  # busco el pico
             pico = np.max(np.abs(convolucion))
             ventana = 1000  # calculo el piso excluyendo una ventana alrededor del pico
             sin_pico = np.concatenate(
-                (np.abs(convolucion[: indice_pico - ventana]), np.abs(convolucion[indice_pico + ventana :]))
+                (np.abs(convolucion[: indice_pico - ventana]),
+                 np.abs(convolucion[indice_pico + ventana :]))
             )
             piso = np.mean(sin_pico)
             relacion_db = 20 * np.log10(pico / piso)  # relacion pico/piso en dB
@@ -65,7 +67,7 @@ def ploteo(plot):
             plt.grid()
             plt.show()
 
-    if plot == 'plotruidorosa':  
+    if plot == 'plotruidorosa':
         r_rosa = generar_ruido_rosa(duracion, fs)
 
         #acá empieza el calculo de la pendiente con welch
@@ -73,10 +75,12 @@ def ploteo(plot):
 
         mask = (f >= 100) & (f <= 10000) #acá tomo las frecuencias entre 100 y 1000 hz
 
-        x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el primedio de la pendiente sea en db/octava
+        x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el 
+                             # primedio de la pendiente sea en db/octava
         y = 10 * np.log10(pxx[mask]) #esto me hace la escala y en db
 
-        pendiente, _, _, _, _ = linregress(x, y) #lineregress toma todos los puntos de la respuesta espectral y hace un ajuste lineal
+        pendiente, _, _, _, _ = linregress(x, y) #lineregress toma todos los puntos de la
+                                                 #respuesta espectral y hace un ajuste lineal
 
         #esta parte es la del gráfico
         plt.figure()
@@ -112,13 +116,14 @@ def ploteo(plot):
         freq_central = 1000
         T60_segundos = 1.2
 
-        ri = sintetizar_ri({freq_central: T60_segundos}, fs, duracion)
+        ri = sintetizar_ri({freq_central: t60_segundos}, fs, duracion)
         time = np.linspace(0,len(ri) / fs, num = len(ri))
 
         plt.figure(figsize=(10, 4))
-        plt.title(f"IR sintética: t60 {T60_segundos:.1f} segundos, duración {duracion:.1f} segundos")
+        plt.title(f"IR sintética: t60 {T60_segundos:.1f} segundos, duración {duracion:.1f} segundos"
+        )
         plt.xlabel("Tiempo [s]")
-        
+
         if plot == 'plotriAMP':
             plt.ylabel("Amplitud normalizada")
             plt.xlim([0, 4])
@@ -142,7 +147,7 @@ def ploteo(plot):
         duracion = 10
 
         sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
-        
+
         grabacion = reproducir_y_grabar(sweep, fs, duracion)
         ridesdesweep = obtener_ri_desde_sweep(grabacion, inverso)
 
