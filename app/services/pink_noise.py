@@ -17,6 +17,11 @@ def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     np.ndarray
         Array con la señal de ruido rosa normalizada entre -1 y 1 (dtype float32).
     """
+    if duracion <= 0:
+        raise ValueError("la duracion debe ser un numero positivo")
+    if fs <= 0:
+        raise ValueError("la frecuencia de muestreo debe ser un numero positivo")
+
     n_bits = 20
     n_muestras = int(duracion * fs)  # numero de muestras
 
