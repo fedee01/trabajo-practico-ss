@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy import signal
 from scipy.signal import envelope, welch
 from scipy.stats import linregress
 
