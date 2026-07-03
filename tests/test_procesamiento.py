@@ -3,7 +3,6 @@
 import numpy as np
 import pytest
 import soundfile as sf
-
 from scipy.signal import butter, sosfreqz
 
 from app.services.filter import filtro_octava
@@ -14,6 +13,7 @@ from app.services.signal_utils import (
     sintetizar_ri,
 )
 from app.services.sine_sweep import generar_sine_sweep
+
 
 # ---------------------------------------------------------------------
 
