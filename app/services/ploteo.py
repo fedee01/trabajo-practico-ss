@@ -4,11 +4,10 @@ from scipy import signal
 from scipy.signal import envelope, welch
 from scipy.stats import linregress
 
-from app.services.pink_noise import generar_ruido_rosa
-from app.services.reproducir_grabar import reproducir_y_grabar
-from app.services.signal_utils import obtener_ri_desde_sweep, sintetizar_ri
-from app.services.sine_sweep import generar_sine_sweep
-
+from .pink_noise import generar_ruido_rosa
+from .reproducir_grabar import reproducir_y_grabar
+from .signal_utils import obtener_ri_desde_sweep, sintetizar_ri
+from .sine_sweep import generar_sine_sweep
 
 # parametros de ejemplo
 fs = 44100
