@@ -146,6 +146,6 @@ def reproducir_y_grabar(
         raise RuntimeError(
             f"Duración de grabación inesperada: solicitada {duracion_grabacion:.6f}s, "
             f"registrada {recorded_seconds:.6f}s dando una diferencia del "
-            f"({rel_diff * 100:.2f}%)"
+            f"({rel_diff * 100:.2f}%)")
 
     return recording
