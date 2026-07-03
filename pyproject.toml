@@ -47,9 +47,6 @@ select = [
     "SIM", # flake8-simplify
 ]
 
-[tool.ruff.lint.isort]
-known-first-party = ["app"]
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
