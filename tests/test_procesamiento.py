@@ -11,6 +11,7 @@ from app.services.signal_utils import (
     obtener_ri_desde_sweep,
     sintetizar_ri,
 )
+from app.services.filter import filtro_octava
 from app.services.sine_sweep import generar_sine_sweep
 
 
