@@ -8,6 +8,7 @@ from scipy.stats import linregress
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 # parametros de ejemplo
 fs = 44100
 f1 = 20
@@ -75,7 +76,7 @@ def ploteo(plot):
 
         mask = (f >= 100) & (f <= 10000) #acá tomo las frecuencias entre 100 y 1000 hz
 
-        x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el 
+        x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el
                              # primedio de la pendiente sea en db/octava
         y = 10 * np.log10(pxx[mask]) #esto me hace la escala y en db
 
@@ -114,7 +115,7 @@ def ploteo(plot):
         fs = 44100
         duracion = 4
         freq_central = 1000
-        T60_segundos = 1.2
+        t60_segundos = 1.2
 
         ri = sintetizar_ri({freq_central: t60_segundos}, fs, duracion)
         time = np.linspace(0,len(ri) / fs, num = len(ri))
