@@ -1,12 +1,13 @@
-from sine_sweep import generar_sine_sweep
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy import signal
+from scipy.signal import envelope, welch
+from scipy.stats import linregress
+
 from pink_noise import generar_ruido_rosa
 from reproducir_grabar import reproducir_y_grabar
-from signal_utils import sintetizar_ri, obtener_ri_desde_sweep
-from scipy import signal
-from scipy.signal import welch, envelope
-from scipy.stats import linregress
-import numpy as np
-import matplotlib.pyplot as plt
+from signal_utils import obtener_ri_desde_sweep, sintetizar_ri
+from sine_sweep import generar_sine_sweep
 
 
 # parametros de ejemplo
@@ -121,7 +122,7 @@ def ploteo(plot):
         time = np.linspace(0,len(ri) / fs, num = len(ri))
 
         plt.figure(figsize=(10, 4))
-        plt.title(f"IR sintética: t60 {T60_segundos:.1f} segundos, duración {duracion:.1f} segundos"
+        plt.title(f"IR sintética: t60 {t60_segundos:.1f} segundos, duración {duracion:.1f} segundos"
         )
         plt.xlabel("Tiempo [s]")
 
