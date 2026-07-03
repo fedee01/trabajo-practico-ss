@@ -3,10 +3,10 @@ import numpy as np
 from scipy.signal import envelope, welch
 from scipy.stats import linregress
 
-from pink_noise import generar_ruido_rosa
-from reproducir_grabar import reproducir_y_grabar
-from signal_utils import obtener_ri_desde_sweep, sintetizar_ri
-from sine_sweep import generar_sine_sweep
+from .pink_noise import generar_ruido_rosa
+from .reproducir_grabar import reproducir_y_grabar
+from .signal_utils import obtener_ri_desde_sweep, sintetizar_ri
+from .sine_sweep import generar_sine_sweep
 
 
 # parametros de ejemplo
