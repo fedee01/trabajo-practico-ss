@@ -1,5 +1,13 @@
 # Informe de la Medición 2:
 
+Como primera acción se realizó la función grabar y se delimitó que está solo funcione con archivos de audio WAV y FLAC,  en el caso que se inserte otro tipo de archivo responderá con error. Asimismo se normalizó a (-1,1) para en un futuro no tener problemas con los ploteos por distorsión. Se delimitó a que solamente acepta audios de 1 o 2 dimensiones, es decir, mono o estéreo. En el caso de que se reciba un audio estéreo se convertirá en mono por: 
+
+ ```python
+mean(axis=1) 
+
+   ```
+Luego creamos una respuesta al impulso sintetizada a la cual le establecimos los valores de T60 por banda de octava. Esta la utilizaremos para comprobar que nuestra api funcione correctamente cuando utilicemos respuestas al impulso reales.  
+
 Asumimos que el recinto se comporta como un sistema Lineal e Invariante en el Tiempo (LTI). Bajo esta hipótesis, la sala queda completamente caracterizada por una única función: su Respuesta al Impulso (h(t)). 
 Cualquier sonido que se reproduzca en la sala (x(t)) saldrá modificado como una grabación (y(t)) que es el resultado de la convolución matemática: 
 
