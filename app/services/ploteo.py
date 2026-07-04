@@ -1,12 +1,11 @@
-from sine_sweep import generar_sine_sweep
-from pink_noise import generar_ruido_rosa
-from reproducir_grabar import reproducir_y_grabar
-from signal_utils import sintetizar_ri, obtener_ri_desde_sweep
-from scipy import signal
-from scipy.signal import welch, envelope
-from scipy.stats import linregress
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+from pink_noise import generar_ruido_rosa
+from scipy import signal
+from scipy.signal import envelope, welch
+from scipy.stats import linregress
+from signal_utils import obtener_ri_desde_sweep, sintetizar_ri
+from sine_sweep import generar_sine_sweep
 
 # parametros de ejemplo
 fs = 44100
@@ -65,7 +64,7 @@ def ploteo(plot):
             plt.grid()
             plt.show()
 
-    if plot == 'plotruidorosa':  
+    if plot == 'plotruidorosa':
         r_rosa = generar_ruido_rosa(duracion, fs)
 
         #acá empieza el calculo de la pendiente con welch
@@ -118,7 +117,7 @@ def ploteo(plot):
         plt.figure(figsize=(10, 4))
         plt.title(f"IR sintética: T60 {T60_segundos:.1f} segundos, duración {duracion:.1f} segundos")
         plt.xlabel("Tiempo [s]")
-        
+
         if plot == 'plotriAMP':
             plt.ylabel("Amplitud normalizada")
             plt.xlim([0, 4])

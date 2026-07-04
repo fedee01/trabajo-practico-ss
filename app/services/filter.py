@@ -59,6 +59,6 @@ def filtro_octava(signal: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.
 
     sos = scipy.signal.butter(orden, [W_inf, W_sup], btype="bandpass", output="sos")
 
-    senal_filtrada = scipy.signal.sosfiltfilt(sos, signal) 
+    senal_filtrada = scipy.signal.sosfiltfilt(sos, signal)
 
     return senal_filtrada

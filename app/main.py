@@ -7,14 +7,11 @@ Uso:
 """
 
 from fastapi import FastAPI
+
 from app.routers import health
-from app.services.sine_sweep import generar_sine_sweep
 from app.services.pink_noise import generar_ruido_rosa
 from app.services.reproducir_grabar import reproducir_y_grabar
 from app.services.sine_sweep import generar_sine_sweep
-from app.services.pink_noise import generar_ruido_rosa
-from app.services.reproducir_grabar import reproducir_y_grabar
-import sounddevice as sd
 
 app = FastAPI(
     title="RIR-API",

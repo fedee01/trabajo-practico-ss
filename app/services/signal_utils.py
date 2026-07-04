@@ -4,7 +4,9 @@ Milestone 2: Procesamiento de la respuesta al impulso.
 """
 
 import os
+
 import numpy as np
+
 
 def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     """Carga un archivo de audio y retorna la senal y la frecuencia de muestreo.
@@ -46,15 +48,15 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
 
     if signal.ndim == 2:
         n_channels = signal.shape[1]
-        
+
         if n_channels not in (1, 2):
             raise ValueError(
                 f"Número de canales inválido: "
                 f"{n_channels}. "
                 "Debe ser mono o estéreo.")
-            
+
         signal = signal.mean(axis=1)
-        
+
     elif signal.ndim != 1:
         raise ValueError("Formato de audio inválido.")
 
@@ -95,9 +97,9 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     if fs <= 0:
         raise ValueError("fs debe ser positivo")
 
-    n_samples = int(np.ceil(duracion * fs))                 
-    t = np.arange(n_samples, dtype=np.float64) / fs         
-    ri_sintetizada = np.zeros(n_samples, dtype=np.float64)  
+    n_samples = int(np.ceil(duracion * fs))
+    t = np.arange(n_samples, dtype=np.float64) / fs
+    ri_sintetizada = np.zeros(n_samples, dtype=np.float64)
     nyq = fs / 2
 
     for fc, t60 in t60_por_banda.items():
@@ -110,7 +112,7 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         if t60 <= 0:
             raise ValueError(f"T60 inválido: {t60}")
 
-        noise = np.random.normal(loc=0.0, scale=1.0, size=n_samples) 
+        noise = np.random.normal(loc=0.0, scale=1.0, size=n_samples)
 
         f_inf = fc / np.sqrt(2)
         f_sup = fc * np.sqrt(2)
@@ -121,23 +123,23 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         if f_inf >= f_sup:
             raise ValueError(f"Banda inválida para fc={fc}")
 
-        w = [f_inf / nyq, f_sup / nyq] 
+        w = [f_inf / nyq, f_sup / nyq]
 
-        sos = butter( N=4, Wn=w, btype="bandpass", output="sos") 
+        sos = butter( N=4, Wn=w, btype="bandpass", output="sos")
 
         filtrado = sosfiltfilt(sos, noise)
 
-        rms = np.sqrt(np.mean(filtrado**2)) 
+        rms = np.sqrt(np.mean(filtrado**2))
         if rms > 0:
             filtrado /= rms
 
-        alfa = np.log(1000.0) / t60 
+        alfa = np.log(1000.0) / t60
 
-        envolv = np.exp(-alfa * t) 
-        banda = filtrado * envolv 
+        envolv = np.exp(-alfa * t)
+        banda = filtrado * envolv
         ri_sintetizada += banda
 
-    max_abs = np.max(np.abs(ri_sintetizada)) 
+    max_abs = np.max(np.abs(ri_sintetizada))
     if max_abs > 0:
         ri_sintetizada /= max_abs
 
@@ -173,7 +175,7 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
 
     if filtro_inverso.ndim == 2:
         n_channels = filtro_inverso.shape[1]
-        
+
         if n_channels not in (1, 2):
              raise ValueError(f"Número de canales inválido:{n_channels}. Debe ser mono o estéreo.")
 

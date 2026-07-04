@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
     """
     Genera ruido rosa usando el algoritmo de Voss-McCartney.
