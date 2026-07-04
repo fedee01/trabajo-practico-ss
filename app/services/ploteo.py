@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+<<<<<<< HEAD
 from scipy import signal
 from scipy.signal import envelope, welch
 from scipy.stats import linregress
@@ -8,6 +9,14 @@ from .pink_noise import generar_ruido_rosa
 from .reproducir_grabar import reproducir_y_grabar
 from .signal_utils import obtener_ri_desde_sweep, sintetizar_ri
 from .sine_sweep import generar_sine_sweep
+=======
+from pink_noise import generar_ruido_rosa
+from scipy import signal
+from scipy.signal import envelope, welch
+from scipy.stats import linregress
+from signal_utils import obtener_ri_desde_sweep, sintetizar_ri
+from sine_sweep import generar_sine_sweep
+>>>>>>> dev
 
 # parametros de ejemplo
 fs = 44100
@@ -115,6 +124,7 @@ def ploteo(plot):
         fs = 44100
         duracion = 4
         freq_central = 1000
+<<<<<<< HEAD
         t60_segundos = 1.2
 
         ri = sintetizar_ri({freq_central: t60_segundos}, fs, duracion)
@@ -123,6 +133,15 @@ def ploteo(plot):
         plt.figure(figsize=(10, 4))
         plt.title(f"IR sintética: t60 {t60_segundos:.1f} segundos, duración {duracion:.1f} segundos"
         )
+=======
+        T60_segundos = 1.2
+
+        ri = sintetizar_ri({freq_central: T60_segundos}, fs, duracion)
+        time = np.linspace(0,len(ri) / fs, num = len(ri))
+
+        plt.figure(figsize=(10, 4))
+        plt.title(f"IR sintética: T60 {T60_segundos:.1f} segundos, duración {duracion:.1f} segundos")
+>>>>>>> dev
         plt.xlabel("Tiempo [s]")
 
         if plot == 'plotriAMP':
@@ -143,11 +162,16 @@ def ploteo(plot):
             plt.grid()
             plt.show()
 
+<<<<<<< HEAD
     if plot == 'plotridesdesweep':
+=======
+    if plot == "plotridesdesweep":
+>>>>>>> dev
         fs = 44100
         duracion = 10
 
         sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
+<<<<<<< HEAD
 
         grabacion = reproducir_y_grabar(sweep, fs, duracion)
         ridesdesweep = obtener_ri_desde_sweep(grabacion, inverso)
@@ -157,6 +181,21 @@ def ploteo(plot):
         plt.xlim([0, 1.5])
         plt.ylim([-100, 0])
         plt.plot(ridesdesweep)
+=======
+        audio = cargar_audio(r"RI\1a_marble_hall.wav")
+        convo = fftconvolve(audio[0], sweep)
+
+        ridesdesweep = obtener_ri_desde_sweep(convo, inverso)
+
+        tiempo = np.linspace(0, len(ridesdesweep) / fs, num=len(ridesdesweep))
+
+        plt.xlabel("Tiempo [s]")
+        plt.ylabel("Amplitud [dB]")
+        plt.xlim([0, 4])
+        plt.ylim([-1, 1])
+        plt.title("obtener_ri_desde_sweep")
+        plt.plot(tiempo, ridesdesweep)
+>>>>>>> dev
         plt.grid()
         plt.show()
 

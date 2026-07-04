@@ -2,9 +2,15 @@
 
 Milestone 1: Generacion de senales.
 """
+<<<<<<< HEAD
+=======
+from pathlib import Path
+>>>>>>> dev
 
 import numpy as np
 import sounddevice as sd
+import soundfile as sf
+
 
 PRE_ROLL = 0.5  # segundos
 
@@ -40,6 +46,7 @@ def reproducir_y_grabar(
     if fs <= 0:
         raise ValueError("la frecuencia de muestreo debe ser positiva")
 
+<<<<<<< HEAD
     if duracion_grabacion <= 0:
         raise ValueError("la duración de grabación debe ser positiva")
 
@@ -47,6 +54,8 @@ def reproducir_y_grabar(
         raise ValueError("la señal no puede estar vacía")
 
     # acepta señal mono (1D) o estéreo/multicanal (2D)
+=======
+>>>>>>> dev
     if signal.ndim == 1:
         channels = 1
     elif signal.ndim == 2:
@@ -90,6 +99,7 @@ def reproducir_y_grabar(
             (1, channels),
         )
 
+<<<<<<< HEAD
         post_roll = np.zeros(
             (post_roll_samples, channels),
             dtype=signal.dtype,
@@ -105,12 +115,19 @@ def reproducir_y_grabar(
         )
 
     # verifica dispositivos de entrada y salida
+=======
+    playback_length = senal_final.shape[0] / float(fs)
+    if duracion_grabacion < playback_length:
+        raise ValueError(f"La duración de grabación debe ser al menos de ({playback_length:.3f}s)")
+
+>>>>>>> dev
     try:
         sd.check_input_settings(
             samplerate=int(fs),
             channels=channels,
         )
 
+<<<<<<< HEAD
         sd.check_output_settings(
             samplerate=int(fs),
             channels=channels,
@@ -147,5 +164,29 @@ def reproducir_y_grabar(
             f"Duración de grabación inesperada: solicitada {duracion_grabacion:.6f}s, "
             f"registrada {recorded_seconds:.6f}s dando una diferencia del "
             f"({rel_diff * 100:.2f}%)")
+=======
+    pre_roll = np.zeros(int(0.5 * fs)) # Crea un array de silencio para el pre-roll
+    senal_final = np.concatenate((pre_roll, signal)) # Concatena el pre-roll con la señal original
+
+    if not sd.query_devices():
+        raise RuntimeError("No se encontraron dispositivos de audio disponibles.")
+
+    grabacion = sd.playrec(senal_final, samplerate=fs, channels=signal.shape[1] if signal.ndim > 1 else 1, dtype='float32') # Reproducir y grabar simultáneamente
+    sd.wait()
+
+    recording = sd.playrec(senal_final, samplerate=int(fs), channels=channels, dtype="float32")
+    sd.wait()
+
+    app_dir = Path(__file__).resolve().parent.parent.parent / "grabaciones"
+
+    graba_num = 1
+    filename = f"grabacion_{graba_num}.wav"
+    while (app_dir / filename).exists():
+        graba_num += 1
+        filename = f"grabacion_{graba_num}.wav"
+
+    out_path = app_dir / filename
+    sf.write(str(out_path), recording, int(fs))
+>>>>>>> dev
 
     return recording

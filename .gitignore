@@ -3,3 +3,5 @@
 /app/routers/
 /app/services/__pycache__/
 .pytest_cache/
+RI/
+grabaciones/
