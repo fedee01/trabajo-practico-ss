@@ -9,9 +9,12 @@ Uso:
 from fastapi import FastAPI
 
 from app.routers import health
+<<<<<<< HEAD
+=======
 from app.services.pink_noise import generar_ruido_rosa
 from app.services.reproducir_grabar import reproducir_y_grabar
 from app.services.sine_sweep import generar_sine_sweep
+>>>>>>> dev
 
 app = FastAPI(
     title="RIR-API",
@@ -39,11 +42,3 @@ async def root():
         "description": "Room Impulse Response API",
         "docs": "/docs",
     }
-
-sine_sweep = generar_sine_sweep(400,4000,1,44100)
-pink_noise = generar_ruido_rosa(1,44100)
-
-if __name__ == "__main__":
-    # import uvicorn
-    # uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
-    reproducir_y_grabar(sine_sweep,44100)

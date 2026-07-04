@@ -20,10 +20,19 @@ import numpy as np
     np.ndarray
         Array con la señal de ruido rosa normalizada entre -1 y 1 (dtype float32).
     """
+<<<<<<< HEAD
+    if duracion <= 0:
+        raise ValueError("la duracion debe ser un numero positivo")
+    if fs <= 0:
+        raise ValueError("la frecuencia de muestreo debe ser un numero positivo")
+
+    n_bits = 20
+=======
     n_bits = 16  # numero de bits, es decir numero de generadores
+>>>>>>> dev
     n_muestras = int(duracion * fs)  # numero de muestras
 
-    generadores = np.random.randn(n_bits)  # array de la profundidad de bits elegida con los generadores de ruido.
+    generadores = np.random.randn(n_bits)
     r_rosa = np.empty(n_muestras, dtype=np.float32)
 
 

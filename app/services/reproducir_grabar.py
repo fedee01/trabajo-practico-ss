@@ -2,16 +2,31 @@
 
 Milestone 1: Generacion de senales.
 """
+<<<<<<< HEAD
+=======
 from pathlib import Path
+>>>>>>> dev
 
 import numpy as np
 import sounddevice as sd
 import soundfile as sf
 
 
-def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) -> np.ndarray:
+PRE_ROLL = 0.5  # segundos
+
+
+def reproducir_y_grabar(
+    signal: np.ndarray,
+    fs: int,
+    duracion_grabacion: float,
+) -> np.ndarray:
     """
-    Reproduce una senal y graba simultaneamente.
+    Reproduce una señal y graba simultáneamente.
+
+    Se agrega automáticamente un silencio inicial (pre-roll) de 0.5 s y,
+    si es necesario, un silencio final (post-roll) para completar la
+    duración solicitada de la grabación y permitir capturar la cola de
+    reverberación.
 
     Parameters
     ----------
@@ -21,44 +36,135 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
         Frecuencia de muestreo en Hz.
     duracion_grabacion : float
         Duración total de la grabación en segundos.
-        Debe ser >= duración de la señal para capturar la reverberación.
+        Debe ser mayor o igual que la duración de la señal reproducida.
 
     Returns
     -------
     np.ndarray
         Array con la señal grabada.
     """
-    if fs <= 0 :
+    if fs <= 0:
         raise ValueError("la frecuencia de muestreo debe ser positiva")
 
+<<<<<<< HEAD
+    if duracion_grabacion <= 0:
+        raise ValueError("la duración de grabación debe ser positiva")
+
+    if signal.size == 0:
+        raise ValueError("la señal no puede estar vacía")
+
+    # acepta señal mono (1D) o estéreo/multicanal (2D)
+=======
+>>>>>>> dev
     if signal.ndim == 1:
         channels = 1
     elif signal.ndim == 2:
         channels = signal.shape[1]
     else:
-        raise ValueError("`signal` debe ser mono o stereo (1D o 2D)")
+        raise ValueError("`signal` debe ser mono o estéreo (1D o 2D)")
 
-    if duracion_grabacion < len(signal) / fs:
-        raise ValueError("La duración de grabación debe ser mayor o igual a la de la señal")
+    # ---------- Pre-roll ----------
+    pre_roll = np.zeros(
+        int(PRE_ROLL * fs),
+        dtype=signal.dtype,
+    )
 
-    pre_roll = np.zeros(int(0.5 * fs), dtype=signal.dtype)
+    # duración de pre-roll + señal (sin contar el post-roll)
+    playback_length = PRE_ROLL + signal.shape[0] / fs
+
+    if duracion_grabacion < playback_length:
+        raise ValueError(f"La duración de grabación debe ser al menos de {playback_length:.3f} s.")
+
+    # ---------- Post-roll ----------
+    extra_time = duracion_grabacion - playback_length
+    post_roll_samples = int(round(extra_time * fs))
 
     if signal.ndim == 1:
-        senal_final = np.concatenate((pre_roll, signal))
-    else:
-        pre_roll_multi = np.tile(pre_roll.reshape(-1, 1), (1, channels))
-        senal_final = np.concatenate((pre_roll_multi, signal), axis=0)
+        post_roll = np.zeros(
+            post_roll_samples,
+            dtype=signal.dtype,
+        )
 
+        senal_final = np.concatenate(
+            (
+                pre_roll,
+                signal,
+                post_roll,
+            )
+        )
+
+    else:
+        pre_roll_multi = np.tile(
+            pre_roll.reshape(-1, 1),
+            (1, channels),
+        )
+
+<<<<<<< HEAD
+        post_roll = np.zeros(
+            (post_roll_samples, channels),
+            dtype=signal.dtype,
+        )
+
+        senal_final = np.concatenate(
+            (
+                pre_roll_multi,
+                signal,
+                post_roll,
+            ),
+            axis=0,
+        )
+
+    # verifica dispositivos de entrada y salida
+=======
     playback_length = senal_final.shape[0] / float(fs)
     if duracion_grabacion < playback_length:
         raise ValueError(f"La duración de grabación debe ser al menos de ({playback_length:.3f}s)")
 
+>>>>>>> dev
     try:
-        sd.check_input_settings(samplerate=int(fs), channels=channels)
-        sd.check_output_settings(samplerate=int(fs), channels=channels)
-    except Exception as e:
-        raise RuntimeError(f"Problema con la configuración del dispositivo de audio: {e}")
+        sd.check_input_settings(
+            samplerate=int(fs),
+            channels=channels,
+        )
 
+<<<<<<< HEAD
+        sd.check_output_settings(
+            samplerate=int(fs),
+            channels=channels,
+        )
+
+    except Exception as exc:
+        raise RuntimeError(
+            f"Problema con la configuración del dispositivo de audio: {exc}"
+        ) from exc
+
+    # normaliza la señal antes de reproducir
+    max_abso = np.nanmax(np.abs(senal_final))
+
+    if np.isfinite(max_abso) and max_abso > 0:
+        senal_final = 0.9 * senal_final.astype(np.float32) / max_abso
+    else:
+        senal_final = senal_final.astype(np.float32)
+
+    # reproducción y grabación simultáneas
+    recording = sd.playrec(
+        senal_final,
+        samplerate=int(fs),
+        channels=channels,
+        dtype="float32",
+    )
+
+    sd.wait()
+
+    # verifica que la duración grabada coincida con la solicitada (±1%)
+    recorded_seconds = recording.shape[0] / float(fs)
+    rel_diff = abs(recorded_seconds - duracion_grabacion) / duracion_grabacion
+    if rel_diff > 0.01:
+        raise RuntimeError(
+            f"Duración de grabación inesperada: solicitada {duracion_grabacion:.6f}s, "
+            f"registrada {recorded_seconds:.6f}s dando una diferencia del "
+            f"({rel_diff * 100:.2f}%)")
+=======
     pre_roll = np.zeros(int(0.5 * fs)) # Crea un array de silencio para el pre-roll
     senal_final = np.concatenate((pre_roll, signal)) # Concatena el pre-roll con la señal original
 
@@ -81,5 +187,6 @@ def reproducir_y_grabar(signal: np.ndarray, fs: int, duracion_grabacion: float) 
 
     out_path = app_dir / filename
     sf.write(str(out_path), recording, int(fs))
+>>>>>>> dev
 
     return recording

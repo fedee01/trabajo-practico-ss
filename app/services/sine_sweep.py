@@ -33,8 +33,12 @@ def generar_sine_sweep(
         Tupla con (sweep, filtro_inverso), ambos normalizados.
     """
 
+<<<<<<< HEAD
+    if f1 == 0:  # si la f pedida es 0, usa un numero muy chico para no dividir por 0
+=======
 
     if f1 == 0:  # asi no divide por cero
+>>>>>>> dev
         f1 += 1e-10
 
     if f2 <= f1:
@@ -51,20 +55,33 @@ def generar_sine_sweep(
     sine_sweep = np.array(
         [
             ma.sin(
-                2 * ma.pi * f1 * duracion
+                2
+                * ma.pi
+                * f1
+                * duracion
                 * (ma.exp(n * (ma.log(f2 / f1) / duracion)) - 1)
-                / ma.log(f2 / f1)) for n in t
+                / ma.log(f2 / f1)
+            )
+            for n in t
         ],
+<<<<<<< HEAD
+        dtype=float,
+    )
+=======
         dtype=float,)
 
     R = (f2 / f1)
+>>>>>>> dev
 
-    envolvente = np.exp(-t * np.log(R) / duracion)
+    # rel entre la f final e inicial
+    r = f2 / f1
+
+    envolvente = np.exp(-t * np.log(r) / duracion)
 
     filt_inv = sine_sweep[::-1] * envolvente  # metodo de farina
 
     if np.max(sine_sweep) > 0:
-        ratio = 2 / (np.max(sine_sweep) - np.min(sine_sweep)) # escalado a 2 [-1, 1]
+        ratio = 2 / (np.max(sine_sweep) - np.min(sine_sweep))  # escalado a 2 [-1, 1]
         shift = (np.max(sine_sweep) + np.min(sine_sweep)) / 2
         # corre el centro al costado, no es el valor promedio
         sine_sweep_normalizada = (sine_sweep - shift) * ratio

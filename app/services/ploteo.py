@@ -1,11 +1,22 @@
 import matplotlib.pyplot as plt
 import numpy as np
+<<<<<<< HEAD
+from scipy import signal
+from scipy.signal import envelope, welch
+from scipy.stats import linregress
+
+from .pink_noise import generar_ruido_rosa
+from .reproducir_grabar import reproducir_y_grabar
+from .signal_utils import obtener_ri_desde_sweep, sintetizar_ri
+from .sine_sweep import generar_sine_sweep
+=======
 from pink_noise import generar_ruido_rosa
 from scipy import signal
 from scipy.signal import envelope, welch
 from scipy.stats import linregress
 from signal_utils import obtener_ri_desde_sweep, sintetizar_ri
 from sine_sweep import generar_sine_sweep
+>>>>>>> dev
 
 # parametros de ejemplo
 fs = 44100
@@ -40,12 +51,14 @@ def ploteo(plot):
 
         elif plot == 'plotconvolucion':
             # plot 2: convolucion sweep x filtro inverso
-            convolucion_normalizada = convolucion / np.max(np.abs(convolucion)) # normalizo tq pico sea 1
+            convolucion_normalizada = convolucion / np.max(np.abs(convolucion)) # normalizo tq
+                                                                                #el pico sea 1
             indice_pico = np.argmax(np.abs(convolucion))  # busco el pico
             pico = np.max(np.abs(convolucion))
             ventana = 1000  # calculo el piso excluyendo una ventana alrededor del pico
             sin_pico = np.concatenate(
-                (np.abs(convolucion[: indice_pico - ventana]), np.abs(convolucion[indice_pico + ventana :]))
+                (np.abs(convolucion[: indice_pico - ventana]),
+                 np.abs(convolucion[indice_pico + ventana :]))
             )
             piso = np.mean(sin_pico)
             relacion_db = 20 * np.log10(pico / piso)  # relacion pico/piso en dB
@@ -68,14 +81,16 @@ def ploteo(plot):
         r_rosa = generar_ruido_rosa(duracion, fs)
 
         #acá empieza el calculo de la pendiente con welch
-        f, Pxx = welch(r_rosa, fs=fs, nperseg=8192) #pxx es el psd
+        f, pxx = welch(r_rosa, fs=fs, nperseg=8192) #pxx es el psd
 
         mask = (f >= 100) & (f <= 10000) #acá tomo las frecuencias entre 100 y 1000 hz
 
-        x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el primedio de la pendiente sea en db/octava
-        y = 10 * np.log10(Pxx[mask]) #esto me hace la escala y en db
+        x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el
+                             # primedio de la pendiente sea en db/octava
+        y = 10 * np.log10(pxx[mask]) #esto me hace la escala y en db
 
-        pendiente, _, _, _, _ = linregress(x, y) #lineregress toma todos los puntos de la respuesta espectral y hace un ajuste lineal
+        pendiente, _, _, _, _ = linregress(x, y) #lineregress toma todos los puntos de la
+                                                 #respuesta espectral y hace un ajuste lineal
 
         #esta parte es la del gráfico
         plt.figure()
@@ -109,6 +124,16 @@ def ploteo(plot):
         fs = 44100
         duracion = 4
         freq_central = 1000
+<<<<<<< HEAD
+        t60_segundos = 1.2
+
+        ri = sintetizar_ri({freq_central: t60_segundos}, fs, duracion)
+        time = np.linspace(0,len(ri) / fs, num = len(ri))
+
+        plt.figure(figsize=(10, 4))
+        plt.title(f"IR sintética: t60 {t60_segundos:.1f} segundos, duración {duracion:.1f} segundos"
+        )
+=======
         T60_segundos = 1.2
 
         ri = sintetizar_ri({freq_central: T60_segundos}, fs, duracion)
@@ -116,6 +141,7 @@ def ploteo(plot):
 
         plt.figure(figsize=(10, 4))
         plt.title(f"IR sintética: T60 {T60_segundos:.1f} segundos, duración {duracion:.1f} segundos")
+>>>>>>> dev
         plt.xlabel("Tiempo [s]")
 
         if plot == 'plotriAMP':
@@ -136,11 +162,26 @@ def ploteo(plot):
             plt.grid()
             plt.show()
 
+<<<<<<< HEAD
+    if plot == 'plotridesdesweep':
+=======
     if plot == "plotridesdesweep":
+>>>>>>> dev
         fs = 44100
         duracion = 10
 
         sweep, inverso = generar_sine_sweep(f1, f2, duracion, fs)
+<<<<<<< HEAD
+
+        grabacion = reproducir_y_grabar(sweep, fs, duracion)
+        ridesdesweep = obtener_ri_desde_sweep(grabacion, inverso)
+
+        plt.ylabel("Amplitud dB")
+        plt.xlabel("Amplitud dB")
+        plt.xlim([0, 1.5])
+        plt.ylim([-100, 0])
+        plt.plot(ridesdesweep)
+=======
         audio = cargar_audio(r"RI\1a_marble_hall.wav")
         convo = fftconvolve(audio[0], sweep)
 
@@ -154,6 +195,7 @@ def ploteo(plot):
         plt.ylim([-1, 1])
         plt.title("obtener_ri_desde_sweep")
         plt.plot(tiempo, ridesdesweep)
+>>>>>>> dev
         plt.grid()
         plt.show()
 
