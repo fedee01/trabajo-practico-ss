@@ -25,6 +25,12 @@ de respuestas al impulso por bandas de octava y calculo de parametros acusticos
 
   Eugenia Onnainty | Legajo: 74462. $${\color{green}Responsable \space de \space testing/CI}$$.
 
+## Librerias utilizadas
+numpy | matplotlib | scipy | sounddevice | fastapi | pytest 
+```bash
+# En caso de no contar con alguno utilizar:
+pip install numpy, matplotlib, scipy, sounddevice, fastapi, pytest
+```
 
 ## Requisitos previos
 
@@ -100,31 +106,33 @@ flowchart LR
 
 ```
 rir-api/
+├── .github/workflows                     # Integracion continua
+|   └── ci.yml                            
 ├── RI/                                   # Respuestas al impulso extraidas de:
 |   ├── 1a_marble_hall.wav                # https://www.openair.hosted.york.ac.uk/?page_id=459
 |   └── mh3_000_ortf_48k.wav              # https://www.openair.hosted.york.ac.uk/?page_id=602
 ├── app/
 │   ├── __init__.py
 │   ├── main.py                           # Punto de entrada FastAPI
+│   ├── app.js                            # JSON
 │   ├── routers/
+|   |   ├── _pycache_
+│   |   │   └── healt.cpython-313.pyc
 │   │   ├── health.py                     # GET /health
-│   │   ├── generacion.py                 # Endpoints de generacion (M1 → M3)
-│   │   ├── procesamiento.py              # Endpoints de filtrado (M2 → M3)
-│   │   ├── analisis.py                   # Endpoints de analisis (M3)
-│   │   └── utils.py                      # Endpoints de utilidades (M3)
+│   │   └── __init__.py
 │   ├── schemas/
 │   │   └── ...                           # Modelos Pydantic de request/response
 |   ├── _pycache_/
 │   │   └── ...                           # cache
 │   └── services/
-│       ├── generación/
-│       │   ├── pink_noise.py             # Generacion de ruido rosa (M1)
-│       │   └── sine_sweep.py             # Generacion de sine sweep (M1)
-│       ├── procesamiento/
-│       │   ├── signal_utils.py           # Utilidades de procesamiento (M2)
-│       │   └── filter.py                 # Filtros de banda de octava (M2)
-│       └── analisis/
-│           └── acoustic_parameters.py    # Parametros acusticos ISO 3382 (M3)
+│       ├── __init__.py
+│       ├── acoustic_parameters.py        # Parametros acusticos ISO 3382 (M3)
+│       ├── filter.py                     # Filtros de banda de octava (M2)
+│       ├── pink_noise.py                 # Generacion de ruido rosa (M1)
+│       ├── ploteo.py                     # Gráficos
+│       ├── reproducir_grabar.py          # Funcion (M1)
+│       ├── signal_utils.py               # Utilidades de procesamiento (M2)
+│       └── sine_sweep.py                 # Generacion de sine sweep (M1)
 ├── tests/
 │   ├── test_generacion.py                # Tests de generacion (M1)
 │   ├── test_procesamiento.py             # Tests de procesamiento (M2)
@@ -139,11 +147,11 @@ rir-api/
 │   ├── mediciones
 │   │   └── sala_ejemplos.md
 │   └── README.md                         # Documentacion de RIR-API
-├── uv.lock
-├── .github/workflows/ci.yml              # Integracion continua
-├── pyproject.toml                        # Configuracion del proyecto
 ├── .gitignore
-└── README.md
+├── AI_LOG.md                             # Documentacion sobre la utilzación de AI
+├── README.md
+├── pyproject.toml                        # Configuracion del proyecto
+└── uv.lock
 ```
 ## Branching Strategy
 
