@@ -142,20 +142,17 @@ rir-api/
 │   └── test_api.py                       # Tests de endpoints (M3)
 ├── docs/                                 # Documentacion
 │   ├── M1
-|       ├── Ruido_rosa.png
-|       └── Sine_Sweep.png
+|       ├── medición01_ruido_rosa.png                           
+|       ├── medición02_ruido_rosa.png   
+|       ├── pink noise.png
+│       └── sine sweep spectrogram.png 
 │   ├── RI
 |       ├── 1a_marble_hall.png                            
 |       ├── 1a_marble_hall.wav                # https://www.openair.hosted.york.ac.uk/?page_id=459
 |       ├── mh3_000_ortf_48k.png
 |       └── mh3_000_ortf_48k.wav              # https://www.openair.hosted.york.ac.uk/?page_id=602
 |   ├── feature
-|       └── documentación
-│   ├── imagenes
-|       ├── medición01_ruido_rosa.png                           
-|       ├── medición02_ruido_rosa.png   
-|       ├── pink noise.png
-│       └── sine sweep spectrogram.png           
+|       └── documentación         
 │   ├── mediciones
 │       └── sala_ejemplos.md
 │   ├── teoria                            # Informacion adicional
