@@ -33,7 +33,12 @@ Se observa en el gráfico en el eje vertical las frecuencias y en el eje horizon
 
 REDACTAR MÁS LINDO LA PARTE DE PROBLEMATICA: 
 
-Cuando se realizó el gráfico de sine sweep surgió como problemática que la resolución del gráfico era demasiado grande, se buscó información en matplotlib y se cambió en el código  plt.yscale(“symlog”),  “log ” por “symlog”. Debido a que este último es de utilidad para rangos muy grandes. 
+Cuando se realizó el gráfico de sine sweep surgió como problemática que la resolución del gráfico era demasiado grande, se buscó información en matplotlib y se cambió en el código de la siguiente manera:
+ ```python
+plt.yscale(“log”)  # “log ” por “symlog”.
+plt.yscale(“symlog”) #de esta forma si resulto el grafico
+   ```
+ Debido a que symlog es de utilidad para rangos muy grandes. 
 
 <img width="1000" height="400" alt="image" src="https://github.com/user-attachments/assets/4a08f7c0-86d1-4da5-826a-3d2394441e42" />
 
