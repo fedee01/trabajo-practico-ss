@@ -108,8 +108,10 @@ flowchart LR
 rir-api/
 ├── .github/workflows                     # Integracion continua
 |   └── ci.yml                            
-├── RI/                                   # Respuestas al impulso extraidas de:
+├── RI/
+|   ├── 1a_marble_hall.png                            
 |   ├── 1a_marble_hall.wav                # https://www.openair.hosted.york.ac.uk/?page_id=459
+|   ├── mh3_000_ortf_48k.png
 |   └── mh3_000_ortf_48k.wav              # https://www.openair.hosted.york.ac.uk/?page_id=602
 ├── app/
 │   ├── __init__.py
