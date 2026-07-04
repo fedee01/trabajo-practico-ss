@@ -1,5 +1,5 @@
 # Informe de la Medición 1:
-Generamos Ruido Rosa debido a que este suele escogerse por encima del Ruido blanco por la similitud de percepción que tiene al oído humano, precisamente  a que reduce la energía en altas frecuencias. Como característica este tiene una “densidad espectral inversamente proporcional a la frecuencia. En la escala logarítmica esto equivale a una caída de -3 dB por octava” (citar info M). 
+Generamos Ruido Rosa ya que este suele escogerse por encima del Ruido blanco por la similitud de percepción que tiene al oído humano, precisamente a que reduce la energía en altas frecuencias. Como característica este tiene una “densidad espectral inversamente proporcional a la frecuencia. En la escala logarítmica esto equivale a una caída de -3 dB por octava” (citar info M). 
 
 Para poder llevar a cabo la elaboración del ruido rosa tomamos como decisión de diseño el algoritmo Voss-McCartney, el cual consiste en “una suma de múltiples generadores de ruido blanco que se actualiza a tasas 2^i. El generador se actualiza cuando el bit del índice cambia. La suma produce una señal cuyo espectro se aproxima a la inversa de la frecuencia (1/f)”. 
 
@@ -12,7 +12,7 @@ GRÁFICO RUIDO ROSA:  (PSD vs FRECUENCIA)
 
 La PSD (Densidad Espectral de Potencia) se expresa en dB/Hz para describir cómo se distribuye la potencia o energía de una señal en un espectro de frecuencias, es decir, a lo largo de las distintas frecuencias que la componen. 
 
-Se observa que hay una caída de 3.18dB por banda de banda de octava, es decir, que pasó el test de espectro de ruido rosa, donde se utilizó la función welch y tenía como criterio que la pendiente debía ser dentro de -3dB con un error de 1dB. 
+Se observa que hay una caída de 3.18 dB por banda de banda de octava, es decir, que pasó el test de espectro de ruido rosa, donde se utilizó la función welch y tenía como criterio que la pendiente debía ser dentro de -3 dB con un error de 1 dB. 
 Asimismo, en el grafico hay una especie de meseta (valor que se mantiene constante) desde las primeras frecuencias hasta un poco más que 170 Hz, esto se puede deber a la longitud de la ventana de análisis que se utilizó para el cálculo de la densidad espectral de potencia y el algoritmo de generación de ruido. En muchos casos el algoritmo no tiene la resolución suficiente para distinguir lo que sucede en las frecuencias bajas, por consiguiente se promedian los valores. También al utilizar el filtro digital, como Voss Mc-Carteney, necesitan muchos coeficientes para mantener la precisión en las bajas frecuencias, por lo tanto se aplana la pendiente. 
 
 ACA HAY QUE PONER SI CAMBIAMOS EL ERROR O LO DEJAMOS ASI!
@@ -43,8 +43,9 @@ Se puede observar que se obtuvo como resultado de la convolución del sine sweep
 Asimismo se validó el test de convolución-impulso, el cual tiene como criterio que la relación pico - piso sea mayor o igual a 40 dB, siendo que se obtuvo un valor de 109.5 dB. 
 
 
-Grabación y reproducción 
-<img width="352" height="326" alt="image" src="https://github.com/user-attachments/assets/ad0f33ec-7663-46e5-a5dd-5f2b34e5263f" />
+Medición de grabación y reproducción 
+------------------------
+<img width="352" height="326" alt="image" src="https://github.com/user-attachments/assets/ad0f33ec-7663-46e5-a5dd-5f2b34e5263f" /> <img width="352" height="326" alt="image" src="https://github.com/valentinadepiero/trabajo-practico-ss/blob/85ff10def12535f9635a62605d6a115b78a73494/docs/imagenes/medicion02_ruido_rosa.png" />
 
 Para comprobar que las funciones “generar_ruido_rosa” y “reproducir_y_grabar” funcionen correctamente se realizo una prueba de la siguiente manera: 
 
