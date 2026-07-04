@@ -78,7 +78,8 @@ flowchart LR
     S -- M1 --> Gen["GENERACIÓN"]
     Gen --> SS["Sine Sweep"] & PN["Pink Noise"] & Rec["Reproducir y Grabar"]
     S -- M2 --> Proc["Procesamiento"]
-    Proc --> F["Filtros por banda de octava"] & Conv["Conversión a escala logaritmica"]
+    Proc --> F["Filtros por banda de octava"] & PrS["Procesamiento de señales"]
+    PrS --> Conv["Conversión a escala logaritmica"] & CaAu["Cargar audio"] & SRI["Sintetizar RI"] & ORIS["Obtener RI por Sweep"]
     S -- M3 --> An["Análisis"]
     An --> Par["Parámetros acústicos"] & Sua["Suavizado de señal"] & InS["Integral de Shchorder"] & Reg["Regresion lineal"] & Mlun["Metodo Lundeby"]
 
@@ -91,7 +92,11 @@ flowchart LR
     style Rec fill: #AFA3A3,color:#000000
     style Proc fill: #a69999,color:#000000
     style F fill: #AFA3A3,color:#000000
-    style Conv fill: #AFA3A3,color:#000000
+    style PrS fill: #AFA3A3,color:#000000
+    style Conv fill: #c5c0c0,color:#000000
+    style CaAu fill: #c5c0c0,color:#000000
+    style SRI fill: #c5c0c0,color:#000000
+    style ORIS fill: #c5c0c0,color:#000000
     style An fill: #a69999,color:#000000
     style Par fill: #AFA3A3,color:#000000
     style Sua fill: #AFA3A3,color:#000000
@@ -108,22 +113,17 @@ flowchart LR
 rir-api/
 ├── .github/workflows                     # Integracion continua
 |   └── ci.yml                            
-├── RI/
-|   ├── 1a_marble_hall.png                            
-|   ├── 1a_marble_hall.wav                # https://www.openair.hosted.york.ac.uk/?page_id=459
-|   ├── mh3_000_ortf_48k.png
-|   └── mh3_000_ortf_48k.wav              # https://www.openair.hosted.york.ac.uk/?page_id=602
 ├── app/
 │   ├── __init__.py
 │   ├── main.py                           # Punto de entrada FastAPI
 │   ├── app.js                            # JSON
 │   ├── routers/
-|   |   ├── _pycache_
-│   |   │   └── healt.cpython-313.pyc
-│   │   ├── health.py                     # GET /health
-│   │   └── __init__.py
+|       ├── _pycache_
+│       │   └── healt.cpython-313.pyc
+│       ├── health.py                     # GET /health
+│       └── __init__.py
 │   ├── schemas/
-│   │   └── ...                           # Modelos Pydantic de request/response
+│       └── ...                           # Modelos Pydantic de request/response
 |   ├── _pycache_/
 │   │   └── ...                           # cache
 │   └── services/
@@ -141,13 +141,26 @@ rir-api/
 │   ├── test_analisis.py                  # Tests de analisis (M3)
 │   └── test_api.py                       # Tests de endpoints (M3)
 ├── docs/                                 # Documentacion
+│   ├── M1
+|       ├── Ruido_rosa.png
+|       └── Sine_Sweep.png
+│   ├── RI
+|       ├── 1a_marble_hall.png                            
+|       ├── 1a_marble_hall.wav                # https://www.openair.hosted.york.ac.uk/?page_id=459
+|       ├── mh3_000_ortf_48k.png
+|       └── mh3_000_ortf_48k.wav              # https://www.openair.hosted.york.ac.uk/?page_id=602
+|   ├── feature
+|       └── documentación
 │   ├── imagenes
-│   │   └── ...                                           
-│   ├── teoria                            # Informacion adicional
-│   │   ├── iso_3382.md
-│   │   └── parametros.md              
+|       ├── medición01_ruido_rosa.png                           
+|       ├── medición02_ruido_rosa.png   
+|       ├── pink noise.png
+│       └── sine sweep spectrogram.png           
 │   ├── mediciones
-│   │   └── sala_ejemplos.md
+│       └── sala_ejemplos.md
+│   ├── teoria                            # Informacion adicional
+│       ├── iso_3382.md
+│       └── parametros.md  
 │   └── README.md                         # Documentacion de RIR-API
 ├── .gitignore
 ├── AI_LOG.md                             # Documentacion sobre la utilzación de AI
