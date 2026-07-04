@@ -10,10 +10,6 @@ from fastapi import FastAPI
 
 from app.routers import health
 
-from app.services.pink_noise import generar_ruido_rosa
-from app.services.reproducir_grabar import reproducir_y_grabar
-from app.services.sine_sweep import generar_sine_sweep
-
 app = FastAPI(
     title="RIR-API",
     description="API para procesamiento y analisis de respuestas al impulso segun ISO 3382.",
