@@ -174,30 +174,30 @@ La estrategia armada para el proyecto es utilizar tres tipos de branches. En pri
 ### M0 — Setup del entorno | Arquitectura (El plano) 
 **Fecha:** Semana 5 (28 de abril de 2026)
 
-- [ ] Hacer fork del repositorio template.
-- [ ] Clonar el fork y verificar que el entorno se instala correctamente.
-- [ ] Ejecutar la API: `uvicorn app.main:app --reload`.
-- [ ] Verificar que `/health` responde correctamente.
-- [ ] Ejecutar los tests (todos deben fallar con `NotImplementedError` excepto los de API).
-- [ ] Verificar que el CI funciona en GitHub Actions.
+- [x] Hacer fork del repositorio template.
+- [x] Clonar el fork y verificar que el entorno se instala correctamente.
+- [x] Ejecutar la API: `uvicorn app.main:app --reload`.
+- [x] Verificar que `/health` responde correctamente.
+- [x] Ejecutar los tests (todos deben fallar con `NotImplementedError` excepto los de API).
+- [x] Verificar que el CI funciona en GitHub Actions.
 
 ### M1 — Generacion de senales
 **Fecha:** Semana 8 (19 de mayo de 2026)
 
-- [ ] Implementar `generar_ruido_rosa()` en `app/services/pink_noise.py`.
-- [ ] Implementar `generar_sine_sweep()` en `app/services/sine_sweep.py`.
-- [ ] Implementar `reproducir_y_grabar()`.
-- [ ] Todos los tests de `test_generacion.py` deben pasar.
+- [x] Implementar `generar_ruido_rosa()` en `app/services/pink_noise.py`.
+- [x] Implementar `generar_sine_sweep()` en `app/services/sine_sweep.py`.
+- [x] Implementar `reproducir_y_grabar()`.
+- [x] Todos los tests de `test_generacion.py` deben pasar.
 
 ### M2 — Procesamiento de senales (RI)
 **Fecha:** Semana 12 (16 de junio de 2026)
 
-- [ ] Implementar `cargar_audio()` en `app/services/signal_utils.py`.
-- [ ] Implementar `obtener_ri_desde_sweep()` en `app/services/signal_utils.py`.
-- [ ] Implementar `filtro_octava()` en `app/services/filter.py`.
-- [ ] Implementar `a_escala_log()` en `app/services/signal_utils.py`.
-- [ ] Implementar `sintetizar_ri()` para validacion.
-- [ ] Todos los tests de `test_procesamiento.py` deben pasar.
+- [x] Implementar `cargar_audio()` en `app/services/signal_utils.py`.
+- [x] Implementar `obtener_ri_desde_sweep()` en `app/services/signal_utils.py`.
+- [x] Implementar `filtro_octava()` en `app/services/filter.py`.
+- [x] Implementar `a_escala_log()` en `app/services/signal_utils.py`.
+- [x] Implementar `sintetizar_ri()` para validacion.
+- [x] Todos los tests de `test_procesamiento.py` deben pasar.
 
 ### M3 — API REST y analisis de parametros acusticos (Producto Final)
 **Fecha:** Semana 15 (7 de Julio de 2026)
