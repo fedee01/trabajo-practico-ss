@@ -9,12 +9,10 @@ Uso:
 from fastapi import FastAPI
 
 from app.routers import health
-<<<<<<< HEAD
-=======
+
 from app.services.pink_noise import generar_ruido_rosa
 from app.services.reproducir_grabar import reproducir_y_grabar
 from app.services.sine_sweep import generar_sine_sweep
->>>>>>> dev
 
 app = FastAPI(
     title="RIR-API",
