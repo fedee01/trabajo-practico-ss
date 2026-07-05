@@ -34,6 +34,14 @@ INSERTAR GRÁFICO DE LA ENVOLVENTE:
 
 Podemos observar que es una recta por lo tanto confirma que es un decaimiento exponencial. Asimismo la recta debe tener como punto que a 60 dB los segundos deben ser 1,2 ya que fue lo establecido. Nosotros obtuvimos (PONER EL PUNTO QUE VEMOS EN EL GRÁFICO), podemos considerar un pequeño error debido a que el test de sintetizar RI acepta un error menor a 10%, es decir, nuestro T60 podía estar entre 1,08 segundos a 1,32 segundos. 
 
+Tambien realizamos un grafico de la curva de decaimiento energetico de la RI sintetizada de forma exponencial 
+
+
+<img width="562" height="433" alt="Screenshot 2026-07-05 133733" src="https://github.com/user-attachments/assets/e7f14851-d0e1-47a8-a81c-3ea44dc0c5ab" />
+
+Podemos observar en el eje Y los niveles en decibeles y el eje X el tiempo en segundos. El punto indica que en el decaimiento de 60 dB es a los 1,99s. Teniendo un error de 0,70% ya que los parametros establecidos para este ploteo es de una frecuencia central de 1000 Hz con una duración 4 segundos, frecuencia de sampleo de 44100 Hz y un T60 de 2 segundos. 
+
+
 A continuación con el sine sweep que se obtuvo con anterioridad:
 
 
@@ -64,10 +72,10 @@ En la siguiente figura observamos un grafico más adetalle de la correlacion en 
 
 
 
+<img width="562" height="433" alt="Screenshot 2026-07-05 133733" src="https://github.com/user-attachments/assets/e7f14851-d0e1-47a8-a81c-3ea44dc0c5ab" />
 
 
-sintetizar_ri: T60 medido dentro del 10% del especificado por banda
-<img width="422" height="318" alt="image" src="https://github.com/user-attachments/assets/0b7ca016-be15-4420-bcb7-b8bcaa40465f" />
+
 
 Sintetizar RI con T60=2.0s a 1000Hz.Filtrar la RI sintetizada en la banda de 1000 Hz.Calcular la curva de decaimiento en dB (Schroeder).Medir el tiempo en que la curva cruza -60 dB.
 
