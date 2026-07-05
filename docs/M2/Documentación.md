@@ -24,6 +24,7 @@ Grafico de IR sintetica grafico de forma lineal:
 
 <img width="558" height="298" alt="image" src="https://github.com/user-attachments/assets/8e3f0860-d42d-4031-95cd-52b9472c10db" />
 
+
 Forma de onda líneal. Eje horizontal tiempo y Eje vertical amplitud.
 
 Se concentra en el tiempo t=0 s con una amplitud máxima de 1 (debido a que fue normalizada la respuesta al impulso entre esos valores), y esta decae de forma exponencial a cero de forma natural. Podemos observar que el pico más alto es la señal directa y luego tenemos las reflexiones primarias y las reflexiones secundarias que van decayendo con el tiempo, la energía decrece de forma muy rapida.
