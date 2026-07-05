@@ -1,4 +1,7 @@
 # Informe de la Medición 1:
+
+### Función Ruido Rosa:
+
 Generamos Ruido Rosa ya que este suele escogerse por encima del Ruido blanco por la similitud de percepción que tiene al oído humano, precisamente a que reduce la energía en altas frecuencias. Como característica este tiene una “densidad espectral inversamente proporcional a la frecuencia. En la escala logarítmica esto equivale a una caída de -3 dB por octava” (citar info M). 
 
 Para poder llevar a cabo la elaboración del ruido rosa tomamos como decisión de diseño el algoritmo Voss-McCartney, el cual consiste en “una suma de múltiples generadores de ruido blanco que se actualiza a tasas 2^i. El generador se actualiza cuando el bit del índice cambia. La suma produce una señal cuyo espectro se aproxima a la inversa de la frecuencia (1/f)”. 
@@ -18,6 +21,8 @@ Asimismo, en el grafico hay una especie de meseta (valor que se mantiene constan
 ACA HAY QUE PONER SI CAMBIAMOS EL ERROR O LO DEJAMOS ASI!
 
 CHEQUEAR A PARTIR DE ACA: 
+
+### Funcion Sine sweep: 
 
 Sine Sweep (barrido sinusoidal) es una oscilación sinusoidal en la cual la frecuencia de oscilación no se mantiene constante sino que aumenta continuamente.  En el caso del sine sweep logarítmico o exponencial aumenta continuamente pero divide el tiempo por octavas de bandas. Esto es por que buscamos igual energía por octava. ACA ES LO DE LA NORMA IEC 61260. 
 
@@ -47,9 +52,8 @@ Se puede observar que se obtuvo como resultado de la convolución del sine sweep
 
 Asimismo se validó el test de convolución-impulso, el cual tiene como criterio que la relación pico - piso sea mayor o igual a 40 dB, siendo que se obtuvo un valor de 109.5 dB. 
 
+### Función de grabación y reproducción:
 
-Medición de grabación y reproducción 
-------------------------
 <img width="352" height="326" alt="image" src="https://github.com/user-attachments/assets/ad0f33ec-7663-46e5-a5dd-5f2b34e5263f" /> <img width="352" height="326" alt="image" src="https://github.com/valentinadepiero/trabajo-practico-ss/blob/85ff10def12535f9635a62605d6a115b78a73494/docs/imagenes/medicion02_ruido_rosa.png" />
 
 Para comprobar que las funciones “generar_ruido_rosa” y “reproducir_y_grabar” funcionen correctamente se realizo una prueba de la siguiente manera: 
