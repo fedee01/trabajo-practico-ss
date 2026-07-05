@@ -116,7 +116,6 @@ def ploteo(plot):
         # parametros de ejemplo
         fs = 44100
         duracion = 4
-        freq_central = 1000
         t60_segundos = 1.2
 
         biblioteca = {
