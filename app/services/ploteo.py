@@ -68,47 +68,48 @@ def ploteo(plot):
             plt.grid()
             plt.show()
 
-    if plot == 'plotruidorosa':
+    if plot == "plotruidorosa":
+        duracion = 10
+        fs = 44100
         r_rosa = generar_ruido_rosa(duracion, fs)
 
-        #acá empieza el calculo de la pendiente con welch
-        f, pxx = welch(r_rosa, fs=fs, nperseg=8192) #pxx es el psd
+        # acá empieza el calculo de la pendiente con welch
+        f, pxx = welch(r_rosa, fs=fs, nperseg=8192)  # pxx es el psd
 
-        mask = (f >= 100) & (f <= 10000) #acá tomo las frecuencias entre 100 y 1000 hz
+        mask = (f >= 20) & (f <= 24000)  # tomo de 20 a 24000 hz
 
-        x = np.log2(f[mask]) #acá expreso al eje x en escala logarítmica para que al hacer el
-                             # primedio de la pendiente sea en db/octava
-        y = 10 * np.log10(pxx[mask]) #esto me hace la escala y en db
+        x = np.log2(f[mask])  # eje x en escala logarítmica para  el promedio de la pendiente
+        y = 10 * np.log10(pxx[mask]) 
 
-        pendiente, _, _, _, _ = linregress(x, y) #lineregress toma todos los puntos de la
-                                                 #respuesta espectral y hace un ajuste lineal
+        pendiente, _, _, _, _ = linregress(x, y)  # lineregress toma los puntos de la rta espectral y hace un ajuste lineal
 
-        #esta parte es la del gráfico
-        plt.figure()
-
-        plt.psd(r_rosa, Fs=fs, color="red", linewidth=1)
-
+        plt.figure(figsize=(10, 5))
+        plt.psd(r_rosa, Fs=fs, color="pink", linewidth=2, label="ruido rosa")
         plt.xlabel("Frecuencia [Hz]")
         plt.ylabel("PSD [dB/Hz]")
-        plt.xscale("log")
 
-        plt.xlim([20, 24000])
+        plt.xscale("symlog")
+        plt.semilogx(range(20000))
+        ax = plt.gca()
+        ax.set_xscale("log")
+        ax.xaxis.set_major_formatter(mt.ScalarFormatter())
+        ax.xaxis.set_minor_formatter(mt.NullFormatter())
+
+        plt.xticks([20,50,100,200,300,500,700,1000,2000,3000,5000,20000,10000,14000,7000,1400])
+        
+        # recta en escala logaritmica
+        x = np.array([20, 20000])
+        y = -3 * np.log2(x / 20) + 10 * np.log10(pxx[mask][0])
+
+        plt.plot(x, y, "g--", label="Pendiente -3 dB/oct", linewidth=0.75)
+        plt.xlim([100, 20000])
         plt.ylim([-85, -35])
-
         plt.title("Ruido rosa")
 
-        plt.text(
-            0.6,
-            0.95,
-            f"Pendiente = {pendiente:.2f} dB/oct",
-            transform=plt.gca().transAxes,
-            verticalalignment="top",
-            bbox=dict(boxstyle="round", facecolor="white"),
-        )
-        #plt.text es para poner la cajita con el valor de la pendiente
-
+        plt.text(0.6,0.95,f"Pendiente = {pendiente:.2f} dB/oct",transform=plt.gca().transAxes,verticalalignment="top",bbox=dict(boxstyle="round", facecolor="white"),)
+        plt.legend()
         plt.show()
-
+        
     if plot == 'plotriAMP' or plot == 'plotriRMS':
 
         # parametros de ejemplo
