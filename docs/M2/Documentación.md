@@ -1,11 +1,16 @@
 # Informe de la Medición 2:
 
-Como primera acción se realizó la función grabar y se delimitó que está solo funcione con archivos de audio WAV y FLAC,  en el caso que se inserte otro tipo de archivo responderá con error. Asimismo se normalizó a (-1,1) para en un futuro no tener problemas con los ploteos por distorsión. Se delimitó a que solamente acepta audios de 1 o 2 dimensiones, es decir, mono o estéreo. En el caso de que se reciba un audio estéreo se convertirá en mono por: 
+### Función cargar audio: 
+
+Como primera acción se realizó la función cargar audio y se delimitó que está solo funcione con archivos de audio WAV y FLAC,  en el caso que se inserte otro tipo de archivo responderá con error. Asimismo se normalizó a (-1,1) para en un futuro no tener problemas con los ploteos por distorsión. Se delimitó a que solamente acepta audios de 1 o 2 dimensiones, es decir, mono o estéreo. En el caso de que se reciba un audio estéreo se convertirá en mono por: 
 
  ```python
 mean(axis=1) 
 
    ```
+
+### Función Sintetizar respuesta al impulso: 
+
 Luego creamos una respuesta al impulso sintetizada a la cual le establecimos los valores de T60 por banda de octava. Esta la utilizaremos para comprobar que nuestra api funcione correctamente cuando utilicemos respuestas al impulso reales.  
 
 El paso a paso para crear la respuesta al impulso sintetizada fue: 
@@ -41,6 +46,7 @@ Tambien realizamos un grafico de la curva de decaimiento energetico de la RI sin
 
 Podemos observar en el eje Y los niveles en decibeles y el eje X el tiempo en segundos. El punto indica que en el decaimiento de 60 dB es a los 1,99s. Teniendo un error de 0,70% ya que los parametros establecidos para este ploteo es de una frecuencia central de 1000 Hz con una duración 4 segundos, frecuencia de sampleo de 44100 Hz y un T60 de 2 segundos. 
 
+### Función obtener RI desde el sweep: 
 
 A continuación con el sine sweep que se obtuvo con anterioridad:
 
@@ -72,11 +78,3 @@ En la siguiente figura observamos un grafico más adetalle de la correlacion en 
 
 
 
-<img width="562" height="433" alt="Screenshot 2026-07-05 133733" src="https://github.com/user-attachments/assets/e7f14851-d0e1-47a8-a81c-3ea44dc0c5ab" />
-
-
-
-
-Sintetizar RI con T60=2.0s a 1000Hz.Filtrar la RI sintetizada en la banda de 1000 Hz.Calcular la curva de decaimiento en dB (Schroeder).Medir el tiempo en que la curva cruza -60 dB.
-
-Deconvolución: Correlación cruzada con RI original > 0.9.
