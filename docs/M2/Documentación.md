@@ -82,6 +82,6 @@ Luego se creó una función de filtro por banda de octava determinada por la nor
 
 <img width="890" height="491" alt="image" src="https://github.com/user-attachments/assets/8d3ad9c2-c736-4b4c-9580-850ffba10090" />
 
-
+En la figura podemos visualizar las 9 bandas de octavas determinadas por la norma IEC 61260. Asimismo podemos comprar con la línea punteada que se cruzan cuando se genera una caída de 3 dB. Es decir, que pasó el test de filtro de octava que tenía como criterio que la frecuencia de corte debían cruzarse con fc:  -3 dB ± 1.
 
 
