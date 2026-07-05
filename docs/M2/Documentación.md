@@ -20,7 +20,7 @@ El paso a paso para crear la respuesta al impulso sintetizada fue:
 
 Los parámetros de referencia que se utilizaron para el siguiente gráfico fueron la frecuencia central de 1000 Hz con una duración 4 segundos, frecuencia de sampleo de 44100 Hz y un T60 de 1,2 segundos. 
 
-Grafico de IR sintetica grafico de forma lineal: Forma de onda líneal. Eje horizontal tiempo y Eje vertical amplitud.
+Grafico de IR sintetica grafico de forma lineal: 
 
 <img width="558" height="298" alt="image" src="https://github.com/user-attachments/assets/8e3f0860-d42d-4031-95cd-52b9472c10db" />
 
@@ -48,6 +48,20 @@ Para obtener nuestra respuesta al impulso $h(t)$ asumimos que el recinto se comp
 $y(t)=h(t)* x(t)$
 
 Cómo logramos reproducir un pulso casi perfecto con nuestro sine sweep y su inverso entonces podemos decir que $x(t)=\delta(x)$ en consecuencia $y(t)=h(t)$ en otras palabras nuestra grabación sería directamente nuestra respuesta al impulso.
+
+Debemos tener en cuenta que la respuesta al impulso obtenida por el sweep tenía recortada la información anterior al pico máximo, por lo tanto cuando buscamos la correlación entre ambas RI (la sintetizada con la obtenida con la convolución), se alinearon y se debió eliminar las primeros picos hasta el máximo de la RI sintetizada. De esta forma cumplio con el objetivo requerido por el test OBETENER_RI_DESDE_SWEEP que tenía como criterio la correlación cruzada con RI original (sintetizada) debe ser mayor a 0,9. 
+
+Podemos observar en los siguientes gráficos la correlación entre ambas respuestas al impulso: 
+
+<img width="1200" height="500" alt="image" src="https://github.com/user-attachments/assets/eb2b22de-a004-4966-b3b6-29e178b1cc62" />
+
+En el eje Y se encuentra la amplitud y en el eje X el tiempo. En naranaja tenemos la RI recueprada que es la obtenida mediante la convolución y en celeste la RI original que es la sinteitzada. Podemos ver que se obtuvo una correlación del 0,9955 
+
+En la siguiente figura observamos un grafico más adetalle de la correlacion en los primeros 100ms. 
+
+<img width="1200" height="500" alt="image" src="https://github.com/user-attachments/assets/ce5b1fc3-7368-49b2-8637-aa65f819ad21" />
+
+
 
 
 
