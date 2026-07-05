@@ -8,6 +8,16 @@ mean(axis=1)
    ```
 Luego creamos una respuesta al impulso sintetizada a la cual le establecimos los valores de T60 por banda de octava. Esta la utilizaremos para comprobar que nuestra api funcione correctamente cuando utilicemos respuestas al impulso reales.  
 
+El paso a paso para crear la respuesta al impulso sintetizada fue: 
+
+- [x] Generar ruido blanco.
+- [x] Filtrar por pasa-banda de octava 
+- [x] Normalizar a RMS.
+- [x] Multiplicarlo por una envolvente $e^{-at}$ para que decaiga de forma exponencial.
+- [x] Se sumaron todas las bandas de octavas.
+- [x]Normalizar 
+
+
 Los parámetros de referencia que se utilizaron para el siguiente gráfico fueron la frecuencia central de 1000 Hz con una duración 4 segundos, frecuencia de sampleo de 44100 Hz y un T60 de 1,2 segundos. 
 
 Grafico de IR sintetica:
