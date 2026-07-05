@@ -20,14 +20,15 @@ El paso a paso para crear la respuesta al impulso sintetizada fue:
 
 Los parámetros de referencia que se utilizaron para el siguiente gráfico fueron la frecuencia central de 1000 Hz con una duración 4 segundos, frecuencia de sampleo de 44100 Hz y un T60 de 1,2 segundos. 
 
-Grafico de IR sintetica grafico de forma lineal:
+Grafico de IR sintetica grafico de forma lineal: Forma de onda líneal. Eje horizontal tiempo y Eje vertical amplitud.
 
 <img width="558" height="298" alt="image" src="https://github.com/user-attachments/assets/8e3f0860-d42d-4031-95cd-52b9472c10db" />
 
-Podemos observar que el pico más alto es la señal directa y luego tenemos las reflexiones primarias y las reflexiones secundarias que van decayendo con el tiempo. Asimismo se observa que el grafico va desde 1 a -1 debido a que fue normalizada la respuesta al impulso entre esos valores. 
+Forma de onda líneal. Eje horizontal tiempo y Eje vertical amplitud.
+
+Se concentra en el tiempo t=0 s con una amplitud máxima de 1 (debido a que fue normalizada la respuesta al impulso entre esos valores), y esta decae de forma exponencial a cero de forma natural. Podemos observar que el pico más alto es la señal directa y luego tenemos las reflexiones primarias y las reflexiones secundarias que van decayendo con el tiempo, la energía decrece de forma muy rapida.
 
 También quisimos observan la respuesta al impulso con escala logarítmica para poder observar el comportamiento en el tiempo de forma más detallada. Se normalizó a RMS para obtener un promedio de energía y ver la tendencia general. 
-
 INSERTAR GRÁFICO DE LA ENVOLVENTE: 
 
 Podemos observar que es una recta por lo tanto confirma que es un decaimiento exponencial. Asimismo la recta debe tener como punto que a 60 dB los segundos deben ser 1,2 ya que fue lo establecido. Nosotros obtuvimos (PONER EL PUNTO QUE VEMOS EN EL GRÁFICO), podemos considerar un pequeño error debido a que el test de sintetizar RI acepta un error menor a 10%, es decir, nuestro T60 podía estar entre 1,08 segundos a 1,32 segundos. 
@@ -37,29 +38,17 @@ A continuación con el sine sweep que se obtuvo con anterioridad:
 
 https://github.com/valentinadepiero/trabajo-practico-ss/blob/69a072043316a4f56c9fed7fd7772973395e8ceb/app/services/sine_sweep.py
 
-Asumimos que el recinto se comporta como un sistema Lineal e Invariante en el Tiempo (LTI). Bajo esta hipótesis, la sala queda completamente caracterizada por una única función: su Respuesta al Impulso (h(t)). 
-Cualquier sonido que se reproduzca en la sala (x(t)) saldrá modificado como una grabación (y(t)) que es el resultado de la convolución matemática: 
+Se convoluciono con su filtro inverso (realizado anteriormente) y se obtuvo un impulso perfecto. ( Recordemos que $x(t)$= sine sweep * filtro inverso= impulso no perfecto).
 
-y(t)=h(t)* x(t)
+Debemos tener en cuenta que como diseño se eligió crear canales separados para el sine sweep y otro para su filtro inverso, para que el usuario pueda utilizarlos por separado de ser necesario. 
 
-Si se pudiera reproducir un impulso ideal, es decir, x(T)= delta de dirac. ENTONCES, NOS TERMINARÍA QUEDANDO QUE Y(T)=H(T),  es decir, que nuestra grabación sería directamente nuestra respuesta al impulso.
 
-Recordemos que generamos un impulso con el sine sweep convolucionado con sul filtro inverso. (M1).
+Para obtener nuestra respuesta al impulso $h(t)$ asumimos que el recinto se comporta como un sistema Lineal e Invariante en el Tiempo (LTI). Por lo tanto, se puede plantear que $x(t)$ es la sala la cual saldrá modificada como una grabación $y(t)$ que es el resultado de la convolución matemática: 
 
-Hay que realizar la deconvolución. Recordemos que x(t)= sine sweep * filtro inverso= impulso no perfecto.
+$y(t)=h(t)* x(t)$
 
-Se utilizó la transformada rápida de Fourier.
+Cómo logramos reproducir un pulso casi perfecto con nuestro sine sweep y su inverso entonces podemos decir que $x(t)=\delta(x)$ en consecuencia $y(t)=h(t)$ en otras palabras nuestra grabación sería directamente nuestra respuesta al impulso.
 
-Grafico de IR sintetica:
-
-<img width="558" height="298" alt="image" src="https://github.com/user-attachments/assets/8e3f0860-d42d-4031-95cd-52b9472c10db" />
-
-Forma de onda líneal. Eje horizontal tiempo y Eje vertical amplitud. 
-
-Se concentra en el tiempo t=0 s con una amplitud máxima de 1 y esta decae de forma exponencial a cero de forma natural. La energía decrece de forma muy rapida
-
-FALTA GRAFICO ESPECTRAL!
-En este es la misma señal pero promediado RMS y luego escalado a escala logartimica, esto se da para poder observar la pendiente de como deae la energia de forma linealmente. 
 
 
 sintetizar_ri: T60 medido dentro del 10% del especificado por banda
