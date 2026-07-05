@@ -20,11 +20,13 @@ El paso a paso para crear la respuesta al impulso sintetizada fue:
 
 Los parámetros de referencia que se utilizaron para el siguiente gráfico fueron la frecuencia central de 1000 Hz con una duración 4 segundos, frecuencia de sampleo de 44100 Hz y un T60 de 1,2 segundos. 
 
-Grafico de IR sintetica:
+Grafico de IR sintetica grafico de forma lineal:
 
 <img width="558" height="298" alt="image" src="https://github.com/user-attachments/assets/8e3f0860-d42d-4031-95cd-52b9472c10db" />
 
-Podemos observar que el pico más alto es la señal directa y luego tenemos las reflexiones primarias y las reflexiones secundarias que van decayendo con el tiempo. 
+Podemos observar que el pico más alto es la señal directa y luego tenemos las reflexiones primarias y las reflexiones secundarias que van decayendo con el tiempo. Asimismo se observa que el grafico va desde 1 a -1 debido a que fue normalizada la respuesta al impulso entre esos valores. 
+
+También quisimos observan la respuesta al impulso con escala logarítmica para poder observar el comportamiento en el tiempo de forma más detallada. Se normalizó a RMS para obtener un promedio de energía y ver la tendencia general. 
 
 
 
