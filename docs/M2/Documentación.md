@@ -15,7 +15,7 @@ El paso a paso para crear la respuesta al impulso sintetizada fue:
 - [x] Normalizar a RMS.
 - [x] Multiplicarlo por una envolvente $e^{-at}$ para que decaiga de forma exponencial.
 - [x] Se sumaron todas las bandas de octavas.
-- [x]Normalizar 
+- [x] Normalizar 
 
 
 Los parámetros de referencia que se utilizaron para el siguiente gráfico fueron la frecuencia central de 1000 Hz con una duración 4 segundos, frecuencia de sampleo de 44100 Hz y un T60 de 1,2 segundos. 
