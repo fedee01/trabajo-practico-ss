@@ -88,3 +88,4 @@ En la figura podemos visualizar las 9 bandas de octavas determinadas por la norm
 
 Como último paso en esta sección se convirtió de escala lineal a escala logarítmica para poder observar en decibeles. El test que debe pasar es a escala logarítmica que verifique que el máximo es 0 dB y que la amplitud de -6 dB. 
 
+<img width="842" height="460" alt="image" src="https://github.com/user-attachments/assets/1227e6e5-f6b0-4e92-9641-8f16352b60fc" />
