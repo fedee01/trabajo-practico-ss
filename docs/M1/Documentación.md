@@ -7,7 +7,7 @@ En el momento de llevar esto a cabo surgió como dificultad la comprensión de l
 
 GRÁFICO RUIDO ROSA:  (PSD vs FRECUENCIA)
 
-<img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/468cdeab-3dd5-4709-89f6-92fc84e1f1e9" />
+<img width="640" height="480" alt="image" src="https://github.com/valentinadepiero/trabajo-practico-ss/blob/2e150105dc788771edef36ded9676d6f4b5c99d9/docs/M1/ruido_rosa.png" />
 
 
 La PSD (Densidad Espectral de Potencia) se expresa en dB/Hz para describir cómo se distribuye la potencia o energía de una señal en un espectro de frecuencias, es decir, a lo largo de las distintas frecuencias que la componen. 
