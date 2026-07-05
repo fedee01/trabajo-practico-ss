@@ -12,7 +12,7 @@ GRÁFICO RUIDO ROSA:  (PSD vs FRECUENCIA)
 
 La PSD (Densidad Espectral de Potencia) se expresa en dB/Hz para describir cómo se distribuye la potencia o energía de una señal en un espectro de frecuencias, es decir, a lo largo de las distintas frecuencias que la componen. 
 
-Se observa que hay una caída de 3.18 dB por banda de banda de octava, es decir, que pasó el test de espectro de ruido rosa, donde se utilizó la función welch y tenía como criterio que la pendiente debía ser dentro de -3 dB con un error de 1 dB. 
+Se observa que hay una caída de 3.16 dB por banda de banda de octava, es decir, que pasó el test de espectro de ruido rosa, donde se utilizó la función welch y tenía como criterio que la pendiente debía ser dentro de -3 dB con un error de 1 dB. 
 Asimismo, en el grafico hay una especie de meseta (valor que se mantiene constante) desde las primeras frecuencias hasta un poco más que 170 Hz, esto se puede deber a la longitud de la ventana de análisis que se utilizó para el cálculo de la densidad espectral de potencia y el algoritmo de generación de ruido. En muchos casos el algoritmo no tiene la resolución suficiente para distinguir lo que sucede en las frecuencias bajas, por consiguiente se promedian los valores. También al utilizar el filtro digital, como Voss Mc-Carteney, necesitan muchos coeficientes para mantener la precisión en las bajas frecuencias, por lo tanto se aplana la pendiente. 
 
 ACA HAY QUE PONER SI CAMBIAMOS EL ERROR O LO DEJAMOS ASI!
