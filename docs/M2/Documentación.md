@@ -84,4 +84,7 @@ Luego se creó una función de filtro por banda de octava determinada por la nor
 
 En la figura podemos visualizar las 9 bandas de octavas determinadas por la norma IEC 61260. Asimismo podemos comprar con la línea punteada que se cruzan cuando se genera una caída de 3 dB. Es decir, que pasó el test de filtro de octava que tenía como criterio que la frecuencia de corte debían cruzarse con fc:  -3 dB ± 1.
 
+### Función a escala logarítmica: 
+
+Como último paso en esta sección se convirtió de escala lineal a escala logarítmica para poder observar en decibeles. El test que debe pasar es a escala logarítmica que verifique que el máximo es 0 dB y que la amplitud de -6 dB. 
 
