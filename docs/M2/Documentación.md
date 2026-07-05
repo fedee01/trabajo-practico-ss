@@ -76,5 +76,12 @@ En la siguiente figura observamos un grafico más adetalle de la correlacion en 
 
 <img width="1200" height="500" alt="image" src="https://github.com/user-attachments/assets/ce5b1fc3-7368-49b2-8637-aa65f819ad21" />
 
+### Filtro banda de octava: 
+
+Luego se creó una función de filtro por banda de octava determinada por la norma IEC 61260. Esta norma define las 9 frecuencias centrales y mediante la fórmula $frec inf/sup = frec c x 2 {± ½} obtenemos las frecuencias de corte inferior y superior. Asimismo implementamos el filtro Butterworth el cual mediante cálculos matemáticos genera que la amplitud sea plana hasta la frecuencia de corte y luego decae.
+
+<img width="890" height="491" alt="image" src="https://github.com/user-attachments/assets/8d3ad9c2-c736-4b4c-9580-850ffba10090" />
+
+
 
 
