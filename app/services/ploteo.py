@@ -115,21 +115,20 @@ def ploteo(plot):
         # parametros de ejemplo
         fs = 44100
         duracion = 4
-        freq_central = 1000
         t60_segundos = 1.2
 
-        ri = sintetizar_ri({freq_central: t60_segundos}, fs, duracion)
-        time = np.linspace(0,len(ri) / fs, num = len(ri))
+        biblioteca = {31.5: 1.5,63: 1.4,125: 1.3,250: 1.2,500: 1.1,1000: 1.0,2000: 0.9,4000: 0.8,8000: 0.7,16000: 0.6}
+        ri = sintetizar_ri(biblioteca, fs, duracion)
+        time = np.linspace(0, len(ri) / fs, num=len(ri))
 
-        plt.figure(figsize=(10, 4))
-        plt.title(f"IR sintética: t60 {t60_segundos:.1f} segundos, duración {duracion:.1f} segundos"
-        )
+        plt.figure(figsize=(12, 6), dpi=80)
+        plt.title(f"IR sintética: t60 {t60_segundos:.1f} segundos, duración {duracion:.1f} segundos")
         plt.xlabel("Tiempo [s]")
 
-        if plot == 'plotriAMP':
+        if plot == "plotriAMP":
             plt.ylabel("Amplitud normalizada")
-            plt.xlim([0, 4])
-            plt.ylim([-1, 1])
+            plt.xlim([-0.002, 0.8])
+            plt.ylim([-1.02, 1.02])
             plt.plot(time, ri, linewidth=0.5)
             plt.grid()
             plt.show()
