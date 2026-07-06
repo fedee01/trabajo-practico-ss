@@ -7,7 +7,9 @@ import os
 
 import numpy as np
 import soundfile as sf
-from scipy.signal import butter, fftconvolve, sosfiltfilt
+from scipy.signal import fftconvolve
+
+from app.services.filter import filtro_octava
 
 
 def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
@@ -27,8 +29,15 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
 
     Raises
     ------
+    TypeError
+        Si `ruta` no es una cadena de texto.
     FileNotFoundError
         Si el archivo especificado no existe.
+    ValueError
+        Si el formato no es .wav/.flac, si el número de canales no es
+        mono/estéreo, o si el archivo está vacío.
+    RuntimeError
+        Si ocurre un error al leer el archivo (delegado desde soundfile).
     """
     # validacion
     if not isinstance(ruta, str):
@@ -46,7 +55,7 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     try:
         signal, fs = sf.read(ruta, dtype="float64")
 
-    # cualquier error de lectura se captura y se lanza como RuntimeError con mensaje claro
+    # cualquier error de lectura se captura y se lanza como RuntimeError
     except Exception as e:
         raise RuntimeError(f"Error al leer el archivo: {e}") from e
 
@@ -130,11 +139,7 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         if f_inf >= f_sup:
             raise ValueError(f"Banda inválida para fc={fc}")
 
-        w = [f_inf / nyq, f_sup / nyq]
-
-        sos = butter(N=4, Wn=w, btype="bandpass", output="sos")
-
-        filtrado = sosfiltfilt(sos, noise)
+        filtrado = filtro_octava(noise, fc, fs)
 
         # normalización RMS
         rms = np.sqrt(np.mean(filtrado**2))
