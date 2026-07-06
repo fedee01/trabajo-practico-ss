@@ -18,3 +18,27 @@ Con la utilización de mínimos cuadrados, encontramos la mejor recta que se aju
 
 
 ### Función calcular parámetros acústicos: 
+
+Debemos considerar que T10, T20 y T30 comienzan a contar el decaimiento luego de 5dB. Por lo tanto EDT no se asemejara tanto al resto debido a que tiene en cuenta las reflexiones tempranas.
+
+El paso a paso que realizamos para obtener los parámetros acústicos fue: 
+
+[x] 
+[x] 
+[x] 
+[x] 
+[x] 
+[x] 
+
+
+
+### VALIDACIÓN: 
+
+Obtuvimos como comparación con una RI sintetizada y con una RI en el recinto Maes Howe, obtenida de la pagina (https://www.openairlib.net/) los siguientes resultados:
+
+PONER RESULTADOS. 
+Análisis breve
+
+### ENDPOINTS: 
+En este sección también realizamos los endpoint, como un criterio de diseño para el endpoint que filtra por bandas de octavas, los http solo devuelve un archivo, por lo tanto elegimos que devuelva una carpeta zip para que el cliente pueda descargar todos los audios para cada banda de octava y no tenga que elegir descargar uno por uno.
+
