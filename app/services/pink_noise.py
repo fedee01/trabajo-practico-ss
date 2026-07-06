@@ -39,3 +39,4 @@ def generar_ruido_rosa(duracion: float, fs: int) -> np.ndarray:
         r_rosa /= max_val
 
     return r_rosa
+
