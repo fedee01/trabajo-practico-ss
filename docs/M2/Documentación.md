@@ -42,6 +42,8 @@ También quisimos observan la respuesta al impulso con escala logarítmica para 
 
 Podemos observar que es una recta por lo tanto confirma que es un decaimiento exponencial. Asimismo la recta debe tener como punto que a 60 dB los segundos deben ser 1,2 ya que fue lo establecido. Nosotros obtuvimos que a 60 dB tenemos 1,214 segundos, cumple con el objetivo ya que el test de sintetizar RI acepta un error menor a 10%, es decir, nuestro T60 podía estar entre 1,08 segundos a 1,32 segundos. 
 
+A la hora de realizar el ploteo de la envolvente surgieron dificultades, ya que al aplicar el filtro no podiamos obtener el grafico esperado, por lo tanto se implento el uso de la IA consultandole el error en el codigo y corrigio los errores que hacía que no funcione.
+
 Tambien realizamos un grafico de la curva de decaimiento energetico de la RI sintetizada de forma exponencial 
 
 
