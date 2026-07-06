@@ -23,10 +23,6 @@ class TestCargarAudio:
         with pytest.raises(FileNotFoundError):
             cargar_audio("archivo_que_no_existe.wav")
 
-    def test_cargar_audio_retorna_tupla(self):
-        """Verifica que retorna una tupla (signal, fs) — requiere archivo de prueba."""
-        pytest.skip("Requiere archivo de audio de prueba")
-
     @pytest.mark.parametrize("extension", [".wav", ".flac"])
     def test_cargar_audio(self, extension, tmp_path):
         """Verificar carga correcta de archivos WAV y FLAC."""
