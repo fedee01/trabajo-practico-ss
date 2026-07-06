@@ -119,4 +119,3 @@ class TestReproducirYGrabar:
 
         with pytest.raises(RuntimeError, match="Problema con la configuración"):
             reproducir_y_grabar(signal, fs, duracion)
-
