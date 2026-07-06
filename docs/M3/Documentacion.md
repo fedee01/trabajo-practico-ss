@@ -40,30 +40,35 @@ Para comprobar la efectividad de nuestro método decidimos ponernos un margen de
 Las comparaciones pueden observarse en las siguientes cinco figuras donde se pueden ver seis bandas normalizadas [125 Hz, 250 Hz, 500 Hz, 1000 Hz, 2000 Hz y 4000 Hz] en el eje X y el tiempo en segundos en el eje Y. Para cada una de las comparaciones hay un gráfico donde se ve el EDT, T20 y T30.
 
 En la siguiente figura se puede ver el audio RI_Sintetizada.wav:
+<img width="880" height="470" alt="image" src="https://github.com/valentinadepiero/trabajo-practico-ss/blob/dev/docs/M3/Sintetizada2.png" />
 
 <sub>Figura 2. Comparacion EDT, T20 y T30 para la primer RI sintetizada. </sub>
 
 En la figura 2 puede verse en azul nuestra RIR-API, en verde la de la cátedra, en bordó el REW y en celeste el T60 que tabulamos para generar el archivo. Como se puede notar nuestros valores dieron muy próximos a los del REW siendo superada por la API de la cátedra solamente en los 250 Hz del T20.
 
 En la siguiente figura se puede ver el audio RI_Sintetizada2.wav:
+<img width="880" height="470" alt="image" src="https://github.com/valentinadepiero/trabajo-practico-ss/blob/02a4c49e55c78dbb717ab7f4caccf221672a42ae/docs/M3/Sintetizada1.png" />
 
 <sub> Figura 3. Comparacion EDT, T20 y T30 para la segunda RI sintetizada. </sub>
 
 En la figura 2 puede verse nuestra RIR-API, en verde la API de la cátedra, rel bordó el REW y en celeste el T60 que tabulamos para generar el archivo. En este caso se pude ver como nuestra RIR-API suele tener valores muy próximos al REW salvo en el EDT de 500 y 1000 Hz, en el T20 de 500 Hz y en el T30 de 500 Hz, sin embargo las diferencias son menores a 0.5 segundos por lo que consideramos que son buenas aproximaciones. Además salvo en el EDT de 500 y 1000 Hz las diferencias entre nuestra API y la de la cátedra son mínimas.
 
 En la siguiente figura se puede ver el audio 1a_marble_hall.wav:
+<img width="880" height="470" alt="image" src="https://github.com/valentinadepiero/trabajo-practico-ss/blob/dev/docs/M3/1a_marble.png" />
 
 <sub>Figura 4. Comparacion EDT, T20 y T30 para la primer sala de Elveden Hall. </sub>
 
 En azul puede verse nuestra RIR-API, rel bordó el REW y en amarillo los datos suministrados por OPEN AIR que tabulamos para generar el archivo. En este caso el archivo no era soportado por la API de la cátedra. Los valores obtenidos estan dentro de los esperados salvo en el T30 de 125 Hz donde OPEN AIR proporciona un valor con mas de 5 segundos de diferencia, sin embargo el valor calculado por el REW es similar al nuestro por lo que consideremos que esa diferencia se debe a que no tuvimos en cuenta las primeras dos bandas de octava y que estas presentan valores muy altos (T30 de 40,51 segundos para 31,25 Hz y de 22,68 segundos para 62.5 Hz).
 
 En la siguiente figura se puede ver el audio 3a_hats_cloaks_the_lord.wav:
+<img width="880" height="470" alt="image" src="https://github.com/valentinadepiero/trabajo-practico-ss/blob/dev/docs/M3/3a_hats.png" />
 
 <sub> Figura 5. Comparacion EDT, T20 y T30 para la segunda sala de Elveden Hall.</sub>
 
 En azul puede verse nuestra RIR-API, en verde la API de la cátedra, rel bordó el REW. En este caso no tenemos datos suministrados por OPEN AIR. Los valores que obtuvimos son consistentes con los del REW a excepción del T20 para 2000 Hz, sin embargo la diferencia entre estos es menor a 0,5 segundos por lo que consideramos que la diferencia es aceptable.
 
 En la siguiente figura se puede ver el audio mh3_000_wx_48k.wav:
+<img width="880" height="470" alt="image" src="https://github.com/valentinadepiero/trabajo-practico-ss/blob/dev/docs/M3/Maes_Howe.png" />
 
 <sub>Figura 6. Comparacion EDT, T20 y T30 para Maes Howe. </sub>
 
