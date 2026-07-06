@@ -34,6 +34,18 @@ El paso a paso que realizamos para obtener los parámetros acústicos fue:
 
 ### VALIDACIÓN: 
 
+Para realizar los cuadros comparativos se utlizo: 
+
+ ```python
+print(f" {'':<4}|{'':<5}{'125 Hz':<9} |     {'250 Hz':<9} |     {'500 Hz':<9} |     {'1000 Hz':<9} |     {'2000 Hz':<9} |     {'4000 Hz':<9}|")
+print("-" * 102)
+print(f" {'EDT'}{'':<1}|{'':<5}{round(pa['EDT'][125], 3)}{'':<5}|{'':<5}{round(pa['EDT'][250], 3)}{'':<5}|{'':<5}{round(pa['EDT'][500],3)}{'':<5}|{'':<5}{round(pa['EDT'][1000], 3)}{'':<5}|{'':<5}{round(pa['EDT'][2000], 3)}{'':<5}|{'':<5}{round(pa['EDT'][4000], 3)}{'':<5}|")
+print(f" {'T20'}{'':<1}|{'':<5}{round(pa['T20'][125], 3)}{'':<5}|{'':<5}{round(pa['T20'][250], 3)}{'':<5}|{'':<5}{round(pa['T20'][500],3)}{'':<5}|{'':<5}{round(pa['T20'][1000], 3)}{'':<5}|{'':<5}{round(pa['EDT'][2000], 3)}{'':<5}|{'':<5}{round(pa['T20'][4000], 3)}{'':<5}|")
+print(f" {'T30'}{'':<1}|{'':<5}{round(pa['T30'][125], 3)}{'':<5}|{'':<5}{round(pa['T30'][250], 3)}{'':<5}|{'':<5}{round(pa['T30'][500],3)}{'':<5}|{'':<5}{round(pa['T30'][1000], 3)}{'':<5}|{'':<5}{round(pa['T30'][2000], 3)}{'':<5}|{'':<5}{round(pa['T30'][4000], 3)}{'':<5}|)
+print("-" * 102)
+
+ ```
+
 Obtuvimos como comparación con una RI sintetizada y con una RI en el recinto Maes Howe, obtenida de la pagina (https://www.openairlib.net/) los siguientes resultados:
 
 PONER RESULTADOS. 
