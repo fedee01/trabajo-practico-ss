@@ -80,6 +80,7 @@ class TestGenerarSineSweep:
         relacion_db = 10 * np.log10(energia_pico / energia_resto)
         assert relacion_db >= 40
 
+
 class TestReproducirYGrabar:
     """Tests para la funcion reproducir_y_grabar."""
 
@@ -94,17 +95,37 @@ class TestReproducirYGrabar:
         shape = (fs,) if channels == 1 else (fs, channels)
         signal = np.random.randn(*shape)
 
-        monkeypatch.setattr(sd, "check_input_settings", lambda **kwargs: None, )
-        monkeypatch.setattr(sd, "check_output_settings", lambda **kwargs: None, )
-        monkeypatch.setattr(sd, "playrec",
+        monkeypatch.setattr(
+            sd,
+            "check_input_settings",
+            lambda **kwargs: None,
+        )
+        monkeypatch.setattr(
+            sd,
+            "check_output_settings",
+            lambda **kwargs: None,
+        )
+        monkeypatch.setattr(
+            sd,
+            "playrec",
             lambda data, samplerate, channels, dtype: np.zeros(
-                (data.shape[0], channels), dtype=np.float32, ), )
+                (data.shape[0], channels),
+                dtype=np.float32,
+            ),
+        )
         monkeypatch.setattr(sd, "wait", lambda: None)
 
-        recording = reproducir_y_grabar(signal, fs, duracion,)
+        recording = reproducir_y_grabar(
+            signal,
+            fs,
+            duracion,
+        )
 
         n_esperado = int(fs * duracion)
-        assert recording.shape == (n_esperado, channels, )
+        assert recording.shape == (
+            n_esperado,
+            channels,
+        )
 
     def test_reproducir_y_grabar_sin_dispositivo(self, monkeypatch):
         """Verifica que se informa correctamente cuando no hay dispositivo de audio."""
@@ -119,3 +140,34 @@ class TestReproducirYGrabar:
 
         with pytest.raises(RuntimeError, match="Problema con la configuración"):
             reproducir_y_grabar(signal, fs, duracion)
+
+    def test_reproducir_y_grabar_senal_vacia(self):
+        """Verifica que una señal vacía lanza ValueError."""
+        with pytest.raises(ValueError, match="no puede estar vacía"):
+            reproducir_y_grabar(np.array([]), fs=48000, duracion_grabacion=2.0)
+
+    def test_reproducir_y_grabar_duracion_insuficiente(self):
+        """Verifica que una duración de grabación menor al playback lanza ValueError."""
+        signal = np.random.randn(48000)  # 1 segundo
+        with pytest.raises(ValueError, match="al menos"):
+            reproducir_y_grabar(signal, fs=48000, duracion_grabacion=0.5)  # pre-roll+señal > 0.5s
+
+    def test_reproducir_y_grabar_duracion_grabada_incorrecta(self, monkeypatch):
+        """Verifica que una discrepancia > 1% en la duración grabada lanza RuntimeError."""
+        fs = 48000
+        signal = np.random.randn(fs)
+
+        monkeypatch.setattr(sd, "check_input_settings", lambda **kwargs: None)
+        monkeypatch.setattr(sd, "check_output_settings", lambda **kwargs: None)
+        # simula que el dispositivo grabó de menos (5% menos de lo esperado)
+        monkeypatch.setattr(
+            sd,
+            "playrec",
+            lambda data, samplerate, channels, dtype: np.zeros(
+                (int(data.shape[0] * 0.95), channels), dtype=np.float32
+            ),
+        )
+        monkeypatch.setattr(sd, "wait", lambda: None)
+
+        with pytest.raises(RuntimeError, match="Duración de grabación inesperada"):
+            reproducir_y_grabar(signal, fs, duracion_grabacion=2.0)
