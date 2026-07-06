@@ -55,8 +55,6 @@ https://github.com/valentinadepiero/trabajo-practico-ss/blob/69a072043316a4f56c9
 
 Se convoluciono con su filtro inverso (realizado anteriormente) y se obtuvo un impulso perfecto. ( Recordemos que $x(t)$= sine sweep * filtro inverso= impulso no perfecto).
 
-Debemos tener en cuenta que como diseño se eligió crear canales separados para el sine sweep y otro para su filtro inverso, para que el usuario pueda utilizarlos por separado de ser necesario. 
-
 
 Para obtener nuestra respuesta al impulso $h(t)$ asumimos que el recinto se comporta como un sistema Lineal e Invariante en el Tiempo (LTI). Por lo tanto, se puede plantear que $x(t)$ es la sala la cual saldrá modificada como una grabación $y(t)$ que es el resultado de la convolución matemática: 
 
