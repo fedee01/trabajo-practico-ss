@@ -23,14 +23,11 @@ Debemos considerar que T10, T20 y T30 comienzan a contar el decaimiento luego de
 
 El paso a paso que realizamos para obtener los parámetros acústicos fue: 
 
-[x] 
-[x] 
-[x] 
-[x] 
-[x] 
-[x] 
-
-
+[x] Filtra por bandas de octavas.
+[x] Suavizado por Hilbert
+[x] Integración de Schroeder.
+[x] Ajusta regresiones sobre cada tramo (EDT: 0 a -10 dB, T20: -5 a -25 dB,T30: -5 a -35 dB). 
+[x] Extrapola los datos. 
 
 ### VALIDACIÓN: 
 
@@ -45,6 +42,80 @@ print(f" {'T30'}{'':<1}|{'':<5}{round(pa['T30'][125], 3)}{'':<5}|{'':<5}{round(p
 print("-" * 102)
 
  ```
+
+
+ ```python
+Para realizar lo ploteos se utilizo lo siguiente: 
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+bandas = ["125 Hz", "250 Hz", "500 Hz", "1 kHz", "2 kHz", "4 kHz"]
+
+# Valores Gráfico 1 (EDT)
+nuestro0 = [1, 2, 3, 3, 2, 1]
+catedra0 = [1.0, 1.1, 2.2, 1.3, 2.4, 1.5]
+rew0 = [0, 0, 0, 0, 0, 0]
+referencia0 = [1.23, 1.234, 1.2345, 1.23456, 1.234567, 1.2345678]
+
+# Valores Gráfico 2 (T20)
+nuestro1 = [1, 2, 3, 3, 2, 1]
+catedra1 = [1, 1.1, 2.2, 1.3, 2.4, 1.5]
+rew1 = [0, 0, 0, 0, 0, 0]
+referencia1 = [1.23, 1.234, 1.2345, 1.23456, 1.234567, 1.2345678]
+
+# Valores Gráfico 3 (T30)
+nuestro2 = [1, 2, 3, 3, 2, 1]
+catedra2 = [1, 1.1, 2.2, 1.3, 2.4, 1.5]
+rew2 = [0, 0, 0, 0, 0, 0]
+referencia2 = [1.23, 1.234, 1.2345, 1.23456, 1.234567, 1.2345678]
+
+bar_width = 0.25
+x = np.arange(len(bandas))
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+# Subgráficos de Barras
+axes[0].bar(x - 0.75 * bar_width, nuestro0, bar_width / 2, label="RIR-API", color="steelblue")
+axes[0].bar(x - bar_width * 0.25, catedra0, bar_width / 2, label="API CÁTEDRA", color="lightgreen")
+axes[0].bar(x + bar_width * 0.25, rew0, bar_width / 2, label="REW", color="darkred")
+axes[0].bar(x + bar_width * 0.75, referencia0, bar_width / 2, label="OPEN AIR", color="orange")
+
+axes[1].bar(x - 0.75 * bar_width, nuestro1, bar_width / 2, label="RIR-API", color="steelblue")
+axes[1].bar(x - bar_width * 0.25, catedra1, bar_width / 2, label="API CÁTEDRA", color="lightgreen")
+axes[1].bar(x + bar_width * 0.25, rew1, bar_width / 2, label="REW", color="darkred")
+axes[1].bar(x + bar_width * 0.75, referencia1, bar_width / 2, label="OPEN AIR", color="orange")
+
+axes[2].bar(x - 0.75 * bar_width, nuestro2, bar_width / 2, label="RIR-API", color="steelblue")
+axes[2].bar(x - bar_width * 0.25, catedra2, bar_width / 2, label="API CÁTEDRA", color="lightgreen")
+axes[2].bar(x + bar_width * 0.25, rew2, bar_width / 2, label="REW", color="darkred")
+axes[2].bar(x + bar_width * 0.75, referencia2, bar_width / 2, label="OPEN AIR", color="orange")
+
+# Informacion por Gráfico
+axes[0].set_title("EDT")
+axes[0].set_xlabel("Bandas")
+axes[0].set_ylabel("Segundos")
+axes[1].set_title("T20")
+axes[1].set_ylabel("Segundos")
+axes[1].set_xlabel("Bandas")
+axes[2].set_title("T30")
+axes[2].set_ylabel("Segundos")
+axes[2].set_xlabel("Bandas")
+
+# Sin esto 1 y 2 no tienen datos
+for n, ax in enumerate(axes):
+    ax.plot(x, x / 3, color="w", alpha=0)
+    if n <= 2:
+        ax.set_xticks(x, bandas)
+        ax.grid(alpha=0.2)
+    else:
+        ax.set_title("Automatic ticks")
+
+plt.tight_layout()
+plt.legend()
+plt.show()
+
+ ```
+
 
 Obtuvimos como comparación con una RI sintetizada y con una RI en el recinto Maes Howe, obtenida de la pagina (https://www.openairlib.net/) los siguientes resultados:
 
