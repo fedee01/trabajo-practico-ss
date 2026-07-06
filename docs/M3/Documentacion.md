@@ -42,10 +42,9 @@ print(f" {'T30'}{'':<1}|{'':<5}{round(pa['T30'][125], 3)}{'':<5}|{'':<5}{round(p
 print("-" * 102)
 
  ```
-
+Para realizar lo ploteos de los graficos de banda comparativos se utilizo lo siguiente: 
 
  ```python
-Para realizar lo ploteos se utilizo lo siguiente: 
 
 import matplotlib.pyplot as plt
 import numpy as np
