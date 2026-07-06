@@ -36,7 +36,7 @@ def reproducir_y_grabar(
     -------
     np.ndarray
         Array con la señal grabada.
-        
+
     Raises
     ------
     ValueError
