@@ -4,6 +4,8 @@
 
 En este caso se suavizo la señal para que no tenga grandes fluctuaciones de ruido, se eligió como opción la Envolvente de Hilbert debido a que se aconseja ya que no requiere elegir un tamaño de ventana y preserva mejor la estructura temporal del decaimiento. Se obtendrá una curva suave que sigue la forma del decaimiento sin tener el detalle de las oscilaciones rápidas.
 
+Como extra se agregaron 2 test que devuelvan ValueError si el string es distinto de hilbert y si el tamaño de ventana no es positivo.
+
 ### Función integral de Schroeder:
 
 La integral de Schroeder acumula la energía desde el final hacia el principio, debido a que esta se obtiene mediante la integración inversa y representa la curva de decaimiento de la energía acústica en un recinto. A diferencia de la función anterior está es monotonamente decreciente por lo tanto se le puede aplicar una línea recta. 
@@ -16,6 +18,7 @@ Podemos ver en el grafico anterior de color verde la integral de Schroeder y las
 
 Con la utilización de mínimos cuadrados, encontramos la mejor recta que se ajustan a los puntos que usamos para extrapolar y lo vemos en el gráfico anterior en las líneas punteadas de los T30 y T20, ya que estas rectas son aproximaciones lineales distintas para cada una. 
 
+Se grego un test que verifica que la regresión se aproxima a la recta con datos ruidosos y debe lanzar lanzar ValueError si x e y tienen longitudes distintas, hay menos de 2 puntos y por último si todos los x son iguales (recta vertical).
 
 ### Función calcular parámetros acústicos: 
 
@@ -28,6 +31,9 @@ El paso a paso que realizamos para obtener los parámetros acústicos fue:
 - [x] Integración de Schroeder.
 - [x] Ajusta regresiones sobre cada tramo (EDT: 0 a -10 dB, T20: -5 a -25 dB,T30: -5 a -35 dB). 
 - [x] Extrapola los datos. 
+
+Se agrego un Test para los Parametros Acusticos que verifica que la salida debe tener la forma de dict[str, dict[fc, valor]]Debe calcular parámetros para todas las bandas pedidas, para una RI sintética ideal (decaimiento exponencial puro sin reflexiones tempranas) EDT~= T20 ~= T30. Por último, que con sin_filtrar=True, calcule sobre la RI completa sin pasar por filtro_octava.
+
 
 ### VALIDACIÓN: 
 
