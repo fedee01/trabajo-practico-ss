@@ -36,7 +36,17 @@ def reproducir_y_grabar(
     -------
     np.ndarray
         Array con la señal grabada.
+        
+    Raises
+    ------
+    ValueError
+        Si fs, duracion_grabacion o signal son inválidos (no positivos,
+    señal vacía, o con más de 2 dimensiones).
+    RuntimeError
+        Si el dispositivo de audio no soporta la configuración solicitada,
+    o si la duración grabada difiere en más de un 1% de la solicitada.
     """
+    
     if fs <= 0:
         raise ValueError("la frecuencia de muestreo debe ser positiva")
 
