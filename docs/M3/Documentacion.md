@@ -23,11 +23,11 @@ Debemos considerar que T10, T20 y T30 comienzan a contar el decaimiento luego de
 
 El paso a paso que realizamos para obtener los parámetros acústicos fue: 
 
--[x] Filtra por bandas de octavas.
--[x] Suavizado por Hilbert
--[x] Integración de Schroeder.
--[x] Ajusta regresiones sobre cada tramo (EDT: 0 a -10 dB, T20: -5 a -25 dB,T30: -5 a -35 dB). 
--[x] Extrapola los datos. 
+- [x] Filtra por bandas de octavas.
+- [x] Suavizado por Hilbert
+- [x] Integración de Schroeder.
+- [x] Ajusta regresiones sobre cada tramo (EDT: 0 a -10 dB, T20: -5 a -25 dB,T30: -5 a -35 dB). 
+- [x] Extrapola los datos. 
 
 ### VALIDACIÓN: 
 
