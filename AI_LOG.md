@@ -14,7 +14,7 @@ Reflexión: El diseño preliminar de funciones fue escencial para entender la or
 |--------|-----|-----------|
 | Autocompletado de documentación del código. Funciones FIX y EXPLAIN (errores)                                 | Se utilizó el autocompletado de Copilot para generar docstrings y comentarios descriptivos durante el desarrollo.                         | Se documentaron las funciones siguiendo un formato consistente, facilitando la comprensión del código por parte del resto de los integrantes del equipo.    
 
-Reflexión: Además de facilitaron tareas repetitivas de escritura y correción, se utilizó para dejar descripciones claras como comentarios durante el desarrollo de las funciones. De esta forma, se facilitó el entendimiento del código entre integrantes. Asimismo, se usaron las funciones FIX y EXPLAIN al obtener errores con el fin de detectar la fuente de los mismos.
+Reflexión: Además de facilitar tareas repetitivas de escritura y correción, se utilizó para dejar descripciones claras como comentarios durante el desarrollo de las funciones. De esta forma, se facilitó el entendimiento del código entre integrantes. Asimismo, se usaron las funciones FIX y EXPLAIN al obtener errores con el fin de detectar la fuente de los mismos.
 
 A continuación se encuentran los usos especificos durante cada Milestone:
 
