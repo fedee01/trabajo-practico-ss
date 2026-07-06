@@ -18,11 +18,6 @@ from app.services.sine_sweep import generar_sine_sweep
 class TestCargarAudio:
     """Tests para la funcion cargar_audio."""
 
-    def test_cargar_audio_no_existe(self):
-        """Verifica que se lanza FileNotFoundError si el archivo no existe."""
-        with pytest.raises(FileNotFoundError):
-            cargar_audio("archivo_que_no_existe.wav")
-
     @pytest.mark.parametrize("extension", [".wav", ".flac"])
     def test_cargar_audio(self, extension, tmp_path):
         """Verificar carga correcta de archivos WAV y FLAC."""
@@ -52,6 +47,13 @@ class TestCargarAudio:
         resultado, _ = cargar_audio(str(archivo))
         assert np.max(np.abs(resultado)) == pytest.approx(1.0)
         assert np.all(np.abs(resultado) <= 1.0 + 1e-12)
+
+    # Tests adicional para caso de error
+
+    def test_cargar_audio_no_existe(self):
+        """Verifica que se lanza FileNotFoundError si el archivo no existe."""
+        with pytest.raises(FileNotFoundError):
+            cargar_audio("archivo_que_no_existe.wav")
 
 
 class TestSintetizarRI:
@@ -90,6 +92,17 @@ class TestSintetizarRI:
             t60_objetivo,
             rel=0.1,
         )
+
+    def test_sintetizar_ri_duracion(self):
+        """Verificar que la RI tiene la duracion correcta."""
+        fs = 44100
+        duracion = 1.5
+        t60_por_banda = {1000.0: 0.5}
+
+        ri = sintetizar_ri(t60_por_banda, fs, duracion)
+
+        n_esperado = int(np.ceil(duracion * fs))
+        assert len(ri) == n_esperado
 
 
 class TestObtenerRIdesdeSweep:
