@@ -204,7 +204,6 @@ class TestCalcularParametrosAcusticos:
 
         # RI artificial con toda la energia concentrada en los primeros 10 ms
         # (mucho antes del corte de 80 ms que usa C80), y silencio despues
-        t = np.arange(n_samples) / fs
         ri = np.zeros(n_samples)
         ri[: int(0.01 * fs)] = np.random.randn(int(0.01 * fs))
 
