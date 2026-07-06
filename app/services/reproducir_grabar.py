@@ -46,7 +46,7 @@ def reproducir_y_grabar(
         Si el dispositivo de audio no soporta la configuración solicitada,
     o si la duración grabada difiere en más de un 1% de la solicitada.
     """
-    
+
     if fs <= 0:
         raise ValueError("la frecuencia de muestreo debe ser positiva")
 
