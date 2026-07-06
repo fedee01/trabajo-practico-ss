@@ -29,6 +29,10 @@ def generar_sine_sweep(
     -------
     tuple[np.ndarray, np.ndarray]
         Tupla con (sweep, filtro_inverso), ambos normalizados.
+        Raises
+    ------
+    ValueError
+        Si f2 no es mayor que f1, o si duracion o fs no son positivos.
     """
 
     if f1 == 0:  # si la f pedida es 0, usa un numero muy chico para no dividir por 0
@@ -38,7 +42,7 @@ def generar_sine_sweep(
         raise ValueError("la frecuencia final (f2) debe ser mayor a la inicial (f1)")
 
     if duracion <= 0:
-        raise ValueError("la duracion debe ser un numero positivo)")
+        raise ValueError("la duracion debe ser un numero positivo")
 
     if fs <= 0:
         raise ValueError("la frecuencia de muestreo debe ser un numero positivo")
