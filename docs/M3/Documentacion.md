@@ -225,5 +225,5 @@ PONER RESULTADOS.
 Análisis breve
 
 ### ENDPOINTS: 
-En este sección también realizamos los endpoint, como un criterio de diseño para el endpoint que filtra por bandas de octavas, los http solo devuelve un archivo, por lo tanto elegimos que devuelva una carpeta zip para que el cliente pueda descargar todos los audios para cada banda de octava y no tenga que elegir descargar uno por uno.
+En este sección también realizamos los endpoint, como un criterio de diseño para el endpoint que filtra por bandas de octavas (los http solo devuelve un archivo) por lo tanto elegimos que devuelva una carpeta zip para que el cliente pueda descargar todos los audios para cada banda de octava y no tenga que elegir descargar uno por uno.
 
