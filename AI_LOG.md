@@ -1,8 +1,28 @@
 # AI_LOG
 
+## GENERAL
+ 
+ Se utilizaron distintos modelos durante la construcción de la api para optimizar el desarrollo y aprendizaje:
+
+| Prompt | Uso | Resultado |
+|--------|-----|-----------|
+| Generación preliminar de funciones a partir de las especificaciones del Milestone 2. | Se solicitaron implementaciones iniciales de las funciones para comprender el flujo general del código y contar con una base de trabajo.  | Se obtuvo una primera versión de las funciones, que luego fue revisada y modificada manualmente para adecuarse a los requisitos del proyecto y a criterios de diseño establecidos por los integrantes.                  |
+
+Reflexión: El diseño preliminar de funciones fue escencial para entender la organización del código. Nos permitió entender el proposito de funciones especificas de librerías como Numpy, Sounddevice, entre otras. En base a esto se buscaron y se consultó a los distintos modelos (CHATgpt, Copilot, CLaude) por alternativas mas simples y eficientes para el desarrollo y legibilidad de las funciones.
+
+| Prompt | Uso | Resultado |
+|--------|-----|-----------|
+| Autocompletado de documentación del código. Funciones FIX y EXPLAIN (errores)                                 | Se utilizó el autocompletado de Copilot para generar docstrings y comentarios descriptivos durante el desarrollo.                         | Se documentaron las funciones siguiendo un formato consistente, facilitando la comprensión del código por parte del resto de los integrantes del equipo.    
+
+Reflexión: Además de facilitaron tareas repetitivas de escritura y correción, se utilizó para dejar descripciones claras como comentarios durante el desarrollo de las funciones. De esta forma, se facilitó el entendimiento del código entre integrantes. Asimismo, se usaron las funciones FIX y EXPLAIN al obtener errores con el fin de detectar la fuente de los mismos.
+
+A continuación se encuentran los usos especificos durante cada Milestone:
+
 ## M0
 
 ### Herramienta: ChatGPT
+
+Fecha: 24/04/26
 
 | Prompt | Uso | Resultado |
 |--------|-----|-----------|
@@ -15,7 +35,6 @@
 
 ### Herramienta: ChatGPT
 
-**Uso:**
 | Prompt | Uso | Resultado |
 |--------|-----|-----------|
 | Implementación del algoritmo de Voss-McCartney | Se consultó sobre la implementación del algoritmo de Voss-McCartney para generar ruido rosa. | Se logró un mejor entendimiento sobre la función del algoritmo. |
@@ -29,23 +48,14 @@
 | Revisión de la implementación de `reproducir_y_grabar` | Se solicitó una revisión completa del código para detectar errores lógicos y oportunidades de mejora. | Se agregaron validaciones adicionales y se mejoró la legibilidad del código. |
 | Actualización de los tests de grabación | Se pidió adaptar los tests a la nueva implementación basada en `sd.playrec()`. | Se actualizaron los *mocks* y se adecuaron los tests al nuevo funcionamiento de la función. |
 
-### Herramienta: Copilot (Visual Studio Code)
-
-| Prompt | Uso | Resultado |
-|--------|-----|-----------|
-| Implementación de `reproducir_y_grabar` | Se estructuró un prompt para generar una primera versión de la función `reproducir_y_grabar` a partir de los requisitos establecidos en la especificación. | Se obtuvo una implementación inicial que luego fue revisada, adaptada y corregida manualmente para cumplir con la especificación del proyecto. |
-| Autocompletado en `generar_sine_sweep` | Se utilizó el autocompletado para agilizar la escritura y modificación del código de la función `generar_sine_sweep`. | Se redujo el tiempo de edición del código, manteniendo la lógica definida por el equipo. |
-| Autocompletado en `generar_ruido_rosa` | Se utilizó el autocompletado para agilizar la implementación y modificación de la función `generar_ruido_rosa`. | Se facilitaron tareas repetitivas de escritura y refactorización sin modificar el diseño del algoritmo. |
-| Generación de comentarios | Se utilizó el autocompletado para sugerir comentarios descriptivos y documentación del código. | Se mejoró la legibilidad del código y la comprensión de los procedimientos implementados por parte de los integrantes del grupo. |
-
 ---
 
 ## M2
 
 **Herramienta:** ChatGPT
 
-| **Prompt**                                                      | **Uso**                                                                                                                                                          | **Resultado**                                                                                                                                               |
-| --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prompt | Uso | Resultado |
+|--------|-----|-----------|
 | Recomendaciones para validar las funciones del Milestone 2.     | Se consultó qué aspectos funcionales y casos de prueba eran adecuados para verificar cada una de las funciones implementadas.                                    | Se definieron criterios de validación acordes a la funcionalidad de cada servicio y se utilizaron como base para el desarrollo de los tests.                |
 | Diseño de tests.                  | Se pidió ayuda para estructurar y redactar tests para las funciones `cargar_audio`, `a_escala_log`, `sintetizar_ri`, `obtener_ri_desde_sweep` y `filtro_octava`. | Se obtuvieron propuestas de tests que luego fueron revisadas y adaptadas antes de incorporarlas al proyecto.                                                |
 | Validación del tiempo de reverberación (T60).                   | Se consultó cómo comprobar que la respuesta al impulso sintetizada reproduce el T60 especificado mediante la curva de Schroeder.                                 | Se implementó un procedimiento de validación y un test que estima el T60 y lo compara con el valor esperado dentro de una tolerancia.                       |
@@ -57,18 +67,52 @@
 
 ### Herramienta: Claude
 
+Fecha: 27/06/26
 | Prompt | Uso | Resultado |
 |--------|-----|-----------|
-| Implementar tests para `filtro_octava` (frecuencia central, atenuación, respuesta en frecuencia) según el Test 4 del enunciado | Generación de código de test con pytest, reconstruyendo el filtro SOS con `scipy.signal.butter` y analizando su respuesta con `sosfreqz` | Se generaron los 3 tests (`test_filtro_octava_frecuencia_central`, `test_filtro_octava_atenuacion`, `test_filtro_octava_respuesta_frecuencia`) con helpers `_sos_octava` y `_ganancia_db_en` reutilizables |
-| Corregir `ComplexWarning: Casting complex values to real discards the imaginary part` en los tests de filtro de octava | Debugging de un warning de numpy al castear el array complejo `h` (salida de `sosfreqz`) a `dtype=float` | Se identificó y eliminó el cast `np.asarray(h, dtype=float)`; se usó `np.abs(h)` directamente sobre el complejo para calcular la magnitud en dB |
+| Implementar tests para `filtro_octava` (frecuencia central, atenuación, respuesta en frecuencia) | Generación de código de test con pytest, reconstruyendo el filtro SOS con `scipy.signal.butter` y analizando su respuesta con `sosfreqz` | Se generaron los 3 tests (`test_filtro_octava_frecuencia_central`, `test_filtro_octava_atenuacion`, `test_filtro_octava_respuesta_frecuencia`) con helpers `_sos_octava` y `_ganancia_db_en` reutilizables |
 | Reescribir y reorganizar `test_procesamiento.py` completo integrando todas las clases de test existentes (`TestObtenerRIdesdeSweep`, `TestCargarAudio`, `TestAEscalaLog`, `TestSintetizarRI`, `TestFiltroOctava`) | Reestructuración de archivo de tests para mejorar legibilidad y evitar duplicación de código | Archivo consolidado con imports y helpers al inicio, separadores por bloque, y sin el error de casting complejo |
 
+Fecha: 03/07/26
 
-### Herramienta: Copilot (Visual Studio Code)
+| Prompt | Uso | Resultados |
+|---|---|---|
+| Pedido de unificar `sintetizar_ri` y `filtro_octava` | Refactor de `signal_utils.py` para que `sintetizar_ri` reutilice `filtro_octava` en vez de reimplementar el diseño del filtro | `filtro_octava` quedó como única implementación (robusta: soporta multicanal, clipea `Wn`, fallback a `sosfilt` si no hay `sosfiltfilt`); `sintetizar_ri` la importa y la usa, eliminando código de validación de banda duplicado |
 
-| **Prompt**                                                                           | **Uso**                                                                                                                                   | **Resultado**                                                                                                                                                  |
-| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Generación preliminar de funciones a partir de las especificaciones del Milestone 2. | Se solicitaron implementaciones iniciales de las funciones para comprender el flujo general del código y contar con una base de trabajo.  | Se obtuvo una primera versión de las funciones, que luego fue revisada y modificada manualmente para adecuarse a los requisitos del proyecto.                  |
-| Simplificación y refactorización del código.                                         | Se consultaron alternativas para reducir complejidad, eliminar pasos repetitivos y mejorar la legibilidad de las funciones implementadas. | Se simplificó la estructura del código, eliminando operaciones redundantes y realizando modificaciones para obtener implementaciones más claras y mantenibles. |
-| Autocompletado de documentación del código.                                          | Se utilizó el autocompletado de Copilot para generar docstrings y comentarios descriptivos durante el desarrollo.                         | Se documentaron las funciones siguiendo un formato consistente, facilitando la comprensión del código por parte del resto de los integrantes del equipo.       |
+---
 
+## M3
+
+**Herramienta:** Claude
+
+Fecha: 04/07/26
+
+| Prompt | Uso | Resultados |
+|---|---|---|
+| Pedido de ayuda para realizar gráfico preliminar de respuesta en frecuencia del banco de filtros de octava | Creación de un script de graficado usando `sosfreqz` sobre el diseño real del filtro | Se generó una figura con las 9-10 bandas IEC 61260 superpuestas en escala log |
+
+Reflexión: Para realizar el gráfico se pidieron alternativas. Una era definir una función dentro de `app.services.filter.py` que implementara `sosfreqz` pero se optó por llevar a cabo este paso en un archivo  independiente a las funciones escenciales del proyecto. 
+
+Fecha: 05/07/26
+
+| Prompt | Uso | Resultado |
+|---|---|---|
+| Diseñar `/api/v1/filters/band` para que devuelva las 10 bandas de octava (no 6) | Comparación con el JSON de referencia de cátedra (`file_paths`) | Definidas 3 opciones de diseño (paths+download, ZIP, base64); se eligió ZIP en memoria (`io.BytesIO`, sin tocar disco) por ser stateless y más simple en Render |
+| Metadata del ZIP (`sample_rate`, `num_samples`, `bandwidth`, `center_frequencies`) | Diseño de schema `BandFilterHeaders` + documentación de headers HTTP en OpenAPI | Router `/filters/band` completo devolviendo ZIP + headers `X-*`; schema Pydantic solo para los headers (el body binario no tiene `response_model`) |
+| Agregar `/filters/frequencies` (GET) y `/filters/single-band` (POST) | Extensión del router de filtros utilizando `filtro_octava`  | Dos endpoints nuevos: uno devuelve lista fija de frecuencias, otro filtra una sola banda y devuelve WAV + headers |
+
+Reflexión: Se eligió que el endpoint devuelva un ZIP con archivos de audio WAV filtrados por banda para que sea mas accesible. Como se quería mantener un response body con la metadata se consultó con el modelo y decidimos dejar la informacion en los headers.
+
+| Prompt | Uso | Resultado |
+|---|---|---|
+| Diseñar `/api/v1/acoustics/parameters/by-bands` | Comparación de campos (`file_info`, `analysis_settings`, `band_results`, `parameters`) contra el `openapi.json` real de referencia | Schema y router completos, con reshape de `dict[parametro][fc]` a las dos vistas (`band_results` transpuesto y `parameters` por tipo) |
+| Diseñar `/api/v1/acoustics/parameters` (banda completa, sin filtrar por octava) | Reutilización de `calcular_parametros_acusticos` con flag `sin_filtrar=True` en vez de duplicar función | Único punto de cálculo para banda completa y por bandas; evita reescribir el pipeline Schroeder + regresión |
+
+Reflexión: Se eligió integrar en una misma función ambos casos (señal completa, señal filtrada) a partir de un bool para no duplicar la función.
+
+| Prompt | Uso | Resultado |
+|---|---|---|
+| Resolver `noise_analysis` (`estimated_noise_level`, `estimated_snr_db`) sin implementar Lundeby | Estimador simplificado por energía de cola de la señal (no es el algoritmo Lundeby) | Función `estimar_ruido_de_fondo` documentada explícitamente como aproximación, no como método de Lundeby |
+| Armar `/api/v1/analysis/impulse-response/by-bands` completo | Integración de `calcular_parametros_acusticos` + `estimar_ruido_de_fondo` en un solo endpoint | Endpoint completo con `lundeby_applied: false` y `cutoff_time: null` explícitos, coherente con el JSON de referencia cuando Lundeby no se aplica |
+
+Reflexión: Se integró la función estimar_ruido_de_fondo ya que, al no utilizar Lundeby hay limitaciones en el cálculo de los parámetros. La SNR estimada puede dar información valiosa al momento de determinar la calidad de los parámetros obtenidos. Si se obtiene una SNR alta los parámetros entregados serán mas fieles al comportamiento real de la sala.
