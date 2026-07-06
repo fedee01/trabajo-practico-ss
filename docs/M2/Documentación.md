@@ -35,9 +35,11 @@ Forma de onda líneal. Eje horizontal tiempo y Eje vertical amplitud.
 Se concentra en el tiempo t=0 s con una amplitud máxima de 1 (debido a que fue normalizada la respuesta al impulso entre esos valores), y esta decae de forma exponencial a cero de forma natural. Podemos observar que el pico más alto es la señal directa y luego tenemos las reflexiones primarias y las reflexiones secundarias que van decayendo con el tiempo, la energía decrece de forma muy rapida.
 
 También quisimos observan la respuesta al impulso con escala logarítmica para poder observar el comportamiento en el tiempo de forma más detallada. Se normalizó a RMS para obtener un promedio de energía y ver la tendencia general. 
-INSERTAR GRÁFICO DE LA ENVOLVENTE: 
 
-Podemos observar que es una recta por lo tanto confirma que es un decaimiento exponencial. Asimismo la recta debe tener como punto que a 60 dB los segundos deben ser 1,2 ya que fue lo establecido. Nosotros obtuvimos (PONER EL PUNTO QUE VEMOS EN EL GRÁFICO), podemos considerar un pequeño error debido a que el test de sintetizar RI acepta un error menor a 10%, es decir, nuestro T60 podía estar entre 1,08 segundos a 1,32 segundos. 
+ <img width="1075" height="549" alt="image" src="https://github.com/user-attachments/assets/b8f51334-0d30-4f29-89be-a1549cc5582d" />
+
+
+Podemos observar que es una recta por lo tanto confirma que es un decaimiento exponencial. Asimismo la recta debe tener como punto que a 60 dB los segundos deben ser 1,2 ya que fue lo establecido. Nosotros obtuvimos que a 60 dB tenemos 1,214 segundos, cumple con el objetivo ya que el test de sintetizar RI acepta un error menor a 10%, es decir, nuestro T60 podía estar entre 1,08 segundos a 1,32 segundos. 
 
 Tambien realizamos un grafico de la curva de decaimiento energetico de la RI sintetizada de forma exponencial 
 
