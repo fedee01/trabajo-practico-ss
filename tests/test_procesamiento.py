@@ -14,7 +14,6 @@ from app.services.signal_utils import (
 )
 from app.services.sine_sweep import generar_sine_sweep
 
-# ---------------------------------------------------------------------
 
 class TestCargarAudio:
     """Tests para la funcion cargar_audio."""
@@ -59,8 +58,6 @@ class TestCargarAudio:
         assert np.all(np.abs(resultado) <= 1.0 + 1e-12)
 
 
-# ---------------------------------------------------------------------
-
 class TestSintetizarRI:
     """Tests para la funcion sintetizar_ri."""
 
@@ -70,8 +67,16 @@ class TestSintetizarRI:
         fs = 48000
         fc = 1000
         t60_objetivo = 2.0
-        ri = sintetizar_ri(t60_por_banda={fc: t60_objetivo}, fs=fs, duracion=4.0, )
-        ri_filtrada = filtro_octava(x=ri, fc=fc, fs=fs, )
+        ri = sintetizar_ri(
+            t60_por_banda={fc: t60_objetivo},
+            fs=fs,
+            duracion=4.0,
+        )
+        ri_filtrada = filtro_octava(
+            x=ri,
+            fc=fc,
+            fs=fs,
+        )
 
         # Curva de decaimiento energético (Schroeder)
         schroeder = np.cumsum((ri_filtrada**2)[::-1])[::-1]
@@ -85,17 +90,18 @@ class TestSintetizarRI:
         t60_medido = indices[0] / fs
 
         # Debe coincidir con el valor objetivo dentro del 10 %
-        assert t60_medido == pytest.approx(t60_objetivo, rel=0.1, )
+        assert t60_medido == pytest.approx(
+            t60_objetivo,
+            rel=0.1,
+        )
 
-
-# ---------------------------------------------------------------------
 
 class TestObtenerRIdesdeSweep:
     """Tests para la función obtener_ri_desde_sweep."""
 
     def test_obtener_ri_desde_sweep(self):
         """
-        Verifica que la respuesta al impulso recuperada se parece a la original.
+        Correlación entre RI original y RI recuperada mayor a 0.9
 
         La función obtener_ri_desde_sweep devuelve la RI alineada al impulso
         directo (pico principal), por lo que la RI original también se alinea
@@ -104,10 +110,26 @@ class TestObtenerRIdesdeSweep:
 
         np.random.seed(0)
         fs = 48000
-        sweep, filtro_inverso = generar_sine_sweep(f1=20, f2=20000, duracion=2.0, fs=fs, )
-        ri_original = sintetizar_ri(t60_por_banda={1000.0: 1.5}, fs=fs, duracion=2.0, )
-        grabacion = np.convolve(sweep, ri_original, mode="full", )
-        ri_recuperada = obtener_ri_desde_sweep(grabacion=grabacion, filtro_inverso=filtro_inverso, )
+        sweep, filtro_inverso = generar_sine_sweep(
+            f1=20,
+            f2=20000,
+            duracion=2.0,
+            fs=fs,
+        )
+        ri_original = sintetizar_ri(
+            t60_por_banda={1000.0: 1.5},
+            fs=fs,
+            duracion=2.0,
+        )
+        grabacion = np.convolve(
+            sweep,
+            ri_original,
+            mode="full",
+        )
+        ri_recuperada = obtener_ri_desde_sweep(
+            grabacion=grabacion,
+            filtro_inverso=filtro_inverso,
+        )
 
         # alinear la RI original al impulso directo
         pico_original = np.argmax(np.abs(ri_original))
@@ -119,19 +141,24 @@ class TestObtenerRIdesdeSweep:
         ri_recuperada = ri_recuperada[:n]
 
         # correlación cruzada normalizada
-        correlacion = np.correlate(ri_recuperada, ri_original, mode="full", )
+        correlacion = np.correlate(
+            ri_recuperada,
+            ri_original,
+            mode="full",
+        )
 
         correlacion = np.max(np.abs(correlacion)) / (
-            np.linalg.norm(ri_recuperada) * np.linalg.norm(ri_original))
+            np.linalg.norm(ri_recuperada) * np.linalg.norm(ri_original)
+        )
 
         assert correlacion > 0.9
 
 
 # ---------------------------------------------------------------------
 # Helpers compartidos
-# ---------------------------------------------------------------------
 
-def _sos_octava(fc, fs, orden=4):
+
+def _sos_octava(fc, fs, orden=8):
     """Reconstruye el mismo filtro SOS que arma filtro_octava, para poder
     analizar su respuesta en frecuencia con freqz."""
     f_inf = fc / np.sqrt(2.0)
@@ -141,21 +168,23 @@ def _sos_octava(fc, fs, orden=4):
     wn1 = min(f_sup / nyq, 1.0 - 1e-12)
     return butter(orden, [wn0, wn1], btype="band", output="sos")
 
+
 def _ganancia_db_en(sos, fs, freqs_hz):
     """Devuelve la ganancia en dB del filtro en las frecuencias pedidas."""
     w, h = sosfreqz(sos, worN=8192, fs=fs)  # h es complejo: NO castear a float
     mag_db = 20 * np.log10(np.abs(h) + 1e-20)
-    return np.interp(freqs_hz, w, mag_db)
+    return np.interp(freqs_hz, w, mag_db)  # type: ignore
 
 
 # ---------------------------------------------------------------------
+
 
 class TestFiltroOctava:
     def test_filtro_octava_frecuencia_central(self):
         """Verificar que el filtro pasa correctamente la frecuencia central."""
         fs = 44100
         fc = 1000.0
-        orden = 4
+        orden = 8
 
         sos = _sos_octava(fc, fs, orden)
         ganancia_fc = _ganancia_db_en(sos, fs, [fc])[0]
@@ -167,7 +196,7 @@ class TestFiltroOctava:
         """Verificar atenuacion fuera de banda."""
         fs = 44100
         fc = 1000.0
-        orden = 4
+        orden = 8
 
         sos = _sos_octava(fc, fs, orden)
 
@@ -184,7 +213,7 @@ class TestFiltroOctava:
         """Verificar que la respuesta cumple -3 dB en frecuencias de corte."""
         fs = 48000
         fc = 1000.0
-        orden = 4
+        orden = 8
 
         f_inf = fc / np.sqrt(2.0)
         f_sup = fc * np.sqrt(2.0)
@@ -195,11 +224,11 @@ class TestFiltroOctava:
         w, h = sosfreqz(sos, worN=16384, fs=fs)
         mag_db = 20 * np.log10(np.abs(h) + 1e-20)
 
-        ganancia_fc = np.interp(fc, w, mag_db)
-        ganancia_f_inf = np.interp(f_inf, w, mag_db)
-        ganancia_f_sup = np.interp(f_sup, w, mag_db)
-        ganancia_octava_inf = np.interp(fc / 2.0, w, mag_db)
-        ganancia_octava_sup = np.interp(fc * 2.0, w, mag_db)
+        ganancia_fc = np.interp(fc, w, mag_db)  # type: ignore
+        ganancia_f_inf = np.interp(f_inf, w, mag_db)  # type: ignore
+        ganancia_f_sup = np.interp(f_sup, w, mag_db)  # type: ignore
+        ganancia_octava_inf = np.interp(fc / 2.0, w, mag_db)  # type: ignore
+        ganancia_octava_sup = np.interp(fc * 2.0, w, mag_db)  # type: ignore
 
         # 2. Ganancia en fc maxima (0 dB, tolerancia 0.5 dB)
         assert ganancia_fc == pytest.approx(0.0, abs=0.5)
@@ -214,8 +243,6 @@ class TestFiltroOctava:
         assert ganancia_octava_inf < -20.0
         assert ganancia_octava_sup < -20.0
 
-
-# ---------------------------------------------------------------------
 
 class TestAEscalaLog:
     """Tests para la funcion a_escala_log."""
