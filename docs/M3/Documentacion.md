@@ -31,9 +31,9 @@ El paso a paso que realizamos para obtener los parámetros acústicos fue:
 
 ### VALIDACIÓN: 
 
-Para comprobar la efectividad de nuestra RIR-API comparamos RI conocidas (extraidas de OPEN AIR). Elegimos la API de la Cátedra (https://rir-api-frontend.onrender.com/) proporcionada por el profesor, el programa REW (https://rir-api-frontend.onrender.com) como software profesional y la información proporcionada en las mismas RI por OPEN AIR (https://www.openair.hosted.york.ac.uk/).
+Para comprobar la efectividad de nuestra RIR-API comparamos RI conocidas (extraidas de OPEN AIR). Elegimos la [API de la Cátedra](https://rir-api-frontend.onrender.com/) proporcionada por el profesor, el programa [REW](https://rir-api-frontend.onrender.com) como software profesional y la información proporcionada en las mismas RI por [OPEN AIR](https://www.openair.hosted.york.ac.uk/).
 
-Las RI seleccionas pueden encontrarse en trabajo-practico-ss/docs/M3/RI, las cuales son: 1a_marble_hall.wav y 3a_hats_cloacks_the_lord.wav (extraidas de https://www.openair.hosted.york.ac.uk/?page_id=602), mh3_000_wx_48k.wav (extraida de https://www.openair.hosted.york.ac.uk/?page_id=459) y las RI sintetizadas con nuestra RIR-API (RI_Sintetizada.wav y RI_Sintetizada2.wav).
+Las RI seleccionas pueden encontrarse en trabajo-practico-ss/docs/M3/RI, las cuales son: 1a_marble_hall.wav y [3a_hats_cloacks_the_lord.wav](https://www.openair.hosted.york.ac.uk/?page_id=602), [mh3_000_wx_48k.wav](https://www.openair.hosted.york.ac.uk/?page_id=459) y las RI sintetizadas con nuestra RIR-API (RI_Sintetizada.wav y RI_Sintetizada2.wav).
 
 Para comprobar la efectividad de nuestro método decidimos ponernos un margen de ± 0.5 s respecto al software profesional y/o a la API de la cátedra.
 
