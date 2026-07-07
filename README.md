@@ -241,17 +241,21 @@ uv run ruff format app/ tests/
 ## Ejemplos con curl
 
 ```bash
-# Obtener ruido rosa
+# Obtener ruido rosa (WAV)
 curl -X POST http://localhost:8000/api/v1/signals/pink-noise \
   -H 'Content-Type: application/json' \
   -d '{"duracion": 1, "fs": 48000}' \
   -OJ
 
-# Corregir automaticamente lo que se pueda
-uv run ruff check --fix app/ tests/
+# Audio filtrado por bandas (ZIP)
+curl -X POST http://localhost:8000/api/v1/filters/band \
+  -F "file=@ri_de_prueba.wav" \
+  -OJ
 
-# Formatear el codigo
-uv run ruff format app/ tests/
+# Conversión a escala logarítmica (.npy)
+curl -X POST http://localhost:8000/api/v1/utils/schroeder \
+  -F "file=@ri_de_prueba.wav" \
+  -OJ
 ```
 ## Licencia
 
