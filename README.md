@@ -238,6 +238,21 @@ uv run ruff check --fix app/ tests/
 uv run ruff format app/ tests/
 ```
 
+## Ejemplos con curl
+
+```bash
+# Obtener ruido rosa
+curl -X POST http://localhost:8000/api/v1/signals/pink-noise \
+  -H 'Content-Type: application/json' \
+  -d '{"duracion": 1, "fs": 48000}' \
+  -OJ
+
+# Corregir automaticamente lo que se pueda
+uv run ruff check --fix app/ tests/
+
+# Formatear el codigo
+uv run ruff format app/ tests/
+```
 ## Licencia
 
 Este proyecto esta licenciado bajo la Licencia MIT. Ver el archivo `LICENSE` para mas detalles.
