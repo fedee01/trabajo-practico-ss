@@ -4,7 +4,7 @@ Early Decay Time (Tiempo de Decaimiento Temprano) determinará cómo será el T6
 
 # Explicacion de T20
 
-T20 sigue la misma lógica que el T10,  se toma en cuenta el tiempo que le lleva la señal en caer 20 DB. Debemos tener en cuenta que prácticamente se empieza a contar luego del decaimiento de 5 DB, es decir, que el T20 se toma la medición desde -5 db a -25db. En este caso se debe multiplicar el valor obtenido por 3 para conseguir el T60. Chequear si nosotros prácticamente tenemos esa consideración o no!. 
+T20 sigue la misma lógica que el T10,  se toma en cuenta el tiempo que le lleva la señal en caer 20 DB. Debemos tener en cuenta que prácticamente se empieza a contar luego del decaimiento de 5 DB, es decir, que el T20 se toma la medición desde -5 db a -25db. En este caso se debe multiplicar el valor obtenido por 3 para conseguir el T60. 
  
 # Explicacion de T30
 
