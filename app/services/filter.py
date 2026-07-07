@@ -4,6 +4,7 @@ Milestone 2: Procesamiento de la respuesta al impulso.
 """
 
 import numpy as np
+import scipy.signal
 
 
 def filtro_octava(signal: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.ndarray:
@@ -54,11 +55,11 @@ def filtro_octava(signal: np.ndarray, fc: float, fs: int, orden: int = 4) -> np.
     if f_sup >= nyquist:
         raise ValueError("La frecuencia superior excede Nyquist")
 
-    W_inf = 2 * f_inf / fs
-    W_sup = 2 * f_sup / fs
+    w_inf = 2 * f_inf / fs
+    w_sup = 2 * f_sup / fs
 
-    sos = scipy.signal.butter(orden, [W_inf, W_sup], btype="bandpass", output="sos")
+    sos = scipy.signal.butter(orden, [w_inf, w_sup], btype="bandpass", output="sos")
 
-    senal_filtrada = scipy.signal.sosfiltfilt(sos, signal) 
+    senal_filtrada = scipy.signal.sosfiltfilt(sos, signal)
 
     return senal_filtrada

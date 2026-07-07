@@ -3,9 +3,11 @@
 
 Milestone 1: Generacion de senales.
 """
+
 import math as ma
+
 import numpy as np
-import sounddevice as sd
+
 
 def generar_sine_sweep(
     f1: float, f2: float, duracion: float, fs: int
@@ -32,10 +34,9 @@ def generar_sine_sweep(
         Tupla con (sweep, filtro_inverso), ambos normalizados.
     """
 
-
     if f1 == 0:  # asi no divide por cero
         f1 += 1e-10
-        
+
     if f2 <= f1:
         raise ValueError("la frecuencia final (f2) debe ser mayor a la inicial (f1)")
 
@@ -44,26 +45,32 @@ def generar_sine_sweep(
 
     if fs <= 0:
         raise ValueError("la frecuencia de muestreo debe ser un numero positivo")
-   
+
     t = np.linspace(0, duracion, int(duracion * fs), endpoint=False)
 
     sine_sweep = np.array(
         [
             ma.sin(
-                2 * ma.pi * f1 * duracion
+                2
+                * ma.pi
+                * f1
+                * duracion
                 * (ma.exp(n * (ma.log(f2 / f1) / duracion)) - 1)
-                / ma.log(f2 / f1)) for n in t
+                / ma.log(f2 / f1)
+            )
+            for n in t
         ],
-        dtype=float,)
-    
-    R = (f2 / f1)
+        dtype=float,
+    )
 
-    envolvente = np.exp(-t * np.log(R) / duracion)
+    r = f2 / f1
+
+    envolvente = np.exp(-t * np.log(r) / duracion)
 
     filt_inv = sine_sweep[::-1] * envolvente  # metodo de farina
 
     if np.max(sine_sweep) > 0:
-        ratio = 2 / (np.max(sine_sweep) - np.min(sine_sweep)) # escalado a 2 [-1, 1]
+        ratio = 2 / (np.max(sine_sweep) - np.min(sine_sweep))  # escalado a 2 [-1, 1]
         shift = (np.max(sine_sweep) + np.min(sine_sweep)) / 2
         # corre el centro al costado, no es el valor promedio
         sine_sweep_normalizada = (sine_sweep - shift) * ratio

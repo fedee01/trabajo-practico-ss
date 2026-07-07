@@ -4,7 +4,11 @@ Milestone 2: Procesamiento de la respuesta al impulso.
 """
 
 import os
+
 import numpy as np
+import soundfile as sf
+from scipy.signal import butter, fftconvolve, sosfiltfilt
+
 
 def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     """Carga un archivo de audio y retorna la senal y la frecuencia de muestreo.
@@ -42,19 +46,16 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     except Exception as e:
         raise RuntimeError(f"Error al leer el archivo: {e}") from e
 
-    signal = np.asarray(signal,dtype=np.float64)
+    signal = np.asarray(signal, dtype=np.float64)
 
     if signal.ndim == 2:
         n_channels = signal.shape[1]
-        
+
         if n_channels not in (1, 2):
-            raise ValueError(
-                f"Número de canales inválido: "
-                f"{n_channels}. "
-                "Debe ser mono o estéreo.")
-            
+            raise ValueError(f"Número de canales inválido: {n_channels}. Debe ser mono o estéreo.")
+
         signal = signal.mean(axis=1)
-        
+
     elif signal.ndim != 1:
         raise ValueError("Formato de audio inválido.")
 
@@ -66,6 +67,7 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
         signal = signal / max_abs
 
     return signal, int(fs)
+
 
 def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -> np.ndarray:
     """Sintetiza una respuesta al impulso artificial a partir de valores T60 por banda.
@@ -95,9 +97,9 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     if fs <= 0:
         raise ValueError("fs debe ser positivo")
 
-    n_samples = int(np.ceil(duracion * fs))                 
-    t = np.arange(n_samples, dtype=np.float64) / fs         
-    ri_sintetizada = np.zeros(n_samples, dtype=np.float64)  
+    n_samples = int(np.ceil(duracion * fs))
+    t = np.arange(n_samples, dtype=np.float64) / fs
+    ri_sintetizada = np.zeros(n_samples, dtype=np.float64)
     nyq = fs / 2
 
     for fc, t60 in t60_por_banda.items():
@@ -110,7 +112,7 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         if t60 <= 0:
             raise ValueError(f"T60 inválido: {t60}")
 
-        noise = np.random.normal(loc=0.0, scale=1.0, size=n_samples) 
+        noise = np.random.normal(loc=0.0, scale=1.0, size=n_samples)
 
         f_inf = fc / np.sqrt(2)
         f_sup = fc * np.sqrt(2)
@@ -121,31 +123,33 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         if f_inf >= f_sup:
             raise ValueError(f"Banda inválida para fc={fc}")
 
-        w = [f_inf / nyq, f_sup / nyq] 
+        w = [f_inf / nyq, f_sup / nyq]
 
-        sos = butter( N=4, Wn=w, btype="bandpass", output="sos") 
+        sos = butter(N=4, Wn=w, btype="bandpass", output="sos")
 
         filtrado = sosfiltfilt(sos, noise)
 
-        rms = np.sqrt(np.mean(filtrado**2)) 
+        rms = np.sqrt(np.mean(filtrado**2))
         if rms > 0:
             filtrado /= rms
 
-        alfa = np.log(1000.0) / t60 
+        alfa = np.log(1000.0) / t60
 
-        envolv = np.exp(-alfa * t) 
-        banda = filtrado * envolv 
+        envolv = np.exp(-alfa * t)
+        banda = filtrado * envolv
         ri_sintetizada += banda
 
-    max_abs = np.max(np.abs(ri_sintetizada)) 
+    max_abs = np.max(np.abs(ri_sintetizada))
     if max_abs > 0:
         ri_sintetizada /= max_abs
 
     return ri_sintetizada
 
+
 def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) -> np.ndarray:
     """
-    Obtiene la respuesta al impulso (RI) mediante la deconvolución de una grabación realizada con un sine sweep.
+    Obtiene la respuesta al impulso (RI) mediante la deconvolución de una grabación realizada con
+    un sine sweep.
 
     Parameters
     ----------
@@ -173,9 +177,9 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
 
     if filtro_inverso.ndim == 2:
         n_channels = filtro_inverso.shape[1]
-        
+
         if n_channels not in (1, 2):
-             raise ValueError(f"Número de canales inválido:{n_channels}. Debe ser mono o estéreo.")
+            raise ValueError(f"Número de canales inválido:{n_channels}. Debe ser mono o estéreo.")
 
         filtro_inverso = filtro_inverso.mean(axis=1)
 
@@ -193,12 +197,13 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
     ri_full = fftconvolve(grabacion, filtro_inverso, mode="full")
 
     peak_idx = np.argmax(np.abs(ri_full))
-    ri= ri_full[peak_idx:]
+    ri = ri_full[peak_idx:]
     max_abs = np.max(np.abs(ri))
     if max_abs > 0:
         ri /= max_abs
 
     return ri
+
 
 def a_escala_log(signal: np.ndarray) -> np.ndarray:
     """Convierte una señal a escala logarítmica (dB) normalizada.
