@@ -22,25 +22,6 @@ class SineSweepRequest(BaseModel):
     )
 
 
-class SineSweepResponse(BaseModel):
-    """Metadata + audio de un sine sweep (o su filtro inverso), embebido en base64."""
-
-    duration: float = Field(description="Duracion en segundos.")
-    sample_rate: int = Field(description="Frecuencia de muestreo en Hz.")
-    num_samples: int = Field(description="Numero de muestras.")
-    start_freq: float = Field(description="Frecuencia inicial en Hz.")
-    end_freq: float = Field(description="Frecuencia final en Hz.")
-    is_inverse: bool = Field(description="Si True, es el filtro inverso; si False, es el sweep.")
-    audio_base64: str = Field(description="Audio WAV codificado en base64.")
-
-
-class SineSweepPairResponse(BaseModel):
-    """Respuesta de /sine-sweep/pair: el sweep y su filtro inverso juntos."""
-
-    sweep: SineSweepResponse
-    inverse_filter: SineSweepResponse
-
-
 class SyntheticIRRequest(BaseModel):
     """Parametros para sintetizar una respuesta al impulso con T60 conocido por banda."""
 
