@@ -280,5 +280,5 @@ plt.show()
  ```
 
 ### ENDPOINTS: 
-En este sección también realizamos los endpoint, como un criterio de diseño para el endpoint que filtra por bandas de octavas (los http solo devuelve un archivo) por lo tanto elegimos que devuelva una carpeta zip para que el cliente pueda descargar todos los audios para cada banda de octava y no tenga que elegir descargar uno por uno.
+En este sección también realizamos los endpoint, como un criterio de diseño para el endpoint que filtra por bandas de octavas (los http solo devuelve un archivo) por lo tanto elegimos que devuelva una carpeta zip para que el cliente pueda descargar todos los audios para cada banda de octava y no tenga que elegir descargar uno por uno. Otra decisión fue en el endpoint de sinesweep que con una logica booleana se puede obtener el archivo de filtro inverso. Por último, se separa el endpoint de parametros acusticos en dos versiones, una que devuelve los parametros por la banda de octava elegido y otra que devuelve los parametros pero de la señal completa. 
 
