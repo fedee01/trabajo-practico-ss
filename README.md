@@ -117,15 +117,22 @@ rir-api/
 │   ├── __init__.py
 │   ├── main.py                           # Punto de entrada FastAPI
 │   ├── app.js                            # JSON
+│   ├── settings.py                # Configuracion con pydantic-settings
 │   ├── routers/
-|       ├── _pycache_
-│       │   └── healt.cpython-313.pyc
-│       ├── health.py                     # GET /health
-│       └── __init__.py
+│   |   ├── _pycache_/
+│   │   │   └── ...                # cache
+│   │   ├── health.py              # GET /health
+│   │   ├── signals.py             # POST /api/v1/signals/*
+│   │   ├── filters.py             # POST /api/v1/filters/*
+│   │   ├── acoustics.py           # POST /api/v1/acoustics/*
+│   │   ├── analysis.py            # POST /api/v1/analysis/*
+│   │   └── utils.py               # POST /api/v1/utils/*
 │   ├── schemas/
-│       └── ...                           # Modelos Pydantic de request/response
+│   │   ├── signals.py             # Modelos de request/response para senales
+│   │   ├── filters.py             # Modelos para filtrado
+│   │   └── responses.py           # Modelos de respuesta para analisis
 |   ├── _pycache_/
-│   │   └── ...                           # cache
+│   │   └── ...                    # cache
 │   └── services/
 │       ├── __init__.py
 │       ├── acoustic_parameters.py        # Parametros acusticos ISO 3382 (M3)
