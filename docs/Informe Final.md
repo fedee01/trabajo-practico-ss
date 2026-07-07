@@ -331,9 +331,9 @@ Se implementó `obtener_ri_desde_sweep`. Partiendo del sine sweep generado
 en M1, se asume que el recinto se comporta como un sistema LTI, de modo
 que la grabación resultante es $y(t) = h(t) * x(t)$. Dado que la
 convolución del sweep con su filtro inverso produce un impulso
-aproximadamente perfecto ($x(t) * x_{\text{inv}}(t) \approx \delta(t)$),
+aproximadamente perfecto $x(t)$ * $x_{\text{inv}}(t)$ $\approx$ $\delta(t)$,
 al convolucionar la grabación con el filtro inverso se recupera
-directamente la respuesta al impulso del recinto ($y(t) \approx h(t)$).
+directamente la respuesta al impulso del recinto (y(t) ≈ h(t)).
 
 Un aspecto a resolver durante la implementación fue que la RI obtenida
 por este método queda recortada en la información previa al pico máximo;
@@ -398,7 +398,7 @@ Se implementaron las siguientes funciones del pipeline final:
   mejor se aproxima a los tramos utilizados para extrapolar T20, T30 y
   EDT.
 
-![Integral de Schroeder con extrapolaciones](M3/Schroeder%20regresion%20y%20extrapolacion.png)
+![Integral de Schroeder con extrapolaciones](M3/Schroeder%20regresion%20y%20extrapolacion.jpeg)
 
 *Figura 12. Integral de Schroeder (verde) con las rectas de regresión
 utilizadas para extrapolar T20, T30 y EDT hasta -60 dB.*
@@ -411,23 +411,15 @@ utilizadas para extrapolar T20, T30 y EDT hasta -60 dB.*
   los demás parámetros. El procedimiento seguido por la función es:
 
   1. Filtrar la RI por bandas de octava (`filtro_octava`).
-  2. Suavizar cada banda mediante la envolvente de Hilbert
-     (`suavizar_signal`).
-  3. Integrar la energía con la integral de Schroeder
-     (`integral_schroeder`).
-  4. Ajustar una regresión lineal sobre cada tramo correspondiente (EDT:
-     0 a -10 dB; T20: -5 a -25 dB; T30: -5 a -35 dB).
-  5. Extrapolar cada recta hasta -60 dB para obtener el tiempo de
-     reverberación de cada parámetro.
+  2. Suavizar cada banda mediante la envolvente de Hilbert (`suavizar_signal`).
+  3. Integrar la energía con la integral de Schroeder (`integral_schroeder`).
+  4. Ajustar una regresión lineal sobre cada tramo correspondiente (EDT: 0 a -10 dB; T20: -5 a -25 dB; T30: -5 a -35 dB).
+  5. Extrapolar cada recta hasta -60 dB para obtener el tiempo de reverberación de cada parámetro.
 
   La función admite además un flag `sin_filtrar` que, en lugar de
   duplicar el pipeline, reutiliza el mismo cálculo sobre la señal completa
   sin pasar por `filtro_octava`, evitando reescribir la lógica de
   Schroeder y regresión para ese caso.
-
-**Estado a la fecha de esta entrega:** las funciones de análisis y el
-router de la API REST se encuentran implementados y validados contra
-software de referencia (ver Sección 5.2).
 
 **Decisiones de diseño de la API:**
 
