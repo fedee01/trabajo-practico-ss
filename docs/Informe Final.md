@@ -193,7 +193,7 @@ del criterio de actualización de los generadores: los de índice más bajo
 se actualizan con mayor frecuencia que los de índices superiores. Esta
 duda se resolvió consultando con el cuerpo docente.
 
-![Espectro de ruido rosa (PSD vs. frecuencia)](docs/m1/ruido_rosa.png)
+![Espectro de ruido rosa (PSD vs. frecuencia)](M1/ruido_rosa.png)
 
 *Figura 1. Densidad espectral de potencia (PSD) del ruido rosa generado,
 calculada mediante el método de Welch. Se midió una pendiente de -3,16
@@ -214,9 +214,7 @@ barrido logarítmico (mayor concentración de energía en frecuencias
 bajas). La convolución del sweep con su filtro inverso produce un impulso
 aproximadamente ideal.
 
-**[IMAGEN — espectrograma del sweep]**
-
-![Espectrograma del sine sweep](img/m1/espectrograma_sweep.png)
+![Espectrograma del sine sweep](M1/sine%20sweep%20spectrogram.png)
 
 *Figura 2. Espectrograma del barrido logarítmico. El eje vertical
 representa la frecuencia y el horizontal el tiempo; la intensidad de
@@ -228,9 +226,7 @@ escala `plt.yscale("log")` por `plt.yscale("symlog")` en matplotlib, más
 adecuada para representar rangos de valores muy amplios sin perder el
 comportamiento cerca de cero.*
 
-**[IMAGEN — resultado de la convolución sweep × filtro inverso]**
-
-![Convolución sweep × filtro inverso](img/m1/convolucion_impulso.png)
+![Convolución sweep × filtro inverso](M1/Sweep%20conv%20inverso.png)
 
 *Figura 3. Resultado de convolucionar el sweep con su filtro inverso: un
 impulso con lóbulos laterales pequeños, atenuados de forma simétrica en
@@ -257,9 +253,8 @@ sonoras, utilizando un micrófono cardioide Noga Vintage Mic-2030 PX para
 la captura, y analizando el resultado en Audacity (menú
 *Analizar → Trazar espectro*).
 
-**[IMAGEN — espectro de la grabación real en Audacity]**
-
-![Espectro de ruido rosa grabado](img/m1/grabacion_audacity.png)
+![Espectro de ruido rosa grabado — medición 1](M1/medicion01_ruido_rosa.png)
+![Espectro de ruido rosa grabado — medición 2](M1/medicion02_ruido_rosa.png)
 
 *Figura 4. Espectro (nivel en dB vs. frecuencia en escala logarítmica) de
 una de las grabaciones reales del ruido rosa reproducido y capturado con
@@ -302,14 +297,14 @@ reales. El procedimiento seguido fue:
 
 **Caso 1 — fc = 1000 Hz, duración = 4 s, fs = 44100 Hz, T60 = 1,2 s:**
 
-![RI sintética — forma de onda lineal](img/m2/ri_sintetica_lineal.png)
+![RI sintética — forma de onda lineal](M2/RI%20sintetizada.jpeg)
 
 *Figura 5. Forma de onda de la RI sintetizada (amplitud vs. tiempo). Se
 observa el pico de amplitud máxima (normalizada a 1) en t = 0 s —la señal
 directa—, seguido de las reflexiones primarias y secundarias, cuya
 energía decrece rápidamente y de forma exponencial.*
 
-![RI sintética — envolvente en escala logarítmica](img/m2/ri_sintetica_envolvente.png)
+![RI sintética — envolvente en escala logarítmica](M2/Envolvente.jpeg)
 
 *Figura 6. Envolvente de la RI sintetizada en escala logarítmica,
 normalizada a RMS para observar la tendencia general de decaimiento. Se
@@ -323,7 +318,7 @@ asistencia de IA para identificar y corregir el error en el código.*
 **Caso 2 — fc = 1000 Hz, duración = 4 s, fs = 44100 Hz, T60 = 2,0 s
 (caso de validación oficial de la spec):**
 
-![Curva de decaimiento de la RI sintética](img/m2/ri_sintetica_decaimiento.png)
+![Curva de decaimiento de la RI sintética](M2/Curva%20de%20decaimiento%20energetico.jpeg)
 
 *Figura 7. Curva de decaimiento energético de la RI sintetizada. El punto
 de cruce con -60 dB se ubica en t = 1,99 s, lo que representa un error de
@@ -346,13 +341,13 @@ al comparar por correlación cruzada contra la RI sintetizada de
 referencia, fue necesario alinear ambas señales eliminando los primeros
 valores hasta el pico máximo de la RI sintetizada.
 
-![Comparación de RI original vs. recuperada](img/m2/deconvolucion_comparacion.png)
+![Comparación de RI original vs. recuperada](M2/.Corrlaci%C3%B3n%20RI.jpeg)
 
 *Figura 8. Comparación entre la RI original (sintetizada, celeste) y la
 RI recuperada mediante deconvolución (naranja). Se obtuvo una correlación
 cruzada de 0,9955, superando el criterio de aceptación (> 0,9).*
 
-![Detalle de la correlación en los primeros 100 ms](img/m2/deconvolucion_zoom.png)
+![Detalle de la correlación en los primeros 100 ms](M2/Zoom%20correlaci%C3%B3n.jpeg)
 
 *Figura 9. Detalle de la comparación anterior, sobre los primeros 100 ms.*
 
@@ -364,7 +359,7 @@ $f_{c} \cdot 2^{\pm 1/2}$ para cada una de las 9 frecuencias centrales, e
 implementando el filtrado mediante un filtro Butterworth (respuesta plana
 en la banda de paso, con caída progresiva fuera de ella).
 
-![Banco de filtros de octava](img/m2/filtro_octava.png)
+![Banco de filtros de octava](M2/Filtro%20de%20banda%20de%20octava.jpeg)
 
 *Figura 10. Banco de 9 filtros de octava según IEC 61260. Se verifica
 visualmente que bandas contiguas se cruzan a -3 dB, cumpliendo el
@@ -376,7 +371,7 @@ Se implementó `a_escala_log`, verificada contra el criterio de que el
 máximo de la señal resultante sea 0 dB y que una amplitud mitad
 corresponda a -6 dB.
 
-![Señal en escala logarítmica](img/m2/escala_log.png)
+![Señal en escala logarítmica](M2/IR%20SUAVE%20%28exponencial%29.jpeg)
 
 *Figura 11. Señal convertida a escala logarítmica (dB) a partir de su
 representación lineal. Se verifica que el punto de máxima amplitud
@@ -403,7 +398,7 @@ Se implementaron las siguientes funciones del pipeline final:
   mejor se aproxima a los tramos utilizados para extrapolar T20, T30 y
   EDT.
 
-![Integral de Schroeder con extrapolaciones](img/m3/schroeder_extrapolaciones.png)
+![Integral de Schroeder con extrapolaciones](M3/Schroeder%20regresion%20y%20extrapolacion.png)
 
 *Figura 12. Integral de Schroeder (verde) con las rectas de regresión
 utilizadas para extrapolar T20, T30 y EDT hasta -60 dB.*
@@ -508,6 +503,17 @@ que dicha banda queda cerca del límite entre el suavizado de Hilbert y la
 resolución del filtro de octava, lo que introduce mayor variabilidad en
 la pendiente estimada por regresión.
 
+![Comparación EDT, T20 y T30 — primera RI sintetizada](M3/Sintetizada1.png)
+
+*Figura 13. Comparación de EDT, T20 y T30 para la primera RI sintetizada.
+En azul la RIR-API, en verde la API de la cátedra, en bordó el REW y en
+celeste el T60 tabulado usado para generar el archivo.*
+
+![Comparación EDT, T20 y T30 — segunda RI sintetizada](M3/Sintetizada2.png)
+
+*Figura 14. Comparación de EDT, T20 y T30 para la segunda RI sintetizada,
+con las mismas referencias que la Figura 13.*
+
 **Análisis de las RI reales (OpenAIR):** en Elveden Hall (RI
 `1a_marble_hall.wav`), los resultados fueron consistentes con el REW en
 casi todas las bandas, salvo el T30 de 125 Hz, donde OpenAIR reporta un
@@ -524,6 +530,26 @@ Howe (`mh3_000_wx_48k.wav`), al tratarse de una sala con tiempos de
 reverberación bajos, ningún valor difirió del REW en más de 0,5 s, y en
 varias bandas la RIR-API resultó incluso más cercana a la referencia de
 OpenAIR que el resto de los programas comparados.
+
+![Comparación EDT, T20 y T30 — Elveden Hall, primera grabación](M3/1a_marble.png)
+
+*Figura 15. Comparación de EDT, T20 y T30 para la primera grabación de
+Elveden Hall (`1a_marble_hall.wav`). En azul la RIR-API, en bordó el REW
+y en amarillo los datos de referencia de OpenAIR.*
+
+![Comparación EDT, T20 y T30 — Elveden Hall, segunda grabación](M3/3a_hats.png)
+
+*Figura 16. Comparación de EDT, T20 y T30 para la segunda grabación de
+Elveden Hall (`3a_hats_cloacks_the_lord.wav`). En azul la RIR-API, en
+verde la API de la cátedra y en bordó el REW; no hay dato de referencia
+de OpenAIR para esta grabación.*
+
+![Comparación EDT, T20 y T30 — Maes Howe](M3/Maes_Howe.png)
+
+*Figura 17. Comparación de EDT, T20 y T30 para Maes Howe
+(`mh3_000_wx_48k.wav`). En azul la RIR-API, en verde la API de la
+cátedra, en bordó el REW y en amarillo los datos de referencia de
+OpenAIR.*
 
 En síntesis, el comportamiento observado en los cuatro gráficos de
 comparación muestra que la mayor fuente de discrepancia entre
