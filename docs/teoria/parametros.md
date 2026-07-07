@@ -11,8 +11,7 @@ T20 sigue la misma lógica que el T10,  se toma en cuenta el tiempo que le lleva
 T30 tiene el mismo razonamiento que los anteriores pero en este caso es el tiempo que tarda la señal en caer 30 DB, midiendo desde la caída de menos 5 DB y el resultado se multiplica por 2 para extrapolarlo y que se asemeja a T60. 
 
 
-Chequear siguiente info: 
-Si la diferencia de nivel es superior a 45 DB, el parámetro T60 puede calcularse utilizando el T10, T20 y T30. 
+
 
 
 
