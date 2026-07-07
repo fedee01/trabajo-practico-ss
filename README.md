@@ -25,6 +25,12 @@ de respuestas al impulso por bandas de octava y calculo de parametros acusticos
 
   Eugenia Onnainty | Legajo: 74462. $${\color{green}Responsable \space de \space testing/CI}$$.
 
+## Librerias utilizadas
+numpy | matplotlib | scipy | sounddevice | fastapi | pytest 
+```bash
+# En caso de no contar con alguno utilizar:
+pip install numpy, matplotlib, scipy, sounddevice, fastapi, pytest
+```
 
 ## Requisitos previos
 
@@ -72,7 +78,8 @@ flowchart LR
     S -- M1 --> Gen["GENERACIÓN"]
     Gen --> SS["Sine Sweep"] & PN["Pink Noise"] & Rec["Reproducir y Grabar"]
     S -- M2 --> Proc["Procesamiento"]
-    Proc --> F["Filtros por banda de octava"] & Conv["Conversión a escala logaritmica"]
+    Proc --> F["Filtros por banda de octava"] & PrS["Procesamiento de señales"]
+    PrS --> Conv["Conversión a escala logaritmica"] & CaAu["Cargar audio"] & SRI["Sintetizar RI"] & ORIS["Obtener RI por Sweep"]
     S -- M3 --> An["Análisis"]
     An --> Par["Parámetros acústicos"] & Sua["Suavizado de señal"] & InS["Integral de Shchorder"] & Reg["Regresion lineal"] & Mlun["Metodo Lundeby"]
 
@@ -85,7 +92,11 @@ flowchart LR
     style Rec fill: #AFA3A3,color:#000000
     style Proc fill: #a69999,color:#000000
     style F fill: #AFA3A3,color:#000000
-    style Conv fill: #AFA3A3,color:#000000
+    style PrS fill: #AFA3A3,color:#000000
+    style Conv fill: #c5c0c0,color:#000000
+    style CaAu fill: #c5c0c0,color:#000000
+    style SRI fill: #c5c0c0,color:#000000
+    style ORIS fill: #c5c0c0,color:#000000
     style An fill: #a69999,color:#000000
     style Par fill: #AFA3A3,color:#000000
     style Sua fill: #AFA3A3,color:#000000
@@ -100,50 +111,59 @@ flowchart LR
 
 ```
 rir-api/
-├── RI/                                   # Respuestas al impulso extraidas de:
-|   ├── 1a_marble_hall.wav                # https://www.openair.hosted.york.ac.uk/?page_id=459
-|   └── mh3_000_ortf_48k.wav              # https://www.openair.hosted.york.ac.uk/?page_id=602
+├── .github/workflows                     # Integracion continua
+|   └── ci.yml                            
 ├── app/
 │   ├── __init__.py
 │   ├── main.py                           # Punto de entrada FastAPI
+│   ├── app.js                            # JSON
 │   ├── routers/
-│   │   ├── health.py                     # GET /health
-│   │   ├── generacion.py                 # Endpoints de generacion (M1 → M3)
-│   │   ├── procesamiento.py              # Endpoints de filtrado (M2 → M3)
-│   │   ├── analisis.py                   # Endpoints de analisis (M3)
-│   │   └── utils.py                      # Endpoints de utilidades (M3)
+|       ├── _pycache_
+│       │   └── healt.cpython-313.pyc
+│       ├── health.py                     # GET /health
+│       └── __init__.py
 │   ├── schemas/
-│   │   └── ...                           # Modelos Pydantic de request/response
+│       └── ...                           # Modelos Pydantic de request/response
 |   ├── _pycache_/
 │   │   └── ...                           # cache
 │   └── services/
-│       ├── generación/
-│       │   ├── pink_noise.py             # Generacion de ruido rosa (M1)
-│       │   └── sine_sweep.py             # Generacion de sine sweep (M1)
-│       ├── procesamiento/
-│       │   ├── signal_utils.py           # Utilidades de procesamiento (M2)
-│       │   └── filter.py                 # Filtros de banda de octava (M2)
-│       └── analisis/
-│           └── acoustic_parameters.py    # Parametros acusticos ISO 3382 (M3)
+│       ├── __init__.py
+│       ├── acoustic_parameters.py        # Parametros acusticos ISO 3382 (M3)
+│       ├── filter.py                     # Filtros de banda de octava (M2)
+│       ├── pink_noise.py                 # Generacion de ruido rosa (M1)
+│       ├── ploteo.py                     # Gráficos
+│       ├── reproducir_grabar.py          # Funcion (M1)
+│       ├── signal_utils.py               # Utilidades de procesamiento (M2)
+│       └── sine_sweep.py                 # Generacion de sine sweep (M1)
 ├── tests/
 │   ├── test_generacion.py                # Tests de generacion (M1)
 │   ├── test_procesamiento.py             # Tests de procesamiento (M2)
 │   ├── test_analisis.py                  # Tests de analisis (M3)
 │   └── test_api.py                       # Tests de endpoints (M3)
 ├── docs/                                 # Documentacion
-│   ├── imagenes
-│   │   └── ...                                           
-│   ├── teoria                            # Informacion adicional
-│   │   ├── iso_3382.md
-│   │   └── parametros.md              
+│   ├── M1
+|       ├── medición01_ruido_rosa.png                           
+|       ├── medición02_ruido_rosa.png   
+|       ├── pink noise.png
+│       └── sine sweep spectrogram.png 
+│   ├── RI
+|       ├── 1a_marble_hall.png                            
+|       ├── 1a_marble_hall.wav                # https://www.openair.hosted.york.ac.uk/?page_id=459
+|       ├── mh3_000_ortf_48k.png
+|       └── mh3_000_ortf_48k.wav              # https://www.openair.hosted.york.ac.uk/?page_id=602
+|   ├── feature
+|       └── documentación         
 │   ├── mediciones
-│   │   └── sala_ejemplos.md
+│       └── sala_ejemplos.md
+│   ├── teoria                            # Informacion adicional
+│       ├── iso_3382.md
+│       └── parametros.md  
 │   └── README.md                         # Documentacion de RIR-API
-├── uv.lock
-├── .github/workflows/ci.yml              # Integracion continua
-├── pyproject.toml                        # Configuracion del proyecto
 ├── .gitignore
-└── README.md
+├── AI_LOG.md                             # Documentacion sobre la utilzación de AI
+├── README.md
+├── pyproject.toml                        # Configuracion del proyecto
+└── uv.lock
 ```
 ## Branching Strategy
 
@@ -154,30 +174,30 @@ La estrategia armada para el proyecto es utilizar tres tipos de branches. En pri
 ### M0 — Setup del entorno | Arquitectura (El plano) 
 **Fecha:** Semana 5 (28 de abril de 2026)
 
-- [ ] Hacer fork del repositorio template.
-- [ ] Clonar el fork y verificar que el entorno se instala correctamente.
-- [ ] Ejecutar la API: `uvicorn app.main:app --reload`.
-- [ ] Verificar que `/health` responde correctamente.
-- [ ] Ejecutar los tests (todos deben fallar con `NotImplementedError` excepto los de API).
-- [ ] Verificar que el CI funciona en GitHub Actions.
+- [x] Hacer fork del repositorio template.
+- [x] Clonar el fork y verificar que el entorno se instala correctamente.
+- [x] Ejecutar la API: `uvicorn app.main:app --reload`.
+- [x] Verificar que `/health` responde correctamente.
+- [x] Ejecutar los tests (todos deben fallar con `NotImplementedError` excepto los de API).
+- [x] Verificar que el CI funciona en GitHub Actions.
 
 ### M1 — Generacion de senales
 **Fecha:** Semana 8 (19 de mayo de 2026)
 
-- [ ] Implementar `generar_ruido_rosa()` en `app/services/pink_noise.py`.
-- [ ] Implementar `generar_sine_sweep()` en `app/services/sine_sweep.py`.
-- [ ] Implementar `reproducir_y_grabar()`.
-- [ ] Todos los tests de `test_generacion.py` deben pasar.
+- [x] Implementar `generar_ruido_rosa()` en `app/services/pink_noise.py`.
+- [x] Implementar `generar_sine_sweep()` en `app/services/sine_sweep.py`.
+- [x] Implementar `reproducir_y_grabar()`.
+- [x] Todos los tests de `test_generacion.py` deben pasar.
 
 ### M2 — Procesamiento de senales (RI)
 **Fecha:** Semana 12 (16 de junio de 2026)
 
-- [ ] Implementar `cargar_audio()` en `app/services/signal_utils.py`.
-- [ ] Implementar `obtener_ri_desde_sweep()` en `app/services/signal_utils.py`.
-- [ ] Implementar `filtro_octava()` en `app/services/filter.py`.
-- [ ] Implementar `a_escala_log()` en `app/services/signal_utils.py`.
-- [ ] Implementar `sintetizar_ri()` para validacion.
-- [ ] Todos los tests de `test_procesamiento.py` deben pasar.
+- [x] Implementar `cargar_audio()` en `app/services/signal_utils.py`.
+- [x] Implementar `obtener_ri_desde_sweep()` en `app/services/signal_utils.py`.
+- [x] Implementar `filtro_octava()` en `app/services/filter.py`.
+- [x] Implementar `a_escala_log()` en `app/services/signal_utils.py`.
+- [x] Implementar `sintetizar_ri()` para validacion.
+- [x] Todos los tests de `test_procesamiento.py` deben pasar.
 
 ### M3 — API REST y analisis de parametros acusticos (Producto Final)
 **Fecha:** Semana 15 (7 de Julio de 2026)

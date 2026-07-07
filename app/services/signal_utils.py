@@ -7,7 +7,9 @@ import os
 
 import numpy as np
 import soundfile as sf
-from scipy.signal import butter, fftconvolve, sosfiltfilt
+from scipy.signal import fftconvolve
+
+from app.services.filter import filtro_octava
 
 
 def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
@@ -27,11 +29,21 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
 
     Raises
     ------
+    TypeError
+        Si `ruta` no es una cadena de texto.
     FileNotFoundError
         Si el archivo especificado no existe.
+    ValueError
+        Si el formato no es .wav/.flac, si el número de canales no es
+        mono/estéreo, o si el archivo está vacío.
+    RuntimeError
+        Si ocurre un error al leer el archivo (delegado desde soundfile).
     """
+    # validacion
     if not isinstance(ruta, str):
         raise TypeError("'ruta' debe ser una cadena de texto")
+    # si no es un string, no tiene sentido intentar cargar un archivo, lanzo un error de tipo
+
     if not os.path.exists(ruta):
         raise FileNotFoundError(f"Archivo no encontrado: {ruta}")
 
@@ -43,18 +55,19 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     try:
         signal, fs = sf.read(ruta, dtype="float64")
 
+    # cualquier error de lectura se captura y se lanza como RuntimeError
     except Exception as e:
         raise RuntimeError(f"Error al leer el archivo: {e}") from e
 
     signal = np.asarray(signal, dtype=np.float64)
 
     if signal.ndim == 2:
-        n_channels = signal.shape[1]
+        n_channels = signal.shape[1]  # [1] es el numero de canales, [0] es el numero de muestras
 
         if n_channels not in (1, 2):
             raise ValueError(f"Número de canales inválido: {n_channels}. Debe ser mono o estéreo.")
 
-        signal = signal.mean(axis=1)
+        signal = signal.mean(axis=1)  # si es estéreo, promedia ambos canales para obtener mono
 
     elif signal.ndim != 1:
         raise ValueError("Formato de audio inválido.")
@@ -62,6 +75,7 @@ def cargar_audio(ruta: str) -> tuple[np.ndarray, int]:
     if signal.size == 0:
         raise ValueError("El archivo de audio está vacío.")
 
+    # normalizado
     max_abs = np.max(np.abs(signal))
     if max_abs > 0:
         signal = signal / max_abs
@@ -86,8 +100,8 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     np.ndarray
         Respuesta al impulso sintetizada (array 1D).
     """
-    raise NotImplementedError("Implementar en Milestone 2")
 
+    # validaciones
     if not isinstance(t60_por_banda, dict):
         raise TypeError("t60_por_banda debe ser un diccionario {fc:T60}")
 
@@ -103,7 +117,7 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
     nyq = fs / 2
 
     for fc, t60 in t60_por_banda.items():
-        fc = float(fc)
+        fc = float(fc)  # fc es la frecuencia central de la banda
         t60 = float(t60)
 
         if fc <= 0:
@@ -112,8 +126,10 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         if t60 <= 0:
             raise ValueError(f"T60 inválido: {t60}")
 
+        # ruido blanco
         noise = np.random.normal(loc=0.0, scale=1.0, size=n_samples)
 
+        # filtro de octava
         f_inf = fc / np.sqrt(2)
         f_sup = fc * np.sqrt(2)
 
@@ -123,22 +139,21 @@ def sintetizar_ri(t60_por_banda: dict[float, float], fs: int, duracion: float) -
         if f_inf >= f_sup:
             raise ValueError(f"Banda inválida para fc={fc}")
 
-        w = [f_inf / nyq, f_sup / nyq]
+        filtrado = filtro_octava(noise, fc, fs)
 
-        sos = butter(N=4, Wn=w, btype="bandpass", output="sos")
-
-        filtrado = sosfiltfilt(sos, noise)
-
+        # normalización RMS
         rms = np.sqrt(np.mean(filtrado**2))
         if rms > 0:
             filtrado /= rms
 
+        # envolvente
         alfa = np.log(1000.0) / t60
-
         envolv = np.exp(-alfa * t)
         banda = filtrado * envolv
-        ri_sintetizada += banda
 
+        ri_sintetizada += banda  # la sumatoria de todas las bandas
+
+    # normalizado
     max_abs = np.max(np.abs(ri_sintetizada))
     if max_abs > 0:
         ri_sintetizada /= max_abs
@@ -154,21 +169,25 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
     Parameters
     ----------
     grabacion : np.ndarray
-        Senal grabada que contiene la respuesta de la sala al sweep.
+        Señal grabada que contiene la respuesta de la sala al sine sweep. Puede ser mono o estéreo.
+
     filtro_inverso : np.ndarray
-        Filtro inverso del sweep utilizado.
+        Filtro inverso correspondiente al sine sweep utilizado.
+        Puede ser mono o estéreo.
 
     Returns
     -------
     np.ndarray
-        Respuesta al impulso estimada, normalizada.
+        Respuesta al impulso estimada y normalizada entre -1 y 1.
     """
+    # validación de tipos
     if not isinstance(grabacion, np.ndarray):
         raise TypeError("grabacion debe ser un array numpy")
 
     if not isinstance(filtro_inverso, np.ndarray):
         raise TypeError("filtro_inverso debe ser un array numpy")
 
+    # conversión estéreo -> mono, se promedian para obtener una única señal mono.
     if grabacion.ndim == 2:
         grabacion = grabacion.mean(axis=1)
 
@@ -186,18 +205,24 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
     elif filtro_inverso.ndim != 1:
         raise ValueError("filtro_inverso debe ser mono o estéreo.")
 
+    # conversión a float64
     grabacion = np.asarray(grabacion, dtype=np.float64)
     filtro_inverso = np.asarray(filtro_inverso, dtype=np.float64)
 
+    # validación de arrays vacíos
     if grabacion.size == 0:
         raise ValueError("grabacion vacía")
     if filtro_inverso.size == 0:
         raise ValueError("filtro_inverso vacío")
 
+    # deconvolución con FFT
     ri_full = fftconvolve(grabacion, filtro_inverso, mode="full")
 
+    # ubica el pico principal
     peak_idx = np.argmax(np.abs(ri_full))
     ri = ri_full[peak_idx:]
+
+    # normalizado
     max_abs = np.max(np.abs(ri))
     if max_abs > 0:
         ri /= max_abs
@@ -206,31 +231,36 @@ def obtener_ri_desde_sweep(grabacion: np.ndarray, filtro_inverso: np.ndarray) ->
 
 
 def a_escala_log(signal: np.ndarray) -> np.ndarray:
-    """Convierte una señal a escala logarítmica (dB) normalizada.
+    """Convierte una senal a escala logaritmica (dB) normalizada.
 
     Parameters
     ----------
     signal : np.ndarray
-        Señal de entrada.
+        Senal de entrada (array 1D).
 
     Returns
     -------
     np.ndarray
-        Señal en escala logarítmica (dB), normalizada a 0 dB.
+        Senal en escala logaritmica (dB), normalizada a 0 dB en el maximo.
     """
     if not isinstance(signal, np.ndarray):
         raise TypeError("signal debe ser un np.ndarray")
 
-    if signal.size == 0:
-        raise ValueError("signal no puede estar vacía")
+    # convierte a mono si es multicanal
+    sig = signal.mean(axis=1) if signal.ndim > 1 else signal
 
-    if signal.ndim > 1:
-        signal = signal.mean(axis=1)
+    # evita negativos por si la señal es compleja
+    mag = np.abs(sig.astype(np.float64))
 
-    safe = np.where(signal == 0, np.finfo(float).eps, np.abs(signal))
+    # evitar log(0): usar clip
+    mag_safe = np.clip(mag, 1e-10, None)
 
-    db = 20 * np.log10(safe / np.max(safe))
+    db = 20.0 * np.log10(mag_safe)
 
-    db = np.maximum(db, -120.0)
+    # normalizar para que el maximo sea 0 dB
+    db = db - np.max(db)
+
+    piso_ruido = -120.0
+    db = np.maximum(db, piso_ruido)
 
     return db

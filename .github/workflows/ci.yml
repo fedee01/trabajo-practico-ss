@@ -2,9 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches:
+      - main
+      - dev
+      - feature/**
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   lint-and-test:
@@ -19,6 +23,11 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install PortAudio
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y portaudio19-dev
+
       - name: Instalar uv
         uses: astral-sh/setup-uv@v4
 
@@ -29,7 +38,7 @@ jobs:
 
       - name: Ejecutar linter (ruff)
         run: |
-          uv run ruff check app/ tests/
+          uv run ruff check app tests
 
       - name: Ejecutar tests (pytest)
         run: |

@@ -1,6 +1,6 @@
-
 /tests/__pycache__/
 /app/__pycache__/
+/app/routers/
 /app/services/__pycache__/
 .pytest_cache/
 RI/

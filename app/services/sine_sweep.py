@@ -1,6 +1,5 @@
 """Servicio de generacion de sine sweep logaritmico.
 
-
 Milestone 1: Generacion de senales.
 """
 
@@ -15,7 +14,6 @@ def generar_sine_sweep(
     """
     Genera un sine sweep logaritmico y su filtro inverso.
 
-
     Parameters
     ----------
     f1 : float
@@ -27,14 +25,18 @@ def generar_sine_sweep(
     fs : int
         Frecuencia de muestreo en Hz.
 
-
     Returns
     -------
     tuple[np.ndarray, np.ndarray]
         Tupla con (sweep, filtro_inverso), ambos normalizados.
+
+    Raises
+    ------
+    ValueError
+        Si f2 no es mayor que f1, o si duracion o fs no son positivos.
     """
 
-    if f1 == 0:  # asi no divide por cero
+    if f1 == 0:  # si la f pedida es 0, usa un numero muy chico para no dividir por 0
         f1 += 1e-10
 
     if f2 <= f1:
@@ -63,21 +65,28 @@ def generar_sine_sweep(
         dtype=float,
     )
 
+    # rel entre la f final e inicial
     r = f2 / f1
 
     envolvente = np.exp(-t * np.log(r) / duracion)
 
     filt_inv = sine_sweep[::-1] * envolvente  # metodo de farina
 
-    if np.max(sine_sweep) > 0:
+    # normalizacion a [-1, 1]: si max == min (senal constante), no hay nada
+    # que escalar, se devuelve tal cual para evitar division por cero
+    if np.max(sine_sweep) != np.min(sine_sweep):
         ratio = 2 / (np.max(sine_sweep) - np.min(sine_sweep))  # escalado a 2 [-1, 1]
         shift = (np.max(sine_sweep) + np.min(sine_sweep)) / 2
         # corre el centro al costado, no es el valor promedio
         sine_sweep_normalizada = (sine_sweep - shift) * ratio
+    else:
+        sine_sweep_normalizada = sine_sweep
 
-    if np.max(filt_inv) > 0:
+    if np.max(filt_inv) != np.min(filt_inv):
         ratio = 2 / (np.max(filt_inv) - np.min(filt_inv))
         shift = (np.max(filt_inv) + np.min(filt_inv)) / 2
         filt_inv_normalizado = (filt_inv - shift) * ratio
+    else:
+        filt_inv_normalizado = filt_inv
 
     return sine_sweep_normalizada, filt_inv_normalizado
