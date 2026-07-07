@@ -241,20 +241,20 @@ uv run ruff format app/ tests/
 ## Ejemplos con curl
 
 ```bash
-# Obtener ruido rosa (WAV)
-curl -X POST http://localhost:8000/api/v1/signals/pink-noise \
+# 1. Generar una RI sintética de prueba (WAV)
+curl -X POST http://localhost:8000/api/v1/signals/synthetic-ir \
   -H 'Content-Type: application/json' \
-  -d '{"duracion": 1, "fs": 48000}' \
+  -d '{"t60_por_banda": {"1000": 1.5}, "fs": 48000, "duracion": 3.0}' \
   -OJ
 
-# Audio filtrado por bandas (ZIP)
+# 2. Filtrar esa RI por bandas (ZIP)
 curl -X POST http://localhost:8000/api/v1/filters/band \
-  -F "file=@ri_de_prueba.wav" \
+  -F "file=@synthetic_ir.wav" \
   -OJ
 
-# Conversión a escala logarítmica (.npy)
+# 3. Curva de Schroeder de esa misma RI (.npy)
 curl -X POST http://localhost:8000/api/v1/utils/schroeder \
-  -F "file=@ri_de_prueba.wav" \
+  -F "file=@synthetic_ir.wav" \
   -OJ
 ```
 ## Licencia
