@@ -78,11 +78,11 @@ def obtener_frecuencias(
 @router.post(
     "/band",
     summary="Filtra un WAV en bandas de octava",
-    description=(
-        """Filtra una señal de audio en las 9 bandas de octava (31.5 Hz a 8 kHz)
+    description=("""
+        Filtra una señal de audio en las 9 bandas de octava (31.5 Hz a 8 kHz)
         y devuelve un ZIP con un WAV por banda.
-
-        Útil para análisis espectral por bandas."""
+        Útil para análisis espectral por bandas.
+        """
     ),
     responses={
         200: {
