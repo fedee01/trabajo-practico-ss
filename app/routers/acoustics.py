@@ -55,9 +55,8 @@ async def _leer_audio(file: UploadFile) -> tuple[np.ndarray, int, str]:
     summary="Calcula parámetros acústicos por banda de octava",
     description=(
         """Filtra la respuesta al impulso en las bandas de octava de la tabla de validación
-        IEC 61260 (125 Hz a 4 kHz) y calcula EDT, T10, T20, T30 para cada una.
-
-        Implementa el método ISO 3382 para el cálculo de tiempos de reverberación:
+        IEC 61260 (125 Hz a 4 kHz) y calcula EDT, T10, T20, T30 para cada una. """
+        """Implementa el método ISO 3382 para el cálculo de tiempos de reverberación:
 
         - EDT: Early Decay Time (0 a -10 dB)
         - T10: Tiempo de reverberación (-5 a -15 dB, extrapolado a -60 dB)
