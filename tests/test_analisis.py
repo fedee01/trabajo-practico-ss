@@ -7,7 +7,7 @@ from app.services.acoustic_parameters import integral_schroeder, regresion_linea
 
 
 class TestRegresionLineal:
-    """Tests para la funcion regresion_lineal."""}
+    """Tests para la funcion regresion_lineal."""
 
     @pytest.mark.skip(reason="Milestone 3 aún no implementado")
     def test_regresion_lineal_conocida(self):
