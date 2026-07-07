@@ -26,10 +26,10 @@ de respuestas al impulso por bandas de octava y calculo de parametros acusticos
   Dulcinea Bonet, Eugenia Onnainty, Federico Gionco  | $${\color{yellow}Responsables \space de \space procesamiento}$$.
 
 ## Librerias utilizadas
-numpy | matplotlib | scipy | sounddevice | fastapi | pytest 
+numpy | scipy | soundfile | sounddevice | fastapi | uvicorn | pydantic | python-multipart | pytest |
 ```bash
 # En caso de no contar con alguno utilizar:
-pip install numpy, matplotlib, scipy, sounddevice, fastapi, pytest
+pip install numpy scipy soundfile sounddevice fastapi uvicorn pydantic python-multipart pytest
 ```
 
 ## Requisitos previos
