@@ -61,4 +61,6 @@ de forma tal que se genera un ruido rosa por 3 segundos a una frecuencia de mues
 Estas pruebas se realizaron diez veces a diferentes intensidades sonoras utilizando para su reproducción y grabación un Noga vintage mic-2030 px cardioide. Se puede observar en el grafico de la figura: X el ruido rosa a una intendidad de COMPLETAR INTENSIDAD, cumple con una caida exponencial ya que se veuna recta lineal cuando el grafico tiene el eje Y a escala logaritmica.
 En caso de querer repetir este experimento se puede copiar el codigo en un nuevo archivo, ejecutar y arrastrar la grabación realizada (dentro de la carpeta grabaciones) a audacity (para graficar se deberá tocar “Analizar/Trazar espectro”).
 
+Como dificultad surgió que incialmente no cumplia con lo pedido ya que grababa el auido desde la computadora en lugar de hacerlo a través del microfono, por lo que no permitia tomar la RI de la habitación.
+
 Como criterio de diseño se agregaron como test que devuelva ValueError en caso de que la señal este vacia y si la duracion de grabación es menor a la reproducción. Asimismo devuelve RuntimeError si hay una discrepancia mayor al 1% entre la duración de lo grabado y lo reproducido.
