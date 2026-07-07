@@ -116,3 +116,7 @@ Reflexión: Se eligió integrar en una misma función ambos casos (señal comple
 | Armar `/api/v1/analysis/impulse-response/by-bands` completo | Integración de `calcular_parametros_acusticos` + `estimar_ruido_de_fondo` en un solo endpoint | Endpoint completo con `lundeby_applied: false` y `cutoff_time: null` explícitos, coherente con el JSON de referencia cuando Lundeby no se aplica |
 
 Reflexión: Se integró la función estimar_ruido_de_fondo ya que, al no utilizar Lundeby hay limitaciones en el cálculo de los parámetros. La SNR estimada puede dar información valiosa al momento de determinar la calidad de los parámetros obtenidos. Si se obtiene una SNR alta los parámetros entregados serán mas fieles al comportamiento real de la sala.
+
+| Prompt | Uso | Resultado |
+|---|---|---|
+| Restructuración del informe final (`informe.md`) con la redacción real de la documentación de M1, M2 y M3, vinculación de las 17 figuras a los archivos del repositorio y eliminación de secciones no deseadas | Se pidió reescribir el informe usando el contenido ya redactado en las documentaciones de cada milestone, reemplazar las rutas de imagen provisorias por las 17 correspondientes al repositorio real, y sacar del informe la columna "¿Cumple?" de la tabla de validación.| Se obtuvo un informe consolidado con el análisis de gráficos y resultados de M1/M2/M3, las 17 imágenes correctamente vinculadas (incluyendo nombres de archivo con espacios, tildes y paréntesis), y las secciones y columna solicitadas eliminadas |
