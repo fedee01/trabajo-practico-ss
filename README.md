@@ -81,7 +81,7 @@ flowchart LR
     Proc --> F["Filtros por banda de octava"] & PrS["Procesamiento de señales"]
     PrS --> Conv["Conversión a escala logaritmica"] & CaAu["Cargar audio"] & SRI["Sintetizar RI"] & ORIS["Obtener RI por Sweep"]
     S -- M3 --> An["Análisis"]
-    An --> Par["Parámetros acústicos"] & Sua["Suavizado de señal"] & InS["Integral de Shchorder"] & Reg["Regresion lineal"] & Mlun["Metodo Lundeby"]
+    An --> Par["Parámetros acústicos"] & Sua["Suavizado de señal"] & InS["Integral de Shchorder"] & Reg["Regresion lineal"]
 
     style S fill: #857979,color:#000000
     style R fill: #857979,color:#000000
@@ -174,7 +174,7 @@ rir-api/
 ```
 ## Branching Strategy
 
-La estrategia armada para el proyecto es utilizar tres tipos de branches. En primer lugar, MAIN donde estara la version estable del código. Luego TESTING donde se empleara como anteproyecto/borrador del código total. Por último, FEATURE donde realizaremos Branches segun las funcionalidades y conflictos que se generen a lo largo del proyecto, para seguidamente ser aprobados por el resto de los integrantes para enviarlos a TESTING y posteriormente al MAIN.
+La estrategia armada para el proyecto es utilizar tres tipos de branches. En primer lugar, `main` donde estara la version estable del código. Luego `dev` donde se empleara como anteproyecto/borrador del código total. Por último, `feature/` donde realizaremos Branches segun las funcionalidades y conflictos que se generen a lo largo del proyecto, para seguidamente ser aprobados por el resto de los integrantes para enviarlos a `dev` y posteriormente al `main`.
 
 ## Milestones
 
