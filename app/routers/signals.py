@@ -1,4 +1,3 @@
-import base64
 import io
 
 import numpy as np
@@ -6,13 +5,7 @@ import soundfile as sf
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
-from app.schemas.signals import (
-    PinkNoiseRequest,
-    SineSweepPairResponse,
-    SineSweepRequest,
-    SineSweepResponse,
-    SyntheticIRRequest,
-)
+from app.schemas.signals import PinkNoiseRequest, SineSweepRequest, SyntheticIRRequest
 from app.services.pink_noise import generar_ruido_rosa
 from app.services.signal_utils import sintetizar_ri
 from app.services.sine_sweep import generar_sine_sweep
@@ -29,7 +22,7 @@ def _array_a_wav_response(signal: np.ndarray, fs: int, filename: str) -> Streami
     """
     buffer = io.BytesIO()
     sf.write(buffer, signal, fs, format="WAV", subtype="FLOAT")
-    buffer.seek(0)  # seek(0) mueve el puntero del buffer para que la lectura sea desde el inicio
+    buffer.seek(0)
     return StreamingResponse(
         buffer,
         media_type="audio/wav",
@@ -54,17 +47,10 @@ def crear_ruido_rosa(payload: PinkNoiseRequest) -> StreamingResponse:
     return _array_a_wav_response(signal, payload.fs, "pink_noise.wav")
 
 
-def _array_a_base64_wav(signal: np.ndarray, fs: int) -> str:
-    """Serializa un np.ndarray a WAV y lo codifica en base64 (sin tocar disco)."""
-    buffer = io.BytesIO()
-    sf.write(buffer, signal, fs, format="WAV", subtype="FLOAT")
-    return base64.b64encode(buffer.getvalue()).decode("ascii")
-
-
-@router.post("/sine-sweep/pair", response_model=SineSweepPairResponse)
-def crear_sine_sweep_par(payload: SineSweepRequest) -> SineSweepPairResponse:
+@router.post("/sine-sweep")
+def crear_sine_sweep(payload: SineSweepRequest) -> StreamingResponse:
     """Genera un sine sweep logaritmico para mediciones de respuesta en frecuencia y respuesta al
-    impulso, o su filtroinverso si inverse=True.
+    impulso, o su filtro inverso si inverse=True.
 
     El audio se codifica en 32-bit float: al usarse como señal de excitacion para mediciones reales,
     se prioriza rango dinamico sobre tamano de archivo.
@@ -76,21 +62,9 @@ def crear_sine_sweep_par(payload: SineSweepRequest) -> SineSweepPairResponse:
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
-    def _empaquetar(señal: np.ndarray, es_inverso: bool) -> SineSweepResponse:
-        return SineSweepResponse(
-            duration=payload.duracion,
-            sample_rate=payload.fs,
-            num_samples=len(señal),
-            start_freq=payload.f1,
-            end_freq=payload.f2,
-            is_inverse=es_inverso,
-            audio_base64=_array_a_base64_wav(señal, payload.fs),
-        )
-
-    return SineSweepPairResponse(
-        sweep=_empaquetar(sweep, es_inverso=False),
-        inverse_filter=_empaquetar(filtro_inverso, es_inverso=True),
-    )
+    if payload.inverse:
+        return _array_a_wav_response(filtro_inverso, payload.fs, "inverse_filter.wav")
+    return _array_a_wav_response(sweep, payload.fs, "sweep.wav")
 
 
 @router.post("/synthetic-ir")
