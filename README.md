@@ -19,11 +19,11 @@ de respuestas al impulso por bandas de octava y calculo de parametros acusticos
  
   Dulcinea Bonet | Legajo: 81506. $${\color{magenta}Responsable \space de \space documentación}$$.
 
-  Valentina De Piero | Legajo: 72221. $${\color{yellow}Responsable \space de \space procesamiento}$$.
-
   Federico Gionco | Legajo: 56901. $${\color{lightblue}Responsable \space de \space generacion \space de  \space senales}$$.
 
   Eugenia Onnainty | Legajo: 74462. $${\color{green}Responsable \space de \space testing/CI}$$.
+
+  Dulcinea Bonet, Eugenia Onnainty, Federico Gionco  | $${\color{yellow}Responsables \space de \space procesamiento}$$.
 
 ## Librerias utilizadas
 numpy | matplotlib | scipy | sounddevice | fastapi | pytest 
