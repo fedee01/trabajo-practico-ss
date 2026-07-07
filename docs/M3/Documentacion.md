@@ -80,8 +80,36 @@ En la siguiente figura se puede ver el audio mh3_000_wx_48k.wav:
 
 En azul puede verse nuestra RIR-API, en verde la API de la cátedra, rel bordó el REW y en amarillo los datos suministrados por OPEN AIR que tabulamos para generar el archivo. Los tiempos de reverberación de esta sala son bajos por lo que en los casos más extremos puede verse como la diferencia entre nuestros valores y los obtenidos mediante REW no difieren más de 0,5 para ningún valor. No obstante nuestros valores generalmente se encontraron más cerca de la referencia de OPEIN AIR que los otros (salvo por el T20 en 2000 y 4000 Hz y el T30 en 125, 1000 y 2000 Hz donde alguno de los otros programas dio resultados mas cercanos a los proporcionados por la fuente.
 
+*Maes Howe*.
 
+Consideraciones Metodológicas: 
 
+OPEN AIR reporta su tiempo de reverberación de referencia ($T_{60}$) utilizando el método **$T_{30}$** (regresión lineal entre $-5\text{ dB}$ y $-35\text{ dB}$). No incluye de manera explícita los valores para $T_{20}$ ni $T_{10}$ en su tabla de parámetros resumen.
+
+RIR API calcula los cuatro estimadores ($EDT$, $T_{10}$, $T_{20}$, $T_{30}$) de forma independiente a partir de la respuesta al impulso integrada por el método de Schroeder.
+
+La diferencia porcentual se calcula tomando como referencia el valor de OPEN AIR:
+   $$\text{Diferencia \%} = \frac{\text{RIR API} - \text{OPEN AIR}}{\text{OPEN AIR}} \times 100$$
+
+ Tabla Comparativa
+
+| Parámetro | Fuente / Cálculo | 125 Hz | 250 Hz | 500 Hz | 1 kHz | 2 kHz | 4 kHz |
+| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **EDT** *(s)* | RIR API (Negro) | 0.612 | 0.352 | 0.332 | 0.265 | 0.505 | 0.051 |
+| | OPEN AIR (Blanco) | 0.620 | 0.370 | 0.240 | 0.240 | 0.240 | 0.110 |
+| | **Diferencia %** | **-1.29%** | **-4.86%** | **+38.33%** | **+10.42%** | **+110.42%** | **-53.64%** |
+| | | | | | | | |
+| **T30** *(s)* | RIR API (Negro) | 0.828 | 0.658 | 0.622 | 0.542 | 0.509 | 0.455 |
+| | OPEN AIR (Blanco) | 0.760 | 0.640 | 0.580 | 0.510 | 0.470 | 0.430 |
+| | **Diferencia %** | **+8.95%** | **+2.81%** | **+7.24%** | **+6.27%** | **+8.30%** | **+5.81%** |
+| | | | | | | | |
+| **T20** *(s)* | RIR API (Negro) | 0.834 | 0.624 | 0.563 | 0.559 | 0.505 | 0.489 |
+| | OPEN AIR (Blanco) | *N/A* | *N/A* | *N/A* | *N/A* | *N/A* | *N/A* |
+| | | | | | | | |
+| **T10** *(s)* | RIR API (Negro) | 0.830 | 0.561 | 0.421 | 0.609 | 0.505 | 0.672 |
+| | OPEN AIR (Blanco) | *N/A* | *N/A* | *N/A* | *N/A* | *N/A* | *N/A* |
+
+---
 
 Para facilitar la obtencion de los datos obtenidos por nuestra RIR-API se utlizo: 
 
